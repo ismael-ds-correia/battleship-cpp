@@ -2,18 +2,20 @@
 #define POSITION_H
 
 #include <iostream> 
+#include "ship.h"
 
 class Position{
 	private:
 		bool isAttacked;
 		bool isBlocked;
-		bool containsShip;
+		Ship* shipReference;
 	public:
 		Position();
 		~Position(){}
 		void attack();
 		void block();
-		void placeShip();
+		void placeShip(Ship& ship);
+		Ship* getShipReference();
 };
 
 #endif

@@ -1,10 +1,11 @@
 #include <iostream>
 #include "position.h"
+#include "ship.h"
 
 Position::Position(){
 	this->isAttacked = false;
 	this->isBlocked = false;
-	this->containsShip = false;
+	this->shipReference = nullptr;
 } 
 
 void Position::attack(){
@@ -15,6 +16,10 @@ void Position::block(){
 	this->isBlocked = true;
 }
 
-void placeShip(){
-	this->containsShip = true;
+void Position::placeShip(Ship& ship){
+	this->shipReference = &ship;
+}
+
+Ship* Position::getShipReference(){
+	return this->shipReference;
 }
