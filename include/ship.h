@@ -12,6 +12,7 @@ class Ship{
 		int size;			//Quantidade de posições ocupadas.
 		int hits;			//Quantidade de posições atingidas.
 	public:
+		Ship(){}
 		Ship(string, int);
 		~Ship(){}
 		bool isDestroyed();
