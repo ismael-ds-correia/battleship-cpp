@@ -4,13 +4,14 @@
 #include <iostream>
 #include "ship.h"
 
-class Fleet{
+// Classe que representa uma frota de navios.
+class Fleet {
 	private:
-		Ship ships[5];
+		Ship ships[5]; // Array contendo os 5 navios da frota.
 	public:
-		Fleet();
-		~Fleet(){}
-		bool isDestroyed();
+		Fleet();  // Construtor padrão que inicializa os navios da frota.
+		~Fleet(){} // Destrutor padrão.
+		bool isDestroyed(); // Verifica se toda a frota foi destruída.
 };
 
 #endif

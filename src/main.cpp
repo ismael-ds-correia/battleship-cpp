@@ -1,7 +1,11 @@
 #include <iostream>
-#include "position.h"
+#include "board.h"
+#include "ship.h"
+
+using namespace std;
 
 int main() {
-    std::cout << "Batalha Naval!" << std::endl;
+    cout << "Batalha Naval!";
+
     return 0;
 }

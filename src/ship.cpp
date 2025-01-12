@@ -4,9 +4,21 @@
 
 using namespace std;
 
+// Construtor que inicializa o nome, tamanho e orientações padrão do navio.
 Ship::Ship(string name, int size) 
-: name(name), size(size), hits(0){}
+: name(name), size(size), hits(0), horizontal(true) {}
 
-bool Ship::isDestroyed(){
-	return hits >= size;   //O navio está detruído quando todas as suas posições foram atacadas.
+// Retorna verdadeiro se o navio foi destruído (todas as posições atingidas).
+bool Ship::isDestroyed() {
+	return hits >= size;
+}
+
+// Retorna a orientação do navio.
+bool Ship::isHorizontal() {
+	return this->horizontal;
+}
+
+// Alterna a orientação do navio (horizontal/vertical).
+void Ship::setPositioning() {
+	this->horizontal = !this->horizontal;
 }
