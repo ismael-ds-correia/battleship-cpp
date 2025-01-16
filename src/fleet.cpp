@@ -21,3 +21,8 @@ bool Fleet::isDestroyed() {
 	
 	return true; // Todos os navios foram destruídos.
 }
+
+// Retorna um navio da frota com base em um índice.
+Ship& Fleet::getShip(int index){
+	return this->ships[index];
+}

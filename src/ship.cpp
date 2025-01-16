@@ -14,11 +14,11 @@ bool Ship::isDestroyed() {
 }
 
 // Retorna a orientação do navio.
-bool Ship::isHorizontal() {
+bool Ship::isHorizontal(){
 	return this->horizontal;
 }
 
 // Alterna a orientação do navio (horizontal/vertical).
-void Ship::setPositioning() {
-	this->horizontal = !this->horizontal;
+void Ship::setOrientation(bool horizontal) {
+	this->horizontal = horizontal;
 }

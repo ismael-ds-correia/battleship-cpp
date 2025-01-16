@@ -5,14 +5,40 @@ using namespace std;
 
 // Método para posicionar um navio no tabuleiro.
 void Board::placeShip(Ship& ship, int line, int column) {
-    // Verifica se a posição é válida para o navio.
-    if (checkPosition(ship, line, column)) {
-        // Posiciona o navio na matriz de posições.
-        this->positions[line][column].placeShip(ship);
-    }
-
+    // Posiciona o navio na matriz de posições.
+    this->positions[line][column].placeShip(ship);
     // Bloqueia as posições adjacentes ao navio.
     blockPositions(ship, line, column);
+}
+
+// Método para remover um navio que já foi posicionado.
+void Board::removeShip(Ship& ship){
+    // Percorre todas as posições do tabuleiro.
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10; j++){
+            // Obtém a referência ao navio na posição atual.
+            Ship* currentShip = this->positions[i][j].getShipReference();
+
+            // Verifica se a posição pertence ao navio a ser removido.
+            if(currentShip == &ship){
+                // Remove a referência ao navio na posição.
+                this->positions[i][j].removeShip();
+                // Desbloqueia a posição.
+                this->positions[i][j].unlock();
+            }
+        }
+    }
+
+    // Recalcula bloqueios para outros navios ainda no tabuleiro.
+    // Isso é necessário caso o desbloqueio anterior tenha afetado os bloqueios de outros navios.
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10; j++){
+            Ship* currentShip = this->positions[i][j].getShipReference();
+            if(currentShip != nullptr){
+                blockPositions(*currentShip, i, j);
+            }
+        }
+    }
 }
 
 // Método para bloquear posições adjacentes ao navio.

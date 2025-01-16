@@ -15,7 +15,9 @@ class Position {
 		~Position(){}        // Destrutor padrão.
 		void attack();       // Marca a posição como atacada.
 		void block();        // Marca a posição como bloqueada.
+		void unlock();		 // Desbloqueia uma posição.
 		void placeShip(Ship& ship); // Associa um navio à posição.
+		void removeShip();			// Desassocia a possição a um navio.
 		Ship* getShipReference();   // Retorna a referência ao navio associado.
 		bool isValidPosition();     // Retorna se a posição é válida para posicionamento.
 		bool isAttacked();          // Retorna se a posição já foi atacada.

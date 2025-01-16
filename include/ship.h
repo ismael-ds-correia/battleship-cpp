@@ -20,7 +20,7 @@ class Ship {
 		bool isDestroyed();    // Retorna se o navio foi destruído (todas as posições atingidas).
 		bool isHorizontal();   // Retorna a orientação do navio (horizontal ou vertical).
 		int getSize(){return size;} // Retorna o tamanho do navio.
-		void setPositioning(); // Altera a orientação do navio.
+		void setOrientation(bool); // Altera a orientação do navio.
 };
 
 #endif

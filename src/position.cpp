@@ -19,9 +19,19 @@ void Position::block() {
 	this->blocked = true;
 }
 
+// Desbloqueia uma posição.
+void Position::unlock(){
+	this->blocked = false;
+}
+
 // Associa um navio à posição.
 void Position::placeShip(Ship& ship) {
 	this->shipReference = &ship;
+}
+
+// Desassocia a possição a um navio.
+void Position::removeShip(){
+	this->shipReference = nullptr;
 }
 
 // Retorna se a posição já foi atacada.
