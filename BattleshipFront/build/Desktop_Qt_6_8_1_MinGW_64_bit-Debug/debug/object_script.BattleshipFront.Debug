@@ -1,0 +1,11 @@
+debug/board.o
+debug/controller.o
+debug/fleet.o
+debug/player.o
+debug/position.o
+debug/ship.o
+debug/mainwindow.o
+debug/main.o
+debug/qrc_textures.o
+debug/moc_controller.o
+debug/moc_mainwindow.o

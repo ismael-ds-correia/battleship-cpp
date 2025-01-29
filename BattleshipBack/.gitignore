@@ -1,0 +1,29 @@
+# Build directories
+/build/
+/bin/
+/obj/
+
+# Compilador e arquivos temporários
+*.exe
+*.o
+*.out
+*.a
+*.so
+*.dll
+*.lib
+
+# Arquivos de editor/IDE
+*.swp
+*.tmp
+*.log
+*.vscode/
+.idea/
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Outros gerados automaticamente
+*.gch
+ 
