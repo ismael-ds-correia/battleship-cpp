@@ -113,12 +113,12 @@ void Board::print() {
                 cout << "x "; // Marca como atacada.
                 continue;
             } else if (this->positions[i][j].getShipReference() != nullptr) { // Posição bloqueada.
-                cout << "b "; // Marca como bloqueada.
+                cout << "B "; // Marca como bloqueada.
                 continue;
             }
 
             // Posição válida e não atacada.
-            cout << "o "; // Marca como livre.
+            cout << "O "; // Marca como livre.
         }
         cout << "\n"; // Nova linha após cada linha do tabuleiro.
     }

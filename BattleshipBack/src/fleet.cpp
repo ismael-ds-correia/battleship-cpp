@@ -4,7 +4,7 @@
 
 // Inicializa uma frota com os navios padrão.
 Fleet::Fleet() {
-	this->ships[0] = Ship("Porta-aviões", 6);
+	this->ships[0] = Ship("Porta-aviões", 5);
 	this->ships[1] = Ship("Navio de Guerra", 4);
 	this->ships[2] = Ship("Encouraçado", 3);
 	this->ships[3] = Ship("Encouraçado", 3);
@@ -25,4 +25,9 @@ bool Fleet::isDestroyed() {
 // Retorna um navio da frota com base em um índice.
 Ship& Fleet::getShip(int index){
 	return this->ships[index];
+}
+
+//Retorna os navios da frota.
+Ship* Fleet::getShips() {
+    return ships;
 }

@@ -12,7 +12,8 @@ class Fleet {
 		Fleet();  // Construtor padrão que inicializa os navios da frota.
 		~Fleet(){} // Destrutor padrão.
 		bool isDestroyed(); // Verifica se toda a frota foi destruída.
-		Ship& getShip(int);
+		Ship& getShip(int); //Retorna um navio com base em um ídice.
+		Ship* getShips();   //Retorna os navios da frota.
 };
 
 #endif

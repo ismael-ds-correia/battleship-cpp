@@ -8,15 +8,12 @@
 using namespace std;
 
 int main() {
-    Ship testShip("test", 3);
+    Player player("eu kkk");
 
-    Board testBoard;
+    player.positionShipsRandomly();
 
-    testShip.setOrientation(false);
+    player.getBoard().print();
 
-    testBoard.placeShip(testShip, 2, 3);
-
-    testBoard.print();
 
     return 0;
 }

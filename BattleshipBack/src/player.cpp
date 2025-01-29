@@ -2,6 +2,10 @@
 #include "player.h" 
 #include "ship.h"
 #include "fleet.h"
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -25,7 +29,7 @@ bool Player::placeShip(int shipIndex, int line, int column, bool horizontal){
 	// Define a oritentação do navio.
 	ship.setOrientation(horizontal);
 
-	// Verifica se a posição é válida para posicionar o navio é válida.
+	// Verifica se a posição é válida para posicionar.
 	if(this->board.checkPosition(ship, line, column)){
 		// Posiciona o navio no tabuleiro.
 		this->board.placeShip(ship, line, column);
@@ -48,6 +52,57 @@ bool Player::repositionShip(int shipIndex, int newLine, int newColumn, bool newH
 	// Tenta reposicionar o navio.
 	return this->placeShip(shipIndex, newLine, newColumn, newHorizontal);
 }
+/*
+void Player::positionShipsRandomly(){
+	int row = 0, column = 0, count = 0;
+	while(count < 5){
+		Ship currentShip = this->fleet.getShips()[count];
+
+		srand(std::time(0)); 
+		row = rand()%10;
+		column = rand()%10;
+
+		bool randomBool = rand()%2 == 0;
+		currentShip.setOrientation(randomBool);
+
+		if(!this->board.placeShip(currentShip, row, column)){
+			continue;
+		}
+
+		count++;
+	}
+}*/
+
+void Player::positionShipsRandomly() {
+    // Lista de todas as posições possíveis (tabuleiro 10x10)
+    vector<pair<int, int>> positions;
+    for (int row = 0; row < 10; ++row) {
+        for (int column = 0; column < 10; ++column) {
+            positions.emplace_back(row, column);
+        }
+    }
+
+    // Embaralhar as posições
+    srand(std::time(0));
+    random_shuffle(positions.begin(), positions.end());
+
+    int count = 0; // Contador de navios posicionados
+    for (auto& pos : positions) {
+        if (count >= 5) break; // Todos os navios foram posicionados
+
+        Ship& currentShip = this->fleet.getShips()[count];
+
+        // Define orientação aleatória para o navio
+        bool randomBool = rand() % 2 == 0;
+        currentShip.setOrientation(randomBool);
+
+        // Tenta posicionar o navio
+        if (this->board.placeShip(currentShip, pos.first, pos.second)) {
+            count++; // Incrementa o contador se o navio foi posicionado
+        }
+    }
+}
+
 
 string Player::getName(){
 	return this->name;

@@ -19,6 +19,8 @@ class Player{
 		Board& getBoard();
 		void placeFleet();
 		bool repositionShip(int, int, int, bool);
+		void positionShipsRandomly();
+
 };
 
 #endif
