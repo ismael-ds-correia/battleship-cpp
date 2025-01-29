@@ -8,9 +8,15 @@
 using namespace std;
 
 int main() {
-    cout << "Batalha Naval!";
+    Ship testShip("test", 3);
 
-    Player player("Diogenys");
+    Board testBoard;
+
+    testShip.setOrientation(false);
+
+    testBoard.placeShip(testShip, 2, 3);
+
+    testBoard.print();
 
     return 0;
 }

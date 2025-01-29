@@ -4,11 +4,24 @@
 using namespace std;
 
 // Método para posicionar um navio no tabuleiro.
-void Board::placeShip(Ship& ship, int line, int column) {
+bool Board::placeShip(Ship& ship, int line, int column) {
+    if(!checkPosition(ship, line, column)){
+        return false;
+    }
     // Posiciona o navio na matriz de posições.
-    this->positions[line][column].placeShip(ship);
+    if(ship.isHorizontal()){
+        for(int i = column; i < column + ship.getSize(); i++){
+            this->positions[line][i].placeShip(ship);
+        }
+    }else{
+        for(int i = line; i < line + ship.getSize(); i++){
+            this->positions[i][column].placeShip(ship);
+        }
+    }
     // Bloqueia as posições adjacentes ao navio.
     blockPositions(ship, line, column);
+
+    return true;
 }
 
 // Método para remover um navio que já foi posicionado.
@@ -99,7 +112,7 @@ void Board::print() {
             if (this->positions[i][j].isAttacked()) { // Posição atacada.
                 cout << "x "; // Marca como atacada.
                 continue;
-            } else if (this->positions[i][j].isBlocked()) { // Posição bloqueada.
+            } else if (this->positions[i][j].getShipReference() != nullptr) { // Posição bloqueada.
                 cout << "b "; // Marca como bloqueada.
                 continue;
             }
