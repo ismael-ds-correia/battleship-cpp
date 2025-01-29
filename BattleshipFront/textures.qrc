@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/textures">
+        <file>Textures/boat.png</file>
+        <file>Textures/water.png</file>
+    </qresource>
+</RCC>
