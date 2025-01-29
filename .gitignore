@@ -2,6 +2,28 @@
 /build/
 /bin/
 /obj/
+/dist/
+
+# Arquivos de compilação do Qt
+*.pro.user
+*.pro.user.*
+*.qmake.stash
+*.moc
+moc_*
+*.qrc
+qrc_*
+*.qmlc
+*.rcc
+rcc_*
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.dylib
+*.exe
+*.app
+*.pch
 
 # Compilador e arquivos temporários
 *.exe
@@ -13,6 +35,9 @@
 *.lib
 
 # Arquivos de editor/IDE
+*.creator
+*.creator.user
+*.creator.user.*
 *.swp
 *.tmp
 *.log
@@ -26,4 +51,8 @@ desktop.ini
 
 # Outros gerados automaticamente
 *.gch
- 
+*.autosave
+*.cps
+*.prl
+*.lrelease
+*.lupdate
