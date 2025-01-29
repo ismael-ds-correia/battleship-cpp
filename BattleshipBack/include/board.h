@@ -13,7 +13,7 @@ class Board {
 	public:
 		Board(){}  // Construtor padrão
 		~Board(){} // Destrutor padrão
-		void placeShip(Ship&, int, int); // Posiciona um navio no tabuleiro.
+		bool placeShip(Ship&, int, int); // Posiciona um navio no tabuleiro.
 		void removeShip(Ship&);
 		void attack(int, int);          // Interface para que o oponente ataque uma posição específica.
 		void print();                   // Exibe o estado atual do tabuleiro.
