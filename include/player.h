@@ -17,7 +17,7 @@ class Player{
 		~Player(){}
 		string getName();
 		Board& getBoard();
-		void placeShips();
+		void placeFleet();
 		bool repositionShip(int, int, int, bool);
 };
 
