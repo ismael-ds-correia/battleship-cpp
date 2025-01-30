@@ -105,6 +105,11 @@ bool Board::checkPosition(Ship& ship, int line, int column) {
     return true;
 }
 
+// Método sobrecarregado para verificar se é possível atacar uma posição.
+bool Board::checkPosition(int row, int column){
+    return !(this->positions[row][column].isAttacked());
+}
+
 // Método para imprimir o estado atual do tabuleiro (usado para testes).
 void Board::print() {
     for (int i = 0; i < 10; i++) { // Itera pelas linhas.
@@ -122,6 +127,16 @@ void Board::print() {
         }
         cout << "\n"; // Nova linha após cada linha do tabuleiro.
     }
+}
+
+bool Board::attack(int row, int column){
+    if(this->checkPosition(row, column)){
+        this->positions[row][column].attack();
+
+        return true;
+    }
+
+    return false;
 }
 
 // Método para retornar uma referência à matriz de posições.

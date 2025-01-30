@@ -1,0 +1,11 @@
+release/boardController.o
+release/board.o
+release/fleet.o
+release/player.o
+release/position.o
+release/ship.o
+release/mainwindow.o
+release/main.o
+release/qrc_textures.o
+release/moc_boardController.o
+release/moc_mainwindow.o

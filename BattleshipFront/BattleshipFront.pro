@@ -19,7 +19,7 @@ SOURCES += \
     ../BattleshipBack/src/position.cpp \
     ../BattleshipBack/src/ship.cpp \
     Sources/mainwindow.cpp \
-    main.cpp
+    main.cpp \
 
 HEADERS += \
     ../BattleshipBack/controllers/boardController.h \
@@ -28,7 +28,7 @@ HEADERS += \
     ../BattleshipBack/include/player.h \
     ../BattleshipBack/include/position.h \
     ../BattleshipBack/include/ship.h \
-    Headers/mainwindow.h
+    Headers/mainwindow.h \
 
 FORMS += \
     Forms/mainwindow.ui

@@ -6,6 +6,7 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#include "board.h"
 
 using namespace std;
 
@@ -54,7 +55,7 @@ bool Player::repositionShip(int shipIndex, int newLine, int newColumn, bool newH
 }
 /*
 void Player::positionShipsRandomly(){
-	int row = 0, column = 0, count = 0;
+	int row = 0, column = 0, count = 0, i = 0;
 	while(count < 5){
 		Ship currentShip = this->fleet.getShips()[count];
 
@@ -64,6 +65,8 @@ void Player::positionShipsRandomly(){
 
 		bool randomBool = rand()%2 == 0;
 		currentShip.setOrientation(randomBool);
+
+		cout << i++ << "\n";
 
 		if(!this->board.placeShip(currentShip, row, column)){
 			continue;
@@ -83,7 +86,7 @@ void Player::positionShipsRandomly() {
     }
 
     // Embaralhar as posições
-    srand(std::time(0));
+    //srand(std::time(0));
     random_shuffle(positions.begin(), positions.end());
 
     int count = 0; // Contador de navios posicionados
@@ -95,7 +98,6 @@ void Player::positionShipsRandomly() {
         // Define orientação aleatória para o navio
         bool randomBool = rand() % 2 == 0;
         currentShip.setOrientation(randomBool);
-
         // Tenta posicionar o navio
         if (this->board.placeShip(currentShip, pos.first, pos.second)) {
             count++; // Incrementa o contador se o navio foi posicionado
@@ -103,6 +105,9 @@ void Player::positionShipsRandomly() {
     }
 }
 
+bool Player::attackOpponent(Board& enemyBoard, int row, int column){
+	return enemyBoard.attack(row, column);
+}
 
 string Player::getName(){
 	return this->name;
