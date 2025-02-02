@@ -13,22 +13,28 @@ INCLUDEPATH += ../BattleshipBack/include \
 
 SOURCES += \
     ../BattleshipBack/controllers/boardController.cpp \
+    ../BattleshipBack/controllers/shipController.cpp \
     ../BattleshipBack/src/board.cpp \
     ../BattleshipBack/src/fleet.cpp \
     ../BattleshipBack/src/player.cpp \
     ../BattleshipBack/src/position.cpp \
     ../BattleshipBack/src/ship.cpp \
+    Sources/boardCell.cpp \
+    Sources/boardRenderer.cpp \
     Sources/mainwindow.cpp \
     main.cpp \
 
 HEADERS += \
     ../BattleshipBack/controllers/boardController.h \
+    ../BattleshipBack/controllers/shipController.h \
     ../BattleshipBack/include/board.h \
     ../BattleshipBack/include/fleet.h \
     ../BattleshipBack/include/player.h \
     ../BattleshipBack/include/position.h \
     ../BattleshipBack/include/ship.h \
-    Headers/mainwindow.h \
+    Headers/boardRenderer.h \
+    Headers/boardCell.h \
+    Headers/mainwindow.h
 
 FORMS += \
     Forms/mainwindow.ui
