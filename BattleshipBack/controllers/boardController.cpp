@@ -1,10 +1,10 @@
 #include "../controllers/boardController.h"
 
-Controller::Controller() : board() {}
+BoardController::BoardController() : board() {}
 
-Controller::~Controller() {}
+BoardController::~BoardController() {}
 
-void Controller::placeShip(int x, int y, Ship& ship) {
+void BoardController::placeShip(int x, int y, Ship& ship) {
     try {
         board.placeShip(ship, x, y);
         emit boardUpdated();
@@ -13,7 +13,7 @@ void Controller::placeShip(int x, int y, Ship& ship) {
     }
 }
 
-Position (&Controller::getBoardState())[10][10] {
+Position (&BoardController::getBoardState())[10][10] {
     return board.getPositions();
 }
 

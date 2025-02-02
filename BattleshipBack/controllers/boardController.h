@@ -4,14 +4,14 @@
 #include "board.h"
 #include <QObject>
 
-class Controller : public QObject {
+class BoardController : public QObject {
 
     Q_OBJECT // Necessário para usar sinais e slots do Qt
     private:
         Board board; // Instância do tabuleiro.
     public:
-        Controller(); // Construtor
-        ~Controller(); // Destrutor
+        BoardController(); // Construtor
+        ~BoardController(); // Destrutor
 
     // Eventos recebidos do frontend:
     void placeShip(int x, int y, Ship& ship); // Posiciona um navio no tabuleiro.

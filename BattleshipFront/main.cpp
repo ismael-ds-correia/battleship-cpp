@@ -2,13 +2,15 @@
 
 #include <QApplication>
 #include "boardController.h"
+#include "shipController.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    Controller controller; //instancia o controllador
+    BoardController boardController; //instancia o controllador
+    ShipController shipController;
 
-    MainWindow mainWindow(&controller); //cria a janela do jogo
+    MainWindow mainWindow(&boardController, &shipController); //cria a janela do jogo
     mainWindow.show();
 
     return app.exec();
