@@ -1,0 +1,59 @@
+[33mcommit 8ae88cef7706c9d8d7a0461b5cd2323cdca3f8a9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Wed Jan 29 20:20:59 2025 -0300
+
+    feat: implementação do método positionShipRandomly, que posiciona navios automaticamente no tabuleiro.
+
+[33mcommit fd77e827b35c62a05fc696a828203e29d53bffc9[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Wed Jan 29 12:23:05 2025 -0300
+
+    Inclusão de pastas separadas para Front e Back do projeto.
+
+[33mcommit 7133703a5eb86a4af0cfc5e89500424d4f012e9a[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Wed Jan 29 12:16:54 2025 -0300
+
+    fix: correção de bug em placeShip da classe Board.
+
+[33mcommit bfbcc4d2f541f9bd69ce5a942320fbc2a618efde[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Tue Jan 28 23:54:28 2025 -0300
+
+    feat: implementação básica da classe player.
+
+[33mcommit c0a4e28d1567ff97ec14faf1c82883359dd15ed4[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Thu Jan 16 12:32:53 2025 -0300
+
+    feat: adiciona funcionalidade para remover navios na classe Player e faz adaptações.
+
+[33mcommit d19b899763660c2d4f4dd5cceeccd0af81780f85[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Sun Jan 12 13:20:59 2025 -0300
+
+    feat: adiciona classe Board e inclui comentários explicativos.
+
+[33mcommit ea14d879d6047ce26addac1df53aa215d8dbbd5a[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Wed Jan 8 20:50:29 2025 -0300
+
+    feat: Criação da classe fleet para representar uma frota. Também foi adicionado um construtor padrão na classe Ship.
+
+[33mcommit 0e0f8744e66cbdb4bf9341a2b6c37767def5f658[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Wed Jan 8 18:08:40 2025 -0300
+
+    feat: adiciona referência de navios na classe Position com ponteiro Ship*
+
+[33mcommit 713583e676c01c4262f4e9145f74c5656dbcd8e2[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Wed Jan 8 10:56:56 2025 -0300
+
+    feat: adiciona classe Ship com construtor e método isDestroyed
+
+[33mcommit 0bb3e0d2576ee517b1b0bfb6e51e335f3a9c497d[m
+Author: Diogenys Correia <diogenys02@gmail.com>
+Date:   Tue Jan 7 21:40:18 2025 -0300
+
+    feat: implementa classe Position com métodos básicos

@@ -22,7 +22,7 @@ SOURCES += \
     Sources/boardCell.cpp \
     Sources/boardRenderer.cpp \
     Sources/mainwindow.cpp \
-    main.cpp
+    main.cpp \
 
 HEADERS += \
     ../BattleshipBack/controllers/boardController.h \
