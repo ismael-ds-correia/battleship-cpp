@@ -107,6 +107,10 @@ bool Board::checkPosition(Ship& ship, int line, int column) {
 
 // Método sobrecarregado para verificar se é possível atacar uma posição.
 bool Board::checkPosition(int row, int column){
+    if(row < 0 || row > 9 || column < 0 || column > 9){
+        return false;
+    }
+
     return !(this->positions[row][column].isAttacked());
 }
 
@@ -115,6 +119,11 @@ void Board::print() {
     for (int i = 0; i < 10; i++) { // Itera pelas linhas.
         for (int j = 0; j < 10; j++) { // Itera pelas colunas.
             if (this->positions[i][j].isAttacked()) { // Posição atacada.
+                if(this->positions[i][j].getShipReference() != nullptr){
+                    cout << "- ";
+                    continue;
+                }
+
                 cout << "x "; // Marca como atacada.
                 continue;
             } else if (this->positions[i][j].getShipReference() != nullptr) { // Posição bloqueada.
@@ -130,6 +139,7 @@ void Board::print() {
 }
 
 bool Board::attack(int row, int column){
+    cout << "atacando (" << row << ", " << column << ")\n";
     if(this->checkPosition(row, column)){
         this->positions[row][column].attack();
 
@@ -142,4 +152,17 @@ bool Board::attack(int row, int column){
 // Método para retornar uma referência à matriz de posições.
 Position (&Board::getPositions())[10][10] {
     return this->positions;
+}
+
+// Retorna uma posição com base em um par de valores.
+Position Board::getPosition(int row, int column){
+    return this->positions[row][column];
+}
+
+Ship* Board::getShipReference(int row, int column){
+    this->positions[row][column].getShipReference();
+}
+
+bool Board::isAttacked(int row, int column){
+    return this->positions[row][column].isAttacked();
 }

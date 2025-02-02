@@ -2,10 +2,9 @@
 #include "robotplayer.h" 
 #include "ship.h"
 #include "fleet.h"
+#include <ctime>
+#include <algorithm>
 
 using namespace std;
 
-RobotPlayer::RobotPlayer()
-	: Player("Xerath"){
-}
 

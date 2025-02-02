@@ -12,6 +12,10 @@ Position::Position() {
 // Marca a posição como atacada.
 void Position::attack() {
 	this->attacked = true;
+
+	if(this->shipReference != nullptr){
+		this->shipReference->incrementHits();
+	}
 }
 
 // Marca a posição como bloqueada.

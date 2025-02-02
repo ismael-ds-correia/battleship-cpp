@@ -5,27 +5,27 @@
 #include "Position.h"
 #include "fleet.h"
 #include <ctime>
+#include "robotplayer.h"
+#include "circularlinkedlist.h"
 
 using namespace std;
 
 int main() {
-    srand(std::time(0));
-    Player player("eu kkk");
-    Player enemy("enemy");
+    //srand(std::time(0));
+    CircularLinkedList list(2, 3);
+    list.push(3, 5);
+    list.push(2, 5);
+    list.push(1, 5);
+    list.push(1, 5);
+    list.push(5, 5);
+    list.push(7, 5);
+    list.push(9, 5);
 
-    player.positionShipsRandomly();
-    player.getBoard().print();
-    cout << "\n";
+    cout << *list.pop();
 
-    enemy.positionShipsRandomly();
-    enemy.getBoard().print();
-    player.attackOpponent(enemy.getBoard(), 1, 1);
+    list.print();
 
-    //player.getBoard().print();
-
-    cout << "\n";
-
-    //enemy.getBoard().print();
+    cout << *list.pop();
 
 
     return 0;

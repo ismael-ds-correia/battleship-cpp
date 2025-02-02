@@ -21,6 +21,7 @@ class Player{
 		bool repositionShip(int, int, int, bool);
 		void positionShipsRandomly();
 		bool attackOpponent(Board&, int, int);
+		void printBoard();
 };
 
 #endif

@@ -116,3 +116,7 @@ string Player::getName(){
 Board& Player::getBoard(){
 	return this->board;
 }
+
+void Player::printBoard(){
+	this->board.print();
+}

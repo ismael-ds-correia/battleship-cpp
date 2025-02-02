@@ -10,7 +10,7 @@ Ship::Ship(string name, int size)
 
 // Retorna verdadeiro se o navio foi destruído (todas as posições atingidas).
 bool Ship::isDestroyed() {
-	return hits >= size;
+	return this->hits >= this->size;
 }
 
 // Retorna a orientação do navio.
@@ -21,4 +21,12 @@ bool Ship::isHorizontal(){
 // Alterna a orientação do navio (horizontal/vertical).
 void Ship::setOrientation(bool horizontal) {
 	this->horizontal = horizontal;
+}
+
+void Ship::incrementHits(){
+	this->hits++;
+}
+
+int Ship::getHits(){
+	return this->hits;
 }
