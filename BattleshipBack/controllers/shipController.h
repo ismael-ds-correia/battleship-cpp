@@ -4,10 +4,15 @@
 #include "ship.h"
 #include "position.h"
 #include "board.h"
+
+#ifdef USE_QT
 #include <QObject>
-
 class ShipController : public QObject {
+    Q_OBJECT
+#else
 
+class ShipController {
+#endif
 private:
     Ship ship;
     Board* board;

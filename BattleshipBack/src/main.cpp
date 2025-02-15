@@ -27,6 +27,13 @@ int main() {
 
     cout << *list.pop();
 
+    cout << "\n";
+
+    Player player("eu kkk");
+
+    player.positionShipsRandomly();
+
+    player.getBoard().print();
 
     return 0;
 }
