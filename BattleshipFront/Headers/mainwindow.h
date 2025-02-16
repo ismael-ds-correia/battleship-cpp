@@ -31,11 +31,14 @@ private:
 
 public:
     explicit MainWindow(BoardController* boardController, ShipController* shipController, QWidget *parent = nullptr);
-    void updateBoard();
+    void positionShipsRandomly();
     ~MainWindow();
+
 
 private slots:
     //void handleCellClick(int row, int col);
+    void onRandomizeButtonClicked();
+    void updateBoard();
 
 };
 #endif // MAINWINDOW_H
