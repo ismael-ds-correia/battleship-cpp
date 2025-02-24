@@ -20,6 +20,8 @@ SOURCES += \
     ../BattleshipBack/src/player.cpp \
     ../BattleshipBack/src/position.cpp \
     ../BattleshipBack/src/ship.cpp \
+    Sources/selectorSpace.cpp \
+    Sources/draggableShip.cpp \
     Sources/boardCell.cpp \
     Sources/boardRenderer.cpp \
     Sources/mainwindow.cpp \
@@ -35,7 +37,9 @@ HEADERS += \
     ../BattleshipBack/include/ship.h \
     Headers/boardRenderer.h \
     Headers/boardCell.h \
-    Headers/mainwindow.h
+    Headers/draggableShip.h \
+    Headers/mainwindow.h \
+    Headers/selectorSpace.h
 
 FORMS += \
     Forms/mainwindow.ui
