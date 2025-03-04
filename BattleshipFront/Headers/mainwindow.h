@@ -47,6 +47,7 @@ private slots:
     //void handleCellClick(int row, int col);
     void onRandomizeButtonClicked();
     void updateBoard();
+    void onClearButtonClicked();
 
 };
 #endif // MAINWINDOW_H

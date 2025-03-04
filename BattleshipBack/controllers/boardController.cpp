@@ -45,6 +45,25 @@ void BoardController::randomizeShips() {
     emit boardUpdated();
 }
 
+void BoardController::removeShip(Ship& ship) {
+    board.removeShip(ship);
+    emit boardUpdated();
+}
+
+void BoardController::clearBoard() {
+    // Itera sobre o tabuleiro e remove todos os navios
+    for (int i = 0; i < 10; ++i) {
+        for (int j = 0; j < 10; ++j) {
+            Position& position = board.getPositions()[i][j];
+            if (position.getShipReference()) {
+                position.removeShip(); // Remove o navio da posição
+            }
+        }
+    }
+
+    // Emite o sinal para atualizar a interface gráfica
+    emit boardUpdated();
+}
 
 // void Controller::attackPosition(int x, int y) {
 //     try {

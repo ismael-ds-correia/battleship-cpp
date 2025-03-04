@@ -5,6 +5,8 @@ SelectorSpace::SelectorSpace(QWidget *parent) : QWidget(parent), isHorizontal(tr
 }
 
 void SelectorSpace::setupShips() {
+    clearShips();
+
     struct ShipInfo {
         QString texturePath;
         QSize size;
@@ -86,6 +88,18 @@ void SelectorSpace::rotateShip(QLabel *shipLabel) {
     shipRotation[shipLabel] = !isVertical;
     shipLabel->update();
 }
+
+
+void SelectorSpace::clearShips() {
+    // Remove todos os navios do espaço de seleção
+    QList<QLabel*> shipLabels = findChildren<QLabel*>();
+    for (QLabel* label : shipLabels) {
+        label->deleteLater();
+    }
+    shipRotation.clear(); // Limpa o mapa de rotações
+}
+
+
 
 SelectorSpace::~SelectorSpace() {
 }
