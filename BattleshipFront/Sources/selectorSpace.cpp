@@ -10,14 +10,15 @@ void SelectorSpace::setupShips() {
     struct ShipInfo {
         QString texturePath;
         QSize size;
+        int shipSize;//tamanho do barco que vai ser passado para o back
     };
 
     QVector<ShipInfo> ships = {
-        {"../../Textures/carrierH.png", QSize(192, 32)},   // Porta-aviões (6 casas)
-        {"../../Textures/battleshipH.png", QSize(128, 32)}, // Navio de guerra (4 casas)
-        {"../../Textures/cruiserH.png", QSize(96, 32)},    // Encourçado (3 casas)
-        {"../../Textures/cruiserH.png", QSize(96, 32)},    // Segundo encourçado (3 casas)
-        {"../../Textures/subH.png", QSize(32, 32)}   // Submarino (1 casa)
+        {"../../Textures/carrierH.png", QSize(192, 32), 6},   // Porta-aviões (6 casas)
+        {"../../Textures/battleshipH.png", QSize(128, 32), 4}, // Navio de guerra (4 casas)
+        {"../../Textures/cruiserH.png", QSize(96, 32), 3},    // Encourçado (3 casas)
+        {"../../Textures/cruiserH.png", QSize(96, 32), 3},    // Segundo encourçado (3 casas)
+        {"../../Textures/subH.png", QSize(32, 32), 1}   // Submarino (1 casa)
     };
 
     int offsetX = 5;
@@ -32,13 +33,14 @@ void SelectorSpace::setupShips() {
         shipLabel->setStyleSheet("background-color: transparent");
         shipLabel->move(offsetX, offsetY); // Ajuste a posição inicial
 
+        shipLabel->setProperty("shipSize", ship.shipSize);
+
         shipLabel->installEventFilter(this); // Captura eventos de mouse
 
         offsetY += ship.size.height() + spacing;
     }
 }
 
-//função que capta o input do mouse para arrastar e rotacionar
 bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
     QLabel *label = qobject_cast<QLabel*>(obj);
     if (label) {
@@ -46,19 +48,13 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 
             if (mouseEvent->button() == Qt::LeftButton) {
-                // Iniciar o arrasto
-                QDrag *drag = new QDrag(this);
-                QMimeData *mimeData = new QMimeData;
-                mimeData->setText("ship");
-                drag->setMimeData(mimeData);
+                //pega o tamanho do barco a partir do QLabel
+                int shipSize = label->property("shipSize").toInt();
+                qDebug() << "Ship selected with size:" << shipSize;
 
-                QPixmap pixmap = label->pixmap(Qt::ReturnByValue);
-                drag->setPixmap(pixmap);
-                drag->setHotSpot(QPoint(pixmap.width() / 2, pixmap.height() / 2));
+                selectedShipSize = shipSize; //quando precisar posicionar o barco, basta passar shipSize para BoardController
 
-                drag->exec(Qt::MoveAction);
-            }
-            else if (mouseEvent->button() == Qt::RightButton) {
+            } else if (mouseEvent->button() == Qt::RightButton) {
                 rotateShip(label);
             }
 
@@ -66,6 +62,11 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
         }
     }
     return QWidget::eventFilter(obj, event);
+}
+
+int SelectorSpace::getSelectedShipSize() {
+    return selectedShipSize;
+
 }
 
 void SelectorSpace::rotateShip(QLabel *shipLabel) {
@@ -99,13 +100,6 @@ void SelectorSpace::clearShips() {
     shipRotation.clear(); // Limpa o mapa de rotações
 }
 
-
-
 SelectorSpace::~SelectorSpace() {
+    qDebug() << "Destruindo SelectorSpace!";
 }
-
-    // QPixmap carrierTexture("../../Textures/battleshipH.png");
-    // QPixmap battleshipTexture("../../Textures/battleshipH.png");
-    // QPixmap cruiserTexture("../../Textures/cruiserH.png");
-    // QPixmap submarineTexture("../../Textures/subH.png");
-

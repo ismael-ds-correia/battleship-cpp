@@ -1,6 +1,7 @@
 #include "../controllers/boardController.h"
 
 #include "player.h"
+#include <qdebug.h>
 
 BoardController::BoardController() : board() {}
 
@@ -8,10 +9,9 @@ BoardController::~BoardController() {}
 
 void BoardController::placeShip(int x, int y, Ship& ship) {
     try {
+        qDebug() << "boardController, placeShip em: " << x << y;
         board.placeShip(ship, x, y);
-#ifdef USE_QT
         emit boardUpdated();
-#endif
     } catch (const std::exception& e) {
         std::cerr << "erro ao posicionar navio: " << e.what() <<std::endl;
     }

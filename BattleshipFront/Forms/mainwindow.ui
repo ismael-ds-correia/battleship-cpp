@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>802</width>
+    <width>607</width>
     <height>443</height>
    </rect>
   </property>
@@ -53,8 +53,8 @@
    <widget class="QPushButton" name="pushButton_3">
     <property name="geometry">
      <rect>
-      <x>680</x>
-      <y>370</y>
+      <x>510</x>
+      <y>360</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -74,22 +74,6 @@
     </property>
     <property name="text">
      <string>P. Aleatório</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="selectorView">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>60</y>
-      <width>151</width>
-      <height>251</height>
-     </rect>
-    </property>
-    <property name="verticalScrollBarPolicy">
-     <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
     </property>
    </widget>
    <widget class="QWidget" name="selectorContainer" native="true">
@@ -124,8 +108,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>802</width>
-     <height>25</height>
+     <width>607</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -6,23 +6,23 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
+#include <QLabel>
 #include "boardController.h"
 #include "shipController.h"
+#include "selectorSpace.h"
 
 
 class BoardRenderer : public QGraphicsView {
     Q_OBJECT
 
 public:
-    BoardRenderer(QGraphicsScene* scene, ShipController* shipController, BoardController* boardController);
+    BoardRenderer(QGraphicsScene* scene, ShipController* shipController, BoardController* boardController, SelectorSpace* selectorSpace);
 
     void setupBoardSelector();
     void renderBoard();
     void loadTextures();
     void renderWater();
     void renderShips();
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
 
 public slots:
     void handleCellClick(int row, int col); //função de testes, remover depois
@@ -31,6 +31,11 @@ private:
     QGraphicsScene* scene;
     ShipController* shipController;
     BoardController* boardController;
+    SelectorSpace* selectorSpace;
+
+    //Ship* selectedShip = nullptr;
+    QLabel* selectedShipLabel;
+    Ship tempShip;
 
     //
     QPixmap battleshipTextureH;

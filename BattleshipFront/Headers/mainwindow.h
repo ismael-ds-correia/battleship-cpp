@@ -6,7 +6,6 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QDropEvent>
-#include <QDragEnterEvent>
 #include <QPixmap>
 #include <QPointF>
 #include <QVBoxLayout>
