@@ -20,6 +20,7 @@ public:
 
     void rotateShip(QLabel *shipLabel);
     void setupShips();
+    void clearShips();
 
 protected:
     //void mousePressEvent(QMouseEvent *event) override;

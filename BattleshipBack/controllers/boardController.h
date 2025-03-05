@@ -25,7 +25,10 @@ class BoardController {
     void attackPosition(int x, int y);       // Ataca uma posição específica.
         void randomizeShips();
 
-    // Dados enviados ao frontend:
+     void removeShip(Ship &ship);
+        void clearBoard();
+
+     // Dados enviados ao frontend:
     Position (&getBoardState())[10][10];     // Retorna o estado atual do tabuleiro.
 
 #ifdef USE_QT

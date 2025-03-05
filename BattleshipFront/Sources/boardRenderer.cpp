@@ -110,6 +110,8 @@ void BoardRenderer::renderShips() {
             // 🔹 Criar apenas uma célula para o barco inteiro
             BoardCell* shipCell = new BoardCell(startRow, startCol, *texture);
             shipCell->setPos(startCol * (cellSize + margin), startRow * (cellSize + margin));
+
+
             // shipCell->setSize(textureWidth, textureHeight);  // Ajusta o tamanho da célula conforme o barco
             scene->addItem(shipCell);
         }

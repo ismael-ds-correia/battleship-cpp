@@ -2,6 +2,11 @@
 #include "ui_mainwindow.h"
 #include "../Headers/draggableShip.h"
 
+
+//ADICIONAR BOTÃO DE REMOVER NAVIOS DO TABULEIRO
+
+
+
 MainWindow::MainWindow(BoardController* boardController, ShipController* shipController, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), boardController(boardController), shipController(shipController) {
 
@@ -23,6 +28,7 @@ MainWindow::MainWindow(BoardController* boardController, ShipController* shipCon
     //conecta as interações do front com os comandos do back
     connect(ui->randomizer, &QPushButton::clicked, this, &MainWindow::onRandomizeButtonClicked);
     connect(boardController, &BoardController::boardUpdated, this, &MainWindow::updateBoard);
+    connect(ui->clear, &QPushButton::clicked, this, &MainWindow::onClearButtonClicked);
 
     //sessão de testes
     selectorSpace = new SelectorSpace(this);
@@ -51,7 +57,31 @@ MainWindow::~MainWindow() {
 
 void MainWindow::onRandomizeButtonClicked() {
     boardController->randomizeShips();
+    selectorSpace->clearShips();
+    ui->clear->setEnabled(true); //botão de limpar fica true
 }
+
+
+void MainWindow::onClearButtonClicked() {
+    // Obtém o estado atual do tabuleiro
+    boardController->clearBoard(); // Adicionaremos essa função no BoardController
+
+    // Limpa o tabuleiro visualmente
+    updateBoard();
+
+    if (selectorSpace) {
+        ui->selectorContainer->layout()->removeWidget(selectorSpace);
+        delete selectorSpace; // Libera a memória do objeto anterior
+    }
+
+    // Devolve os navios ao selectorSpace
+    //selectorSpace->setupShips();
+    selectorSpace = new SelectorSpace(this);
+    //ui->selectorContainer->setLayout(new QVBoxLayout);
+    ui->selectorContainer->layout()->addWidget(selectorSpace);
+    selectorSpace->show();
+}
+
 
 void MainWindow::updateBoard() {
     boardRenderer->renderBoard();
