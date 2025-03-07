@@ -12,6 +12,7 @@
 #include "boardController.h"
 #include "boardRenderer.h"
 #include "selectorSpace.h"
+#include "playerController.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -32,11 +33,16 @@ private:
     ShipController* shipController;
     BoardRenderer* boardRenderer;
     SelectorSpace* selectorSpace;
+    PlayerController* playerController;
 
     void loadTextures();
 
 public:
-    explicit MainWindow(BoardController* boardController, ShipController* shipController, QWidget *parent = nullptr);
+    explicit MainWindow(
+        BoardController* boardController,
+        ShipController* shipController,
+        PlayerController* playerController,
+        QWidget *parent = nullptr);
 
     void positionShipsRandomly();
     ~MainWindow();

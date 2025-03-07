@@ -3,21 +3,24 @@
 
 //construtor ta gigante, essa formatação foi a melhor forma que eu achei pra deixar isso
 //minimamente legivel
-BoardRenderer::BoardRenderer(QGraphicsScene* scene,
-                            ShipController* shipController,
-                            BoardController* boardController,
-                            SelectorSpace* selectorSpace)
-                            : scene(scene),
-                            shipController(shipController),
-                            boardController(boardController),
-                            selectorSpace(selectorSpace) {
+BoardRenderer::BoardRenderer(
+    QGraphicsScene* scene,
+    ShipController* shipController,
+    BoardController* boardController,
+    SelectorSpace* selectorSpace,
+    PlayerController* playerController)
+    : scene(scene),
+    shipController(shipController),
+    boardController(boardController),
+    selectorSpace(selectorSpace),
+    playerController(playerController) {
 
     loadTextures();
 }
 
 
 void BoardRenderer::renderBoard() {
-    scene->clear();
+    //scene->clear();
     renderWater();
     renderShips();
 }
@@ -40,17 +43,19 @@ void BoardRenderer::renderWater() {
 
 //função de testes, remover quando finalizar
 void BoardRenderer::handleCellClick(int row, int col) {
-    qDebug() << "Iniciando handleCellClick";
-    qDebug() << "click: " << row << col;
+    qDebug() << "Iniciando handleCellClick " << row << col;
 
-    int shipSize = selectorSpace->getSelectedShipSize();
+    int shipIndex = selectorSpace->getSelectedShipIndex();
     qDebug() << "endereço de selectorSpace: " << selectorSpace;
 
-    if (shipSize == -1) {
+    if (shipIndex < 0) {
         qDebug() << "Nenhum barco selecionado!";
         return;
     }
 
+    bool horizontal = selectorSpace->isHorizontal();
+
+    /*
     // Determinar o nome do barco baseado no tamanho
     QString shipName;
     if (shipSize == 6) {
@@ -65,14 +70,21 @@ void BoardRenderer::handleCellClick(int row, int col) {
         qDebug() << "Erro: tamanho de barco inválido!";
         return;
     }
-
     Ship tempShip(shipName.toStdString(), shipSize);
-    qDebug() << "Criado barco temporário: " << shipName << " de tamanho " << shipSize;
+    */
+    bool sucess = playerController->placeShipFromFleet(shipIndex, row, col, horizontal);
 
-    boardController->placeShip(row, col, tempShip); // Insere o barco no tabuleiro
-    qDebug() << "PlaceShipRealizado";
+    if (sucess) {
+        selectorSpace->markShipAsPlaced(shipIndex);
+        qDebug() << "barco posicionado com sucesso";
+    } else {
+        qDebug() << "falha ao posicionar o barco";
+    }
 
-    //renderBoard(); //atualiza a interface gráfica para renderizar o barco
+    //boardController->placeShip(row, col, tempShip); // Insere o barco no tabuleiro
+    //qDebug() << "PlaceShipRealizado";
+
+    renderBoard(); //atualiza a interface gráfica para renderizar o barco
 }
 
 void BoardRenderer::renderShips() {

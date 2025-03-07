@@ -14,6 +14,7 @@ INCLUDEPATH += ../BattleshipBack/include \
 
 SOURCES += \
     ../BattleshipBack/controllers/boardController.cpp \
+    ../BattleshipBack/controllers/playerController.cpp \
     ../BattleshipBack/controllers/shipController.cpp \
     ../BattleshipBack/src/board.cpp \
     ../BattleshipBack/src/fleet.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
 
 HEADERS += \
     ../BattleshipBack/controllers/boardController.h \
+    ../BattleshipBack/controllers/playerController.h \
     ../BattleshipBack/controllers/shipController.h \
     ../BattleshipBack/include/board.h \
     ../BattleshipBack/include/fleet.h \

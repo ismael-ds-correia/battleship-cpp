@@ -1,6 +1,6 @@
 #include "../../Headers/selectorSpace.h"
 
-SelectorSpace::SelectorSpace(QWidget *parent) : QWidget(parent), isHorizontal(true), isDragging(false) {
+SelectorSpace::SelectorSpace(QWidget *parent) : QWidget(parent), Horizontal(true), isDragging(false) {
     setupShips();
 }
 
@@ -24,6 +24,7 @@ void SelectorSpace::setupShips() {
     int offsetX = 5;
     int offsetY = 5;
     int spacing = 10;
+    int index = 0;
 
     for (const ShipInfo &ship : ships) {
         QLabel *shipLabel = new QLabel(this);
@@ -31,13 +32,15 @@ void SelectorSpace::setupShips() {
         shipLabel->setFixedSize(ship.size);
         shipLabel->setAttribute(Qt::WA_DeleteOnClose);
         shipLabel->setStyleSheet("background-color: transparent");
-        shipLabel->move(offsetX, offsetY); // Ajuste a posição inicial
+        shipLabel->move(offsetX, offsetY);//ajusta a posição inicial
 
         shipLabel->setProperty("shipSize", ship.shipSize);
+        shipLabel->setProperty("shipIndex", index);
 
-        shipLabel->installEventFilter(this); // Captura eventos de mouse
+        shipLabel->installEventFilter(this);//captura eventos de mouse
 
         offsetY += ship.size.height() + spacing;
+        index++;
     }
 }
 
@@ -50,8 +53,10 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
             if (mouseEvent->button() == Qt::LeftButton) {
                 //pega o tamanho do barco a partir do QLabel
                 int shipSize = label->property("shipSize").toInt();
+                int shipIndex = label->property("shipIndex").toInt();
                 qDebug() << "Ship selected with size:" << shipSize;
 
+                selectedShipIndex = shipIndex;
                 selectedShipSize = shipSize; //quando precisar posicionar o barco, basta passar shipSize para BoardController
 
             } else if (mouseEvent->button() == Qt::RightButton) {
@@ -64,8 +69,18 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
     return QWidget::eventFilter(obj, event);
 }
 
-int SelectorSpace::getSelectedShipSize() {
-    return selectedShipSize;
+void SelectorSpace::markShipAsPlaced(int shipIndex) {
+    //procura todos os QLabel filhos deste widget
+    QList<QLabel*> shipLabels = findChildren<QLabel*>();
+
+    for (QLabel* label : shipLabels) {
+        if (label->property("shipIndex").toInt() == shipIndex) {
+            //remove o label do barco utilizado do SelectorSpace
+            label->hide();
+            label->deleteLater();
+            break;
+        }
+    }
 
 }
 
@@ -99,6 +114,24 @@ void SelectorSpace::clearShips() {
     }
     shipRotation.clear(); // Limpa o mapa de rotações
 }
+
+int SelectorSpace::getSelectedShipSize() {
+    return selectedShipSize;
+
+}
+
+int SelectorSpace::getSelectedShipIndex() {
+    return selectedShipIndex;
+
+}
+
+bool SelectorSpace::isHorizontal() {
+    if (!Horizontal) {
+        return false;
+    }
+    return true;
+}
+
 
 SelectorSpace::~SelectorSpace() {
     qDebug() << "Destruindo SelectorSpace!";

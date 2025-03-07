@@ -21,6 +21,10 @@ public:
     void setupShips();
     void clearShips();
     int getSelectedShipSize();
+    int getSelectedShipIndex();
+    bool isHorizontal();
+    void markShipAsPlaced(int shipIndex);
+    //bool isVertical();
     //QLabel* getSelectedShip();
 
 protected:
@@ -32,10 +36,11 @@ protected:
 
 private:
     int selectedShipSize = -1;
-    bool isHorizontal;
+    int selectedShipIndex = -1;
     bool isDragging;
     QPoint clickOffset;
     QPoint initialPosition;
+    bool Horizontal;
 
     QLabel* selectedShip = nullptr;
 

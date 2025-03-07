@@ -10,13 +10,20 @@
 #include "boardController.h"
 #include "shipController.h"
 #include "selectorSpace.h"
+#include "playerController.h"
 
 
 class BoardRenderer : public QGraphicsView {
     Q_OBJECT
 
 public:
-    BoardRenderer(QGraphicsScene* scene, ShipController* shipController, BoardController* boardController, SelectorSpace* selectorSpace);
+    BoardRenderer(
+        QGraphicsScene* scene,
+        ShipController* shipController,
+        BoardController* boardController,
+        SelectorSpace* selectorSpace,
+        PlayerController* playerController
+    );
 
     void setupBoardSelector();
     void renderBoard();
@@ -32,6 +39,7 @@ private:
     ShipController* shipController;
     BoardController* boardController;
     SelectorSpace* selectorSpace;
+    PlayerController* playerController;
 
     //Ship* selectedShip = nullptr;
     QLabel* selectedShipLabel;
