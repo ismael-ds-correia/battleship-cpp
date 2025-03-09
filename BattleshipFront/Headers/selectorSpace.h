@@ -8,8 +8,7 @@
 #include <QMouseEvent>
 #include <QVBoxLayout>
 #include <QTimer>
-
-#include "draggableShip.h"
+#include "ship.h"
 
 class SelectorSpace : public QWidget{
     Q_OBJECT
@@ -21,6 +20,14 @@ public:
     void rotateShip(QLabel *shipLabel);
     void setupShips();
     void clearShips();
+    int getSelectedShipSize();
+    int getSelectedShipIndex();
+    bool isHorizontal();
+    void markShipAsPlaced(int shipIndex);
+    bool isSelectedShipHorizontal() const;
+    void clearSelectedShip();
+    //bool isVertical();
+    //QLabel* getSelectedShip();
 
 protected:
     //void mousePressEvent(QMouseEvent *event) override;
@@ -30,13 +37,19 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;//talvez tirar o override
 
 private:
-    bool isHorizontal;
+    int selectedShipSize = -1;
+    int selectedShipIndex = -1;
     bool isDragging;
     QPoint clickOffset;
     QPoint initialPosition;
+    bool Horizontal;
 
-    QGraphicsScene *scene;
-    QPixmap originalPixmap;
+    QLabel* selectedShipLabel = nullptr;
+
+    //QLabel* selectedLabel = nullptr;
+
+    //QPixmap originalPixmap;
+    QMap<QLabel*, QPixmap> originalPixmaps;
     QPixmap originalShipPixmaps;
     QMap<QLabel*, bool> shipRotation;
 };

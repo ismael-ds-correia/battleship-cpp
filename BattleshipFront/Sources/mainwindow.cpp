@@ -1,14 +1,18 @@
 #include "../Headers/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../Headers/draggableShip.h"
-
 
 //ADICIONAR BOTÃO DE REMOVER NAVIOS DO TABULEIRO
 
-
-
-MainWindow::MainWindow(BoardController* boardController, ShipController* shipController, QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), boardController(boardController), shipController(shipController) {
+MainWindow::MainWindow(
+    BoardController* boardController,
+    ShipController* shipController,
+    PlayerController* playerController,
+    QWidget *parent)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    boardController(boardController),
+    shipController(shipController),
+    playerController(playerController) {
 
     ui->setupUi(this);//instancia inicial do Ui
 
@@ -18,12 +22,8 @@ MainWindow::MainWindow(BoardController* boardController, ShipController* shipCon
 
     //cria o Scene do selector
     selectorScene = new QGraphicsScene(this);
-    ui->selectorView->setScene(selectorScene);
-    ui->selectorView->setSceneRect(0, 0, ui->selectorView->width(), ui->selectorView->height());
 
     setWindowTitle("Batalha batalhesca");
-
-    boardRenderer = new BoardRenderer(scene, shipController, boardController);
 
     //conecta as interações do front com os comandos do back
     connect(ui->randomizer, &QPushButton::clicked, this, &MainWindow::onRandomizeButtonClicked);
@@ -35,17 +35,8 @@ MainWindow::MainWindow(BoardController* boardController, ShipController* shipCon
     ui->selectorContainer->setLayout(new QVBoxLayout);
     ui->selectorContainer->layout()->addWidget(selectorSpace);
     selectorSpace->show();
-    //QPixmap boatTexture("../../Textures/subH.png");
-    //DraggableShip *testShip = new DraggableShip(boatTexture, 1);
-    //testShip->setPos(10, 10);
-    //selectorScene->addItem(testShip);
 
-
-    /*Ship testShip1("teste1", 3);
-    Ship testShip2("teste2", 4);
-    testShip2.setOrientation(false);
-    boardController->placeShip(2, 3, testShip1);
-    boardController->placeShip(6, 2, testShip2);*/
+    boardRenderer = new BoardRenderer(scene, shipController, boardController, selectorSpace, playerController);
 
     updateBoard();
 }
@@ -63,15 +54,13 @@ void MainWindow::onRandomizeButtonClicked() {
 
 
 void MainWindow::onClearButtonClicked() {
-    // Obtém o estado atual do tabuleiro
-    boardController->clearBoard(); // Adicionaremos essa função no BoardController
+    boardController->clearBoard(); //remove todos os barcos do tabuleiro
 
-    // Limpa o tabuleiro visualmente
-    updateBoard();
+    updateBoard(); //atualiza o tabuleiro
 
     if (selectorSpace) {
         ui->selectorContainer->layout()->removeWidget(selectorSpace);
-        delete selectorSpace; // Libera a memória do objeto anterior
+        delete selectorSpace; //libera a memória do objeto anterior
     }
 
     // Devolve os navios ao selectorSpace

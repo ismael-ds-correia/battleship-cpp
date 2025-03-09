@@ -1,70 +1,82 @@
 #include "../controllers/boardController.h"
 
 #include "player.h"
+#include <QDebug>
 
-BoardController::BoardController() : board() {}
+BoardController::BoardController(Player* player) : owner(player) {
+    // Inicialização mínima; não armazenamos board separadamente.
+}
 
-BoardController::~BoardController() {}
+BoardController::~BoardController() {
+    // Nada específico para desalocar.
+}
 
 void BoardController::placeShip(int x, int y, Ship& ship) {
-    try {
-        board.placeShip(ship, x, y);
-#ifdef USE_QT
-        emit boardUpdated();
-#endif
-    } catch (const std::exception& e) {
-        std::cerr << "erro ao posicionar navio: " << e.what() <<std::endl;
+    qDebug() << "BoardController: tentando posicionar navio em (" << x << "," << y << ")";
+    bool success = owner->getBoard().placeShip(ship, x, y);
+    if (success) {
+        qDebug() << "Navio posicionado com sucesso.";
+    } else {
+        qDebug() << "Falha ao posicionar navio: posição inválida.";
     }
-}
-
-Position (&BoardController::getBoardState())[10][10] {
-    return board.getPositions();
-}
-
-void BoardController::randomizeShips() {
-    // Cria um jogador temporário
-    Player player("Player 1");
-
-    // Posiciona os navios aleatoriamente
-    player.positionShipsRandomly();
-
-    // Limpa o tabuleiro atual
-    board = Board(); // Reseta o tabuleiro
-
-    // Atualiza o tabuleiro com as novas posições dos navios
-    Position (&boardState)[10][10] = player.getBoard().getPositions();
-    for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
-            if (boardState[i][j].getShipReference() != nullptr) {
-                board.placeShip(*boardState[i][j].getShipReference(), i, j);
-            }
-        }
-    }
-
-    // Emite o sinal para atualizar a interface gráfica
     emit boardUpdated();
 }
 
-void BoardController::removeShip(Ship& ship) {
-    board.removeShip(ship);
+bool BoardController::placeShipFromFleet(int shipIndex, int row, int col, bool horizontal) {
+    // Delegar ao Player, que usa sua frota
+    bool success = owner->placeShip(shipIndex, row, col, horizontal);
+    if (success) {
+        qDebug() << "Barco da frota posicionado com sucesso.";
+    } else {
+        qDebug() << "Falha ao posicionar barco da frota.";
+    }
+    emit boardUpdated();
+    return success;
+}
+
+void BoardController::attackPosition(int x, int y) {
+    // A lógica de ataque depende da implementação de attackOpponent do Player.
+    // Aqui assumimos que x e y correspondem à linha e coluna, respectivamente.
+    bool hit = owner->attackOpponent(owner->getBoard(), x, y);
+    emit attackResult(hit);
+}
+
+void BoardController::randomizeShips() {
+    if (!owner) {
+        qDebug() << "BoardController: owner não encontrado.";
+        return;
+    }
+    // Limpa o board antes de reposicionar
+    clearBoard();
+    owner->positionShipsRandomly();
+    emit boardUpdated();
+}
+
+void BoardController::removeShip(Ship &ship) {
+    // Delegamos a remoção ao método do Board, que já trata dos bloqueios e recálculos.
+    owner->getBoard().removeShip(ship);
     emit boardUpdated();
 }
 
 void BoardController::clearBoard() {
-    // Itera sobre o tabuleiro e remove todos os navios
+    // Itera sobre todas as posições e remove os navios, além de desbloquear as posições.
+    Board& board = owner->getBoard();
     for (int i = 0; i < 10; ++i) {
         for (int j = 0; j < 10; ++j) {
-            Position& position = board.getPositions()[i][j];
-            if (position.getShipReference()) {
-                position.removeShip(); // Remove o navio da posição
-            }
+            board.getPositions()[i][j].removeShip();
+            board.getPositions()[i][j].unlock();
         }
     }
-
-    // Emite o sinal para atualizar a interface gráfica
     emit boardUpdated();
 }
 
+Board* BoardController::getBoard() {
+    return &owner->getBoard();
+}
+
+Position (&BoardController::getBoardState())[10][10] {
+    return owner->getBoard().getPositions();
+}
 // void Controller::attackPosition(int x, int y) {
 //     try {
 //         board.attack(x, y);
@@ -75,4 +87,3 @@ void BoardController::clearBoard() {
 //         std::cerr << "erro ao atacar posição: " << e.what() << std::endl;
 //     }
 // }
-
