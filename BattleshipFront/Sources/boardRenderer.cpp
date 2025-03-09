@@ -20,7 +20,6 @@ BoardRenderer::BoardRenderer(
 
 
 void BoardRenderer::renderBoard() {
-    //scene->clear();
     renderWater();
     renderShips();
 }
@@ -53,29 +52,13 @@ void BoardRenderer::handleCellClick(int row, int col) {
         return;
     }
 
-    bool horizontal = selectorSpace->isHorizontal();
+    bool horizontal = selectorSpace->isSelectedShipHorizontal();
 
-    /*
-    // Determinar o nome do barco baseado no tamanho
-    QString shipName;
-    if (shipSize == 6) {
-        shipName = "carrier";
-    } else if (shipSize == 4) {
-        shipName = "battleship";
-    } else if (shipSize == 3) {
-        shipName = "cruiser";
-    } else if (shipSize == 1) {
-        shipName = "sub";
-    } else {
-        qDebug() << "Erro: tamanho de barco inválido!";
-        return;
-    }
-    Ship tempShip(shipName.toStdString(), shipSize);
-    */
     bool sucess = playerController->placeShipFromFleet(shipIndex, row, col, horizontal);
 
     if (sucess) {
         selectorSpace->markShipAsPlaced(shipIndex);
+        selectorSpace->clearSelectedShip();//redundante, mas talvez evite problemas
         qDebug() << "barco posicionado com sucesso";
     } else {
         qDebug() << "falha ao posicionar o barco";

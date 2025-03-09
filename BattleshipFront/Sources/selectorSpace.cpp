@@ -58,6 +58,7 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
 
                 selectedShipIndex = shipIndex;
                 selectedShipSize = shipSize; //quando precisar posicionar o barco, basta passar shipSize para BoardController
+                selectedShipLabel = label;
 
             } else if (mouseEvent->button() == Qt::RightButton) {
                 rotateShip(label);
@@ -70,42 +71,50 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
 }
 
 void SelectorSpace::markShipAsPlaced(int shipIndex) {
-    //procura todos os QLabel filhos deste widget
     QList<QLabel*> shipLabels = findChildren<QLabel*>();
-
     for (QLabel* label : shipLabels) {
         if (label->property("shipIndex").toInt() == shipIndex) {
-            //remove o label do barco utilizado do SelectorSpace
             label->hide();
             label->deleteLater();
+            // Se o barco posicionado for o mesmo que está selecionado, reseta a seleção
+            if (label == selectedShipLabel) {
+                clearSelectedShip();
+            }
             break;
         }
     }
-
 }
 
 void SelectorSpace::rotateShip(QLabel *shipLabel) {
+    // Se ainda não armazenamos o pixmap original, faz isso agora
+    if (!originalPixmaps.contains(shipLabel)) {
+        originalPixmaps[shipLabel] = shipLabel->pixmap();
+    }
+
+    // Obtém o estado atual de rotação para esse QLabel (false = horizontal, true = vertical)
     bool isVertical = shipRotation.value(shipLabel, false);
 
-    QPixmap originalPixmap(shipLabel->pixmap(Qt::ReturnByValue));
+    // Sempre usa o pixmap original como base para a transformação
+    QPixmap originalPixmap = originalPixmaps.value(shipLabel);
     QPixmap newPixmap;
 
     if (!isVertical) {
+        // Rotaciona 90 graus para vertical
         QTransform transform;
         transform.rotate(90);
         newPixmap = originalPixmap.transformed(transform, Qt::SmoothTransformation);
     } else {
+        // Retorna para o estado original horizontal
         newPixmap = originalPixmap;
     }
 
     shipLabel->setPixmap(newPixmap);
     shipLabel->setFixedSize(newPixmap.size());
 
+    // Alterna o estado de rotação para este QLabel
     shipRotation[shipLabel] = !isVertical;
     shipLabel->update();
 }
-
-
 void SelectorSpace::clearShips() {
     // Remove todos os navios do espaço de seleção
     QList<QLabel*> shipLabels = findChildren<QLabel*>();
@@ -115,9 +124,21 @@ void SelectorSpace::clearShips() {
     shipRotation.clear(); // Limpa o mapa de rotações
 }
 
+bool SelectorSpace::isSelectedShipHorizontal() const {
+    if (selectedShipLabel) {
+        return !shipRotation.value(selectedShipLabel, false); //false = horizontal, true = vertical
+    }
+    return true;
+}
+
+void SelectorSpace::clearSelectedShip() {
+    selectedShipIndex = -1;
+    selectedShipSize = 0;
+    selectedShipLabel = nullptr;
+}
+
 int SelectorSpace::getSelectedShipSize() {
     return selectedShipSize;
-
 }
 
 int SelectorSpace::getSelectedShipIndex() {

@@ -24,6 +24,8 @@ public:
     int getSelectedShipIndex();
     bool isHorizontal();
     void markShipAsPlaced(int shipIndex);
+    bool isSelectedShipHorizontal() const;
+    void clearSelectedShip();
     //bool isVertical();
     //QLabel* getSelectedShip();
 
@@ -42,11 +44,12 @@ private:
     QPoint initialPosition;
     bool Horizontal;
 
-    QLabel* selectedShip = nullptr;
+    QLabel* selectedShipLabel = nullptr;
 
     //QLabel* selectedLabel = nullptr;
 
-    QPixmap originalPixmap;
+    //QPixmap originalPixmap;
+    QMap<QLabel*, QPixmap> originalPixmaps;
     QPixmap originalShipPixmaps;
     QMap<QLabel*, bool> shipRotation;
 };
