@@ -30,6 +30,9 @@ public:
     void loadTextures();
     void renderWater();
     void renderShips();
+    void setHideShips(bool hide);
+    void renderCoordinates();
+
 
 public slots:
     void handleCellClick(int row, int col); //função de testes, remover depois
@@ -70,6 +73,8 @@ private:
 
     QPixmap waterTexture;
     QPixmap scaledWaterTexture;
+
+    bool hideShips;
 
 
 };

@@ -53,6 +53,7 @@ private slots:
     void onRandomizeButtonClicked();
     void updateBoard();
     void onClearButtonClicked();
+    void onStartButtonClicked();
 
 };
 #endif // MAINWINDOW_H
