@@ -30,3 +30,7 @@ void Ship::incrementHits(){
 int Ship::getHits(){
 	return this->hits;
 }
+
+int Ship::getShipSize(){
+    return this->size;
+}

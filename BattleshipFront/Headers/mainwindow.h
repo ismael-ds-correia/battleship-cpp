@@ -42,8 +42,10 @@ public:
         BoardController* boardController,
         ShipController* shipController,
         PlayerController* playerController,
-        QWidget *parent = nullptr);
+        QWidget *parent = nullptr
+    );
 
+    void onPlayerUpdated();
     void positionShipsRandomly();
     ~MainWindow();
 
