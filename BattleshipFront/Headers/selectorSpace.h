@@ -10,6 +10,12 @@
 #include <QTimer>
 #include "ship.h"
 
+struct ShipInfo {
+    QString texturePath;
+    QSize size; //tamanho do barco para o front
+    int shipSize; // tamanho do barco para o back-end
+};
+
 class SelectorSpace : public QWidget{
     Q_OBJECT
 
@@ -20,38 +26,32 @@ public:
     void rotateShip(QLabel *shipLabel);
     void setupShips();
     void clearShips();
+    void clearSelectedShip();
+    void restoreShip(Ship &ship);
+    void markShipAsPlaced(int shipIndex);
     int getSelectedShipSize();
     int getSelectedShipIndex();
     bool isHorizontal();
-    void markShipAsPlaced(int shipIndex);
     bool isSelectedShipHorizontal() const;
-    void clearSelectedShip();
-    //bool isVertical();
-    //QLabel* getSelectedShip();
 
 protected:
-    //void mousePressEvent(QMouseEvent *event) override;
-    //void mouseMoveEvent(QMouseEvent *event) override;
-    //void mouseReleaseEvent(QMouseEvent *event) override;
-
     bool eventFilter(QObject *obj, QEvent *event) override;//talvez tirar o override
 
 private:
     int selectedShipSize = -1;
     int selectedShipIndex = -1;
-    bool isDragging;
+    bool isDragging; //testar se ainda é necessario
+    bool Horizontal;
     QPoint clickOffset;
     QPoint initialPosition;
-    bool Horizontal;
 
     QLabel* selectedShipLabel = nullptr;
 
-    //QLabel* selectedLabel = nullptr;
-
-    //QPixmap originalPixmap;
     QMap<QLabel*, QPixmap> originalPixmaps;
-    QPixmap originalShipPixmaps;
     QMap<QLabel*, bool> shipRotation;
+    QPixmap originalShipPixmaps;
+
+    QVector<ShipInfo> shipInfos;
 };
 
 #endif // SELECTORSPACE_H

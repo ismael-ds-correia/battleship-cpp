@@ -47,28 +47,27 @@ void BoardRenderer::renderWater() {
     }
 }
 
-//função de testes, remover quando finalizar
 void BoardRenderer::handleCellClick(int row, int col) {
     qDebug() << "Iniciando handleCellClick " << row << col;
 
-    // Verifica e imprime se a célula clicada contém um navio
+    //retorna o estado atual do board
     Position (&boardState)[10][10] = boardController->getBoardState();
     Ship* clickedShip = boardState[row][col].getShipReference();
-    if (clickedShip) {
-        qDebug() << "A célula (" << row << "," << col << ") contém um navio.";
-    } else {
-        qDebug() << "A célula (" << row << "," << col << ") não contém um navio.";
-    }
 
-    // Verifica se o selectorSpace está disponível
-    if (!selectorSpace) {
-        qDebug() << "selectorSpace é nulo, ignorando o posicionamento.";
+    //Se a célula contém um navio e nenhum navio está selecionado no SelectorSpace,
+    //interpretamos o clique como remoção.
+    if (clickedShip && selectorSpace->getSelectedShipIndex() < 0) {
+        qDebug() << "Removendo barco da célula (" << row << "," << col << ")";
+
+        boardController->removeShip(*clickedShip);
+        // Restaura o navio no SelectorSpace utilizando o objeto Ship removido
+        selectorSpace->restoreShip(*clickedShip);
+        renderBoard();
         return;
     }
 
+    //se tiver um navio selecionado, tenta posicioná-lo na célula clicada
     int shipIndex = selectorSpace->getSelectedShipIndex();
-    qDebug() << "endereço de selectorSpace: " << selectorSpace;
-
     if (shipIndex < 0) {
         qDebug() << "Nenhum barco selecionado!";
         return;
@@ -79,15 +78,14 @@ void BoardRenderer::handleCellClick(int row, int col) {
 
     if (success) {
         selectorSpace->markShipAsPlaced(shipIndex);
-        selectorSpace->clearSelectedShip(); // redundante, mas pode evitar problemas
+        selectorSpace->clearSelectedShip(); // redundante, mas para garantir
         qDebug() << "Barco posicionado com sucesso.";
     } else {
         qDebug() << "Falha ao posicionar o barco.";
     }
 
-    renderBoard(); // Atualiza a interface gráfica
+    renderBoard(); //atualiza o render do tabuleiro
 }
-
 
 void BoardRenderer::renderShips() {
     // Remove os barcos antigos da cena, se houver
