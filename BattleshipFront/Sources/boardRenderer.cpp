@@ -16,11 +16,12 @@ BoardRenderer::BoardRenderer(
     playerController(playerController) {
 
     loadTextures();
+    renderWater();
 }
 
 
 void BoardRenderer::renderBoard() {
-    renderWater();
+    //renderWater();
     renderShips();
 }
 
@@ -71,6 +72,13 @@ void BoardRenderer::handleCellClick(int row, int col) {
 }
 
 void BoardRenderer::renderShips() {
+    // Remove os barcos antigos da cena, se houver
+    for (QGraphicsItem* item : shipItems) {
+        scene->removeItem(item);
+        delete item;  // Se for apropriado gerenciar a memória dessa forma
+    }
+    shipItems.clear();
+
     int cellSize = 32; // Tamanho da célula para o desenho das texturas
     int margin = 0;
 
@@ -111,11 +119,12 @@ void BoardRenderer::renderShips() {
                 continue;
             }
 
-            //Criar apenas uma célula para o barco inteiro
+            // Criar uma célula para o barco inteiro
             BoardCell* shipCell = new BoardCell(startRow, startCol, *texture);
             shipCell->setPos(startCol * (cellSize + margin), startRow * (cellSize + margin));
 
             scene->addItem(shipCell);
+            shipItems.push_back(shipCell); // Armazena o item para futuras remoções
         }
     }
 }

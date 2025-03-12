@@ -7,6 +7,7 @@
 #include <QDropEvent>
 #include <QMimeData>
 #include <QLabel>
+#include "Headers/boardCell.h"
 #include "boardController.h"
 #include "shipController.h"
 #include "selectorSpace.h"
@@ -41,11 +42,14 @@ private:
     SelectorSpace* selectorSpace;
     PlayerController* playerController;
 
+    QVector<BoardCell*> waterCells;
+    QVector<QGraphicsItem*> shipItems;
+
     //Ship* selectedShip = nullptr;
     QLabel* selectedShipLabel;
     Ship tempShip;
 
-    //
+    // texturas
     QPixmap battleshipTextureH;
     QPixmap submarineTextureH;
     QPixmap cruiserTextureH;

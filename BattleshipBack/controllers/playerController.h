@@ -19,6 +19,7 @@ public:
     bool placeShipFromFleet(int shipIndex, int row, int col, bool horizontal);
     bool repositionShip(int shipIndex, int newLine, int newColumn, bool newHorizontal);
     void positionShipsRandomly();
+    void resetBoard();
     bool attackOpponent(Player* opponent, int row, int col);
     void printBoard() const;
 
