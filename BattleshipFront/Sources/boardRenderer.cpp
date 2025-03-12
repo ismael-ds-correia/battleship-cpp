@@ -184,7 +184,6 @@ void BoardRenderer::loadTextures() {
 
 }
 
-
 void BoardRenderer::renderCoordinates() {
     int cellSize = 32;
     int margin = 0;
@@ -212,4 +211,8 @@ void BoardRenderer::renderCoordinates() {
         textItem->setPos(x, y);
         scene->addItem(textItem);
     }
+}
+
+void BoardRenderer::setSelectorSpace(SelectorSpace* newSelectorSpace) {
+    selectorSpace = newSelectorSpace;
 }

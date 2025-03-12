@@ -34,6 +34,7 @@ public:
     void setHideShips(bool hide);
     void renderCoordinates();
 
+    void setSelectorSpace(SelectorSpace* newSelectorSpace);
 
 public slots:
     void handleCellClick(int row, int col); //função de testes, remover depois
@@ -79,8 +80,6 @@ private:
     QPixmap scaledWaterTexture;
 
     bool hideShips;
-
-
 };
 
 #endif // BOARDRENDERER_H

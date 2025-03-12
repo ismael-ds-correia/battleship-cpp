@@ -69,6 +69,8 @@ void MainWindow::onClearButtonClicked() {
     selectorSpace = new SelectorSpace(this);
     ui->selectorContainer->layout()->addWidget(selectorSpace);
     selectorSpace->show();
+
+    boardRenderer->setSelectorSpace(selectorSpace);
 }
 
 
