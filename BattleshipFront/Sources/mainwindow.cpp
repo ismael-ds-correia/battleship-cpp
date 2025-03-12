@@ -1,4 +1,5 @@
 #include "../Headers/mainwindow.h"
+#include "Headers/battleWindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(
@@ -28,6 +29,7 @@ MainWindow::MainWindow(
 
     connect(ui->randomizer, &QPushButton::clicked, this, &MainWindow::onRandomizeButtonClicked);
     connect(ui->clear, &QPushButton::clicked, this, &MainWindow::onClearButtonClicked);
+    connect(ui->start, &QPushButton::clicked, this, &MainWindow::onStartButtonClicked);
 
     //sessão de testes
     selectorSpace = new SelectorSpace(this);
@@ -36,6 +38,7 @@ MainWindow::MainWindow(
     selectorSpace->show();
 
     boardRenderer = new BoardRenderer(scene, shipController, boardController, selectorSpace, playerController);
+    boardRenderer->renderCoordinates();
 
     updateBoard();
 }
@@ -66,6 +69,30 @@ void MainWindow::onClearButtonClicked() {
     selectorSpace = new SelectorSpace(this);
     ui->selectorContainer->layout()->addWidget(selectorSpace);
     selectorSpace->show();
+}
+
+
+void MainWindow::onStartButtonClicked() {
+    // Cria os objetos referentes ao adversário (robô)
+    // Supondo que a classe Player possua um construtor que recebe o nome
+    Player* enemyPlayer = new Player("Robô");
+
+    // Crie um novo BoardController para o robô
+    BoardController* enemyBoardController = new BoardController(enemyPlayer);
+
+    // Crie um PlayerController para o robô
+    PlayerController* enemyController = new PlayerController(enemyPlayer);
+
+    enemyBoardController->randomizeShips();
+
+    // Crie a tela de batalha, passando os controllers do jogador e do robô.
+    // Aqui, usamos o boardController, shipController e playerController que já existem para o jogador.
+    BattleWindow* battleWindow = new BattleWindow(boardController, enemyBoardController, shipController, playerController, enemyController);
+
+    battleWindow->show();
+
+    // Opcional: Fecha ou oculta a tela inicial
+    this->close();
 }
 
 

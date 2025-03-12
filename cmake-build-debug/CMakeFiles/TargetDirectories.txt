@@ -1,3 +1,0 @@
-C:/Users/PEDRO/Downloads/battleship 03.03/battleship-cpp/cmake-build-debug/CMakeFiles/battleship_cpp.dir
-C:/Users/PEDRO/Downloads/battleship 03.03/battleship-cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/PEDRO/Downloads/battleship 03.03/battleship-cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir

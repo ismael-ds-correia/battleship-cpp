@@ -13,10 +13,16 @@ BoardRenderer::BoardRenderer(
     shipController(shipController),
     boardController(boardController),
     selectorSpace(selectorSpace),
-    playerController(playerController) {
+    playerController(playerController),
+    hideShips(false) {
 
     loadTextures();
     renderWater();
+}
+
+
+void BoardRenderer::setHideShips(bool hide) {
+    hideShips = hide;
 }
 
 
@@ -45,6 +51,21 @@ void BoardRenderer::renderWater() {
 void BoardRenderer::handleCellClick(int row, int col) {
     qDebug() << "Iniciando handleCellClick " << row << col;
 
+    // Verifica e imprime se a célula clicada contém um navio
+    Position (&boardState)[10][10] = boardController->getBoardState();
+    Ship* clickedShip = boardState[row][col].getShipReference();
+    if (clickedShip) {
+        qDebug() << "A célula (" << row << "," << col << ") contém um navio.";
+    } else {
+        qDebug() << "A célula (" << row << "," << col << ") não contém um navio.";
+    }
+
+    // Verifica se o selectorSpace está disponível
+    if (!selectorSpace) {
+        qDebug() << "selectorSpace é nulo, ignorando o posicionamento.";
+        return;
+    }
+
     int shipIndex = selectorSpace->getSelectedShipIndex();
     qDebug() << "endereço de selectorSpace: " << selectorSpace;
 
@@ -54,22 +75,19 @@ void BoardRenderer::handleCellClick(int row, int col) {
     }
 
     bool horizontal = selectorSpace->isSelectedShipHorizontal();
+    bool success = playerController->placeShipFromFleet(shipIndex, row, col, horizontal);
 
-    bool sucess = playerController->placeShipFromFleet(shipIndex, row, col, horizontal);
-
-    if (sucess) {
+    if (success) {
         selectorSpace->markShipAsPlaced(shipIndex);
-        selectorSpace->clearSelectedShip();//redundante, mas talvez evite problemas
-        qDebug() << "barco posicionado com sucesso";
+        selectorSpace->clearSelectedShip(); // redundante, mas pode evitar problemas
+        qDebug() << "Barco posicionado com sucesso.";
     } else {
-        qDebug() << "falha ao posicionar o barco";
+        qDebug() << "Falha ao posicionar o barco.";
     }
 
-    //boardController->placeShip(row, col, tempShip); // Insere o barco no tabuleiro
-    //qDebug() << "PlaceShipRealizado";
-
-    renderBoard(); //atualiza a interface gráfica para renderizar o barco
+    renderBoard(); // Atualiza a interface gráfica
 }
+
 
 void BoardRenderer::renderShips() {
     // Remove os barcos antigos da cena, se houver
@@ -97,6 +115,14 @@ void BoardRenderer::renderShips() {
 
             // 🔹 Se não estiver na posição inicial do barco, não renderiza novamente
             if (i != startRow || j != startCol) continue;
+
+            if (hideShips) {
+                // Se a flag estiver ativa, desenha a água no lugar do navio
+                BoardCell* waterCell = new BoardCell(startRow, startCol, scaledWaterTexture);
+                waterCell->setPos(startCol * (cellSize + margin), startRow * (cellSize + margin));
+                scene->addItem(waterCell);
+                continue;
+            }
 
             int shipSize = ship->getSize(); // Tamanho do barco
             QPixmap* texture = nullptr;
@@ -156,4 +182,34 @@ void BoardRenderer::loadTextures() {
     scaledBattleshipTextureV = battleshipTextureV.scaled(cellSize, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     scaledCarrierTextureV = carrierTextureV.scaled(cellSize, 192, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
+}
+
+
+void BoardRenderer::renderCoordinates() {
+    int cellSize = 32;
+    int margin = 0;
+
+    // Adiciona rótulos para as colunas (A-J)
+    for (int j = 0; j < 10; j++) {
+        QString label = QString(QChar('A' + j));
+        QGraphicsTextItem* textItem = new QGraphicsTextItem(label);
+        QRectF textRect = textItem->boundingRect();
+        // Posiciona o texto acima de cada coluna, centralizado na célula
+        qreal x = j * (cellSize + margin) + (cellSize - textRect.width()) / 2;
+        qreal y = -textRect.height() - 5;  // 5 pixels de margem
+        textItem->setPos(x, y);
+        scene->addItem(textItem);
+    }
+
+    // Adiciona rótulos para as linhas (0-9)
+    for (int i = 0; i < 10; i++) {
+        QString label = QString::number(i);
+        QGraphicsTextItem* textItem = new QGraphicsTextItem(label);
+        QRectF textRect = textItem->boundingRect();
+        // Posiciona o texto à esquerda de cada linha, centralizado na célula
+        qreal x = -textRect.width() - 5;  // 5 pixels de margem
+        qreal y = i * (cellSize + margin) + (cellSize - textRect.height()) / 2;
+        textItem->setPos(x, y);
+        scene->addItem(textItem);
+    }
 }
