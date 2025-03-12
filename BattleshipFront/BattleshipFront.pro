@@ -21,6 +21,7 @@ SOURCES += \
     ../BattleshipBack/src/player.cpp \
     ../BattleshipBack/src/position.cpp \
     ../BattleshipBack/src/ship.cpp \
+    Sources/battleWindow.cpp \
     Sources/selectorSpace.cpp \
     Sources/boardCell.cpp \
     Sources/boardRenderer.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     ../BattleshipBack/include/player.h \
     ../BattleshipBack/include/position.h \
     ../BattleshipBack/include/ship.h \
+    Headers/battleWindow.h \
     Headers/boardRenderer.h \
     Headers/boardCell.h \
     Headers/mainwindow.h \
