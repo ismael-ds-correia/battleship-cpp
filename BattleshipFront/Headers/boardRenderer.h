@@ -7,6 +7,7 @@
 #include <QDropEvent>
 #include <QMimeData>
 #include <QLabel>
+#include "Headers/boardCell.h"
 #include "boardController.h"
 #include "shipController.h"
 #include "selectorSpace.h"
@@ -32,7 +33,10 @@ public:
     void renderShips();
     void setHideShips(bool hide);
     void renderCoordinates();
+    void onAttackResult(int row, int col, bool hit);
+    QPointF calculatePosition(int row, int col) const;
 
+    void setSelectorSpace(SelectorSpace* newSelectorSpace);
 
 public slots:
     void handleCellClick(int row, int col); //função de testes, remover depois
@@ -44,11 +48,14 @@ private:
     SelectorSpace* selectorSpace;
     PlayerController* playerController;
 
+    QVector<BoardCell*> waterCells;
+    QVector<QGraphicsItem*> shipItems;
+
     //Ship* selectedShip = nullptr;
     QLabel* selectedShipLabel;
     Ship tempShip;
 
-    //
+    // texturas
     QPixmap battleshipTextureH;
     QPixmap submarineTextureH;
     QPixmap cruiserTextureH;
@@ -75,8 +82,6 @@ private:
     QPixmap scaledWaterTexture;
 
     bool hideShips;
-
-
 };
 
 #endif // BOARDRENDERER_H

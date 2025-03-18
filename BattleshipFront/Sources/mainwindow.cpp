@@ -2,8 +2,6 @@
 #include "Headers/battleWindow.h"
 #include "ui_mainwindow.h"
 
-//ADICIONAR BOTÃO DE REMOVER NAVIOS DO TABULEIRO
-
 MainWindow::MainWindow(
     BoardController* boardController,
     ShipController* shipController,
@@ -27,8 +25,9 @@ MainWindow::MainWindow(
     setWindowTitle("Batalha batalhesca");
 
     //conecta as interações do front com os comandos do back
+    connect(playerController, &PlayerController::playerUpdated, this, &MainWindow::updateBoard);
+
     connect(ui->randomizer, &QPushButton::clicked, this, &MainWindow::onRandomizeButtonClicked);
-    connect(boardController, &BoardController::boardUpdated, this, &MainWindow::updateBoard);
     connect(ui->clear, &QPushButton::clicked, this, &MainWindow::onClearButtonClicked);
     connect(ui->start, &QPushButton::clicked, this, &MainWindow::onStartButtonClicked);
 
@@ -50,28 +49,28 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::onRandomizeButtonClicked() {
-    boardController->randomizeShips();
+    playerController->positionShipsRandomly();
+
     selectorSpace->clearShips();
-    ui->clear->setEnabled(true); //botão de limpar fica true
 }
 
 
 void MainWindow::onClearButtonClicked() {
-    boardController->clearBoard(); //remove todos os barcos do tabuleiro
+    // Reinicia o estado do board (apenas a camada de visualização/estado interno do frontend)
+    playerController->resetBoard();
 
-    updateBoard(); //atualiza o tabuleiro
+    updateBoard();  // Atualiza a interface do tabuleiro
 
+    // Recria o SelectorSpace para restaurar os navios disponíveis
     if (selectorSpace) {
         ui->selectorContainer->layout()->removeWidget(selectorSpace);
-        delete selectorSpace; //libera a memória do objeto anterior
+        delete selectorSpace;
     }
-
-    // Devolve os navios ao selectorSpace
-    //selectorSpace->setupShips();
     selectorSpace = new SelectorSpace(this);
-    //ui->selectorContainer->setLayout(new QVBoxLayout);
     ui->selectorContainer->layout()->addWidget(selectorSpace);
     selectorSpace->show();
+
+    boardRenderer->setSelectorSpace(selectorSpace);
 }
 
 

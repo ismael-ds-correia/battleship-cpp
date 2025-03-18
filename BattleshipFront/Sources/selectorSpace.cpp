@@ -1,32 +1,25 @@
 #include "../../Headers/selectorSpace.h"
 
 SelectorSpace::SelectorSpace(QWidget *parent) : QWidget(parent), Horizontal(true), isDragging(false) {
+    shipInfos = {
+        {"../../Textures/carrierH.png", QSize(192, 32), 6},//porta-aviões (6 casas)
+        {"../../Textures/battleshipH.png", QSize(128, 32), 4},//navio de guerra (4 casas)
+        {"../../Textures/cruiserH.png", QSize(96, 32), 3},//encourçado (3 casas)
+        {"../../Textures/cruiserH.png", QSize(96, 32), 3},//encourçado (3 casas)
+        {"../../Textures/subH.png", QSize(32, 32), 1}//submarino (1 casa)
+    };
     setupShips();
 }
 
 void SelectorSpace::setupShips() {
-    clearShips();
-
-    struct ShipInfo {
-        QString texturePath;
-        QSize size;
-        int shipSize;//tamanho do barco que vai ser passado para o back
-    };
-
-    QVector<ShipInfo> ships = {
-        {"../../Textures/carrierH.png", QSize(192, 32), 6},   // Porta-aviões (6 casas)
-        {"../../Textures/battleshipH.png", QSize(128, 32), 4}, // Navio de guerra (4 casas)
-        {"../../Textures/cruiserH.png", QSize(96, 32), 3},    // Encourçado (3 casas)
-        {"../../Textures/cruiserH.png", QSize(96, 32), 3},    // Segundo encourçado (3 casas)
-        {"../../Textures/subH.png", QSize(32, 32), 1}   // Submarino (1 casa)
-    };
+    //clearShips();
 
     int offsetX = 5;
     int offsetY = 5;
     int spacing = 10;
     int index = 0;
 
-    for (const ShipInfo &ship : ships) {
+    for (const ShipInfo &ship : shipInfos) {
         QLabel *shipLabel = new QLabel(this);
         shipLabel->setPixmap(QPixmap(ship.texturePath));
         shipLabel->setFixedSize(ship.size);
@@ -41,6 +34,52 @@ void SelectorSpace::setupShips() {
 
         offsetY += ship.size.height() + spacing;
         index++;
+    }
+}
+
+void SelectorSpace::restoreShip(Ship &ship) {
+    bool restored = false; //usado meramente para depuração
+    // Procura uma entrada em shipInfos que corresponda ao tamanho do navio removido.
+    // Se houver mais de uma com o mesmo tamanho, restaura a primeira que não estiver presente.
+    for (int i = 0; i < shipInfos.size(); i++) {
+        if (shipInfos[i].shipSize == ship.getSize()) {
+            // Verifica se já existe um QLabel para esse navio (identificado pelo índice 'i')
+            bool alreadyExists = false;
+            QList<QLabel*> labels = findChildren<QLabel*>();
+            for (QLabel* label : labels) {
+                if (label->property("shipIndex").toInt() == i) {
+                    alreadyExists = true;
+                    break;
+                }
+            }
+            if (!alreadyExists) {
+                // Cria o QLabel para o navio removido com base nos dados de shipInfos[i]
+                ShipInfo info = shipInfos[i];
+                QLabel* shipLabel = new QLabel(this);
+                shipLabel->setPixmap(QPixmap(info.texturePath));
+                shipLabel->setFixedSize(info.size);
+                shipLabel->setAttribute(Qt::WA_DeleteOnClose);
+                shipLabel->setStyleSheet("background-color: transparent");
+
+                //define a posição padrão para exibição. O tamanho do barco é usado para calcular um offset
+                int offsetX = 5;
+                int spacing = 10;
+                int offsetY = 5 + i * (info.size.height() + spacing);
+                shipLabel->move(offsetX, offsetY);
+
+                shipLabel->setProperty("shipSize", info.shipSize);
+                shipLabel->setProperty("shipIndex", i);
+                shipLabel->installEventFilter(this);
+                shipLabel->show();
+
+                qDebug() << "Navio restaurado para shipInfos[" << i << "]";
+                restored = true;
+                break; // Restaura apenas uma entrada para o navio removido
+            }
+        }
+    }
+    if (!restored) {
+        qDebug() << "Nenhum navio correspondente encontrado para restaurar";
     }
 }
 
@@ -121,7 +160,8 @@ void SelectorSpace::clearShips() {
     for (QLabel* label : shipLabels) {
         label->deleteLater();
     }
-    shipRotation.clear(); // Limpa o mapa de rotações
+    shipRotation.clear(); //limpa o mapa de rotações
+    originalPixmaps.clear();
 }
 
 bool SelectorSpace::isSelectedShipHorizontal() const {

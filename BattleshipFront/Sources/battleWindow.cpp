@@ -2,12 +2,13 @@
 #include <QHBoxLayout>
 #include <QWidget>
 
-BattleWindow::BattleWindow(BoardController* playerBoardController,
-                           BoardController* enemyBoardController,
-                           ShipController* shipController,
-                           PlayerController* playerController,
-                           PlayerController* enemyController,
-                           QWidget* parent)
+BattleWindow::BattleWindow(
+    BoardController* playerBoardController,
+    BoardController* enemyBoardController,
+    ShipController* shipController,
+    PlayerController* playerController,
+    PlayerController* enemyController,
+    QWidget* parent)
     : QMainWindow(parent),
     playerBoardController(playerBoardController),
     enemyBoardController(enemyBoardController),

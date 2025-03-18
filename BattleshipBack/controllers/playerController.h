@@ -13,18 +13,18 @@ public:
     explicit PlayerController(Player* player, QObject* parent = nullptr);
     ~PlayerController();
 
-    // Métodos para interagir com o Player
     QString getPlayerName() const;
     void placeFleet();
     bool placeShipFromFleet(int shipIndex, int row, int col, bool horizontal);
     bool repositionShip(int shipIndex, int newLine, int newColumn, bool newHorizontal);
     void positionShipsRandomly();
+    void resetBoard();
     bool attackOpponent(Player* opponent, int row, int col);
     void printBoard() const;
 
 signals:
     void playerUpdated();
-    void attackResult(bool hit);
+    void attackResult(int row, int col, bool hit);
 
 private:
     Player* player;
