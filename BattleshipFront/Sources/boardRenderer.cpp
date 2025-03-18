@@ -125,7 +125,7 @@ void BoardRenderer::renderShips() {
             int shipSize = ship->getSize(); // Tamanho do barco
             QPixmap* texture = nullptr;
 
-            if (shipSize == 5) {
+            if (shipSize == 6) {
                 texture = ship->isHorizontal() ? &scaledCarrierTextureH : &scaledCarrierTextureV;
             }
             else if (shipSize == 4) {
@@ -153,33 +153,27 @@ void BoardRenderer::renderShips() {
     }
 }
 
-void BoardRenderer::loadTextures() {
-    int cellSize = 32;//tamanho das celulas do tabuleiro
+void BoardRenderer::onAttackResult(int row, int col, bool hit) {
+    QPixmap overlayPixmap;
+    if (hit) {
+        overlayPixmap.load(":/resources/hit_texture.png"); // Textura para acerto (fogo)
+    } else {
+        overlayPixmap.load(":/resources/miss_texture.png"); // Textura para água
+    }
 
-    waterTexture.load("../../Textures/water.png");
+    QPointF pos = calculatePosition(row, col); // Converte coordenadas da grade para posição na cena.
+    QGraphicsPixmapItem* overlayItem = new QGraphicsPixmapItem(overlayPixmap);
+    overlayItem->setPos(pos);
+    scene->addItem(overlayItem);
+}
 
-    submarineTextureH.load("../../Textures/subH.png");
-    battleshipTextureH.load("../../Textures/battleshipH.png");
-    cruiserTextureH.load("../../Textures/cruiserH.png");
-    carrierTextureH.load("../../Textures/carrierH.png");
+QPointF BoardRenderer::calculatePosition(int row, int col) const {
+    int cellSize = 32;
+    int margin = 0;
 
-    submarineTextureV.load("../../Textures/subV.png");
-    battleshipTextureV.load("../../Textures/battleshipV.png");
-    cruiserTextureV.load("../../Textures/cruiserV.png");
-    carrierTextureV.load("../../Textures/carrierV.png");
-
-    scaledWaterTexture = waterTexture.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-    scaledSubmarineTextureH = submarineTextureH.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    scaledCruiserTextureH = cruiserTextureH.scaled(96, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    scaledBattleshipTextureH = battleshipTextureH.scaled(128, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    scaledCarrierTextureH = carrierTextureH.scaled(192, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-    scaledSubmarineTextureV = submarineTextureV.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    scaledCruiserTextureV = cruiserTextureV.scaled(cellSize, 96, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    scaledBattleshipTextureV = battleshipTextureV.scaled(cellSize, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    scaledCarrierTextureV = carrierTextureV.scaled(cellSize, 192, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
+    int x = col * (cellSize + margin);
+    int y = row * (cellSize + margin);
+    return QPointF(x, y);
 }
 
 void BoardRenderer::renderCoordinates() {
@@ -213,4 +207,33 @@ void BoardRenderer::renderCoordinates() {
 
 void BoardRenderer::setSelectorSpace(SelectorSpace* newSelectorSpace) {
     selectorSpace = newSelectorSpace;
+}
+
+void BoardRenderer::loadTextures() {
+    int cellSize = 32;//tamanho das celulas do tabuleiro
+
+    waterTexture.load("../../Textures/water.png");
+
+    submarineTextureH.load("../../Textures/subH.png");
+    battleshipTextureH.load("../../Textures/battleshipH.png");
+    cruiserTextureH.load("../../Textures/cruiserH.png");
+    carrierTextureH.load("../../Textures/carrierH.png");
+
+    submarineTextureV.load("../../Textures/subV.png");
+    battleshipTextureV.load("../../Textures/battleshipV.png");
+    cruiserTextureV.load("../../Textures/cruiserV.png");
+    carrierTextureV.load("../../Textures/carrierV.png");
+
+    scaledWaterTexture = waterTexture.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    scaledSubmarineTextureH = submarineTextureH.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaledCruiserTextureH = cruiserTextureH.scaled(96, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaledBattleshipTextureH = battleshipTextureH.scaled(128, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaledCarrierTextureH = carrierTextureH.scaled(192, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    scaledSubmarineTextureV = submarineTextureV.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaledCruiserTextureV = cruiserTextureV.scaled(cellSize, 96, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaledBattleshipTextureV = battleshipTextureV.scaled(cellSize, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaledCarrierTextureV = carrierTextureV.scaled(cellSize, 192, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
 }

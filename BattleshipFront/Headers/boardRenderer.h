@@ -33,6 +33,8 @@ public:
     void renderShips();
     void setHideShips(bool hide);
     void renderCoordinates();
+    void onAttackResult(int row, int col, bool hit);
+    QPointF calculatePosition(int row, int col) const;
 
     void setSelectorSpace(SelectorSpace* newSelectorSpace);
 

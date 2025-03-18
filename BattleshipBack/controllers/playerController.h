@@ -13,7 +13,6 @@ public:
     explicit PlayerController(Player* player, QObject* parent = nullptr);
     ~PlayerController();
 
-    // Métodos para interagir com o Player
     QString getPlayerName() const;
     void placeFleet();
     bool placeShipFromFleet(int shipIndex, int row, int col, bool horizontal);
@@ -25,7 +24,7 @@ public:
 
 signals:
     void playerUpdated();
-    void attackResult(bool hit);
+    void attackResult(int row, int col, bool hit);
 
 private:
     Player* player;
