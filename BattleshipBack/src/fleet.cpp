@@ -4,7 +4,7 @@
 
 // Inicializa uma frota com os navios padrão.
 Fleet::Fleet() {
-	this->ships[0] = Ship("Porta-aviões", 5);
+    this->ships[0] = Ship("Porta-aviões", 6);
 	this->ships[1] = Ship("Navio de Guerra", 4);
 	this->ships[2] = Ship("Encouraçado", 3);
 	this->ships[3] = Ship("Encouraçado", 3);
@@ -13,7 +13,7 @@ Fleet::Fleet() {
 
 // Verifica se todos os navios da frota foram destruídos.
 bool Fleet::isDestroyed() {
-	for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
 		if (!this->ships[i].isDestroyed()) { // Se algum navio ainda não foi destruído.
 			return false;
 		}

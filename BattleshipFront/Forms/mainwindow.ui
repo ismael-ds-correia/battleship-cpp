@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>441</width>
-    <height>600</height>
+    <width>607</width>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QGraphicsView" name="boardView">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>441</width>
-      <height>481</height>
+      <x>10</x>
+      <y>10</y>
+      <width>361</width>
+      <height>351</height>
      </rect>
     </property>
    </widget>
@@ -28,7 +28,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>500</y>
+      <y>370</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -41,7 +41,7 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>500</y>
+      <y>370</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -50,11 +50,11 @@
      <string>Posicionar</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="start">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>500</y>
+      <x>510</x>
+      <y>360</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -63,14 +63,50 @@
      <string>Start</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="randomizer">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>370</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>P. Aleatório</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="selectorContainer" native="true">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>69</y>
+      <width>211</width>
+      <height>261</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="clear">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>370</y>
+      <width>80</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Limpar</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>441</width>
-     <height>21</height>
+     <width>607</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>

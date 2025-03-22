@@ -5,9 +5,14 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QDropEvent>
 #include <QPixmap>
+#include <QPointF>
+#include <QVBoxLayout>
 #include "boardController.h"
 #include "boardRenderer.h"
+#include "selectorSpace.h"
+#include "playerController.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,19 +28,34 @@ private:
 
     QGraphicsView* boardView;
     QGraphicsScene* scene;
+    QGraphicsScene* selectorScene;
     BoardController* boardController;
     ShipController* shipController;
     BoardRenderer* boardRenderer;
+    SelectorSpace* selectorSpace;
+    PlayerController* playerController;
 
     void loadTextures();
 
 public:
-    explicit MainWindow(BoardController* boardController, ShipController* shipController, QWidget *parent = nullptr);
-    void updateBoard();
+    explicit MainWindow(
+        BoardController* boardController,
+        ShipController* shipController,
+        PlayerController* playerController,
+        QWidget *parent = nullptr
+    );
+
+    void onPlayerUpdated();
+    void positionShipsRandomly();
     ~MainWindow();
+
 
 private slots:
     //void handleCellClick(int row, int col);
+    void onRandomizeButtonClicked();
+    void updateBoard();
+    void onClearButtonClicked();
+    void onStartButtonClicked();
 
 };
 #endif // MAINWINDOW_H

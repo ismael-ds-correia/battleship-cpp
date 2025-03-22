@@ -16,7 +16,8 @@ class Board {
 		bool placeShip(Ship&, int, int); // Posiciona um navio no tabuleiro.
 		void removeShip(Ship&);
 		bool attack(int, int);          // Interface para que o oponente ataque uma posição específica.
-		void print();                   // Exibe o estado atual do tabuleiro.
+        bool attackFront(int row, int col);
+        void print();                   // Exibe o estado atual do tabuleiro.
 		Position getPosition(int, int); // Retorna uma posição com base em um par de valores.
 		Position (&getPositions())[10][10]; // Retorna uma referência para a matriz de posições.
 		bool checkPosition(Ship&, int, int);  // Verifica se um determinado navio pode ser

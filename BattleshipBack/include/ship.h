@@ -20,9 +20,10 @@ class Ship {
 		bool isDestroyed();    // Retorna se o navio foi destruído (todas as posições atingidas).
 		bool isHorizontal();   // Retorna a orientação do navio (horizontal ou vertical).
 		int getSize(){return size;} // Retorna o tamanho do navio.
-		void setOrientation(bool); // Altera a orientação do navio.
+        int getShipSize();      //problemas no Qt, tive que adicionar este outro getter
+        void setOrientation(bool); // Altera a orientação do navio.
 		void incrementHits();
-		int getHits();
+        int getHits();
 };
 
 #endif

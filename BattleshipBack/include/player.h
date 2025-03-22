@@ -11,12 +11,12 @@ class Player{
 		string name;
 		Board board;
 		Fleet fleet;
-		bool placeShip(int, int, int, bool);
 	public:
 		Player(string);
 		~Player(){}
 		string getName();
 		Board& getBoard();
+        bool placeShip(int, int, int, bool);
 		void placeFleet();
 		bool repositionShip(int, int, int, bool);
 		void positionShipsRandomly();

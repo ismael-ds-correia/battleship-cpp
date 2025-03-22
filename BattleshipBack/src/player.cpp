@@ -53,28 +53,6 @@ bool Player::repositionShip(int shipIndex, int newLine, int newColumn, bool newH
 	// Tenta reposicionar o navio.
 	return this->placeShip(shipIndex, newLine, newColumn, newHorizontal);
 }
-/*
-void Player::positionShipsRandomly(){
-	int row = 0, column = 0, count = 0, i = 0;
-	while(count < 5){
-		Ship currentShip = this->fleet.getShips()[count];
-
-		srand(std::time(0)); 
-		row = rand()%10;
-		column = rand()%10;
-
-		bool randomBool = rand()%2 == 0;
-		currentShip.setOrientation(randomBool);
-
-		cout << i++ << "\n";
-
-		if(!this->board.placeShip(currentShip, row, column)){
-			continue;
-		}
-
-		count++;
-	}
-}*/
 
 void Player::positionShipsRandomly() {
     // Lista de todas as posições possíveis (tabuleiro 10x10)
@@ -106,7 +84,7 @@ void Player::positionShipsRandomly() {
 }
 
 bool Player::attackOpponent(Board& enemyBoard, int row, int column){
-	return enemyBoard.attack(row, column);
+    return enemyBoard.attackFront(row, column);
 }
 
 string Player::getName(){
@@ -120,3 +98,25 @@ Board& Player::getBoard(){
 void Player::printBoard(){
 	this->board.print();
 }
+/*
+void Player::positionShipsRandomly(){
+    int row = 0, column = 0, count = 0, i = 0;
+    while(count < 5){
+        Ship currentShip = this->fleet.getShips()[count];
+
+        srand(std::time(0));
+        row = rand()%10;
+        column = rand()%10;
+
+        bool randomBool = rand()%2 == 0;
+        currentShip.setOrientation(randomBool);
+
+        cout << i++ << "\n";
+
+        if(!this->board.placeShip(currentShip, row, column)){
+            continue;
+        }
+
+        count++;
+    }
+}*/

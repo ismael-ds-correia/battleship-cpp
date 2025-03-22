@@ -5,7 +5,7 @@
 using namespace std;
 
 // Construtor que inicializa o nome, tamanho e orientações padrão do navio.
-Ship::Ship(string name, int size) 
+Ship::Ship(string name, int size)
 : name(name), size(size), hits(0), horizontal(true) {}
 
 // Retorna verdadeiro se o navio foi destruído (todas as posições atingidas).
@@ -29,4 +29,8 @@ void Ship::incrementHits(){
 
 int Ship::getHits(){
 	return this->hits;
+}
+
+int Ship::getShipSize(){
+    return this->size;
 }

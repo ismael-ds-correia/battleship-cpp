@@ -1,4 +1,5 @@
 QT       += core gui
+DEFINES += USE_QT
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,12 +14,15 @@ INCLUDEPATH += ../BattleshipBack/include \
 
 SOURCES += \
     ../BattleshipBack/controllers/boardController.cpp \
+    ../BattleshipBack/controllers/playerController.cpp \
     ../BattleshipBack/controllers/shipController.cpp \
     ../BattleshipBack/src/board.cpp \
     ../BattleshipBack/src/fleet.cpp \
     ../BattleshipBack/src/player.cpp \
     ../BattleshipBack/src/position.cpp \
     ../BattleshipBack/src/ship.cpp \
+    Sources/battleWindow.cpp \
+    Sources/selectorSpace.cpp \
     Sources/boardCell.cpp \
     Sources/boardRenderer.cpp \
     Sources/mainwindow.cpp \
@@ -26,15 +30,18 @@ SOURCES += \
 
 HEADERS += \
     ../BattleshipBack/controllers/boardController.h \
+    ../BattleshipBack/controllers/playerController.h \
     ../BattleshipBack/controllers/shipController.h \
     ../BattleshipBack/include/board.h \
     ../BattleshipBack/include/fleet.h \
     ../BattleshipBack/include/player.h \
     ../BattleshipBack/include/position.h \
     ../BattleshipBack/include/ship.h \
+    Headers/battleWindow.h \
     Headers/boardRenderer.h \
     Headers/boardCell.h \
-    Headers/mainwindow.h
+    Headers/mainwindow.h \
+    Headers/selectorSpace.h
 
 FORMS += \
     Forms/mainwindow.ui

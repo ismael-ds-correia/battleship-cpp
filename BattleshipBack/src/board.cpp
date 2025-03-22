@@ -149,6 +149,23 @@ bool Board::attack(int row, int column){
     return false;
 }
 
+bool Board::attackFront(int row, int col) {
+    cout << "atacando (" << row << ", " << col << ")\n";
+    if (this->checkPosition(row, col)) {
+        //marca a posição como atacada.
+        this->positions[row][col].attack();
+
+        Ship* ship = this->positions[row][col].getShipReference();
+        if (ship != nullptr) {
+            //incrementa os acertos no navio.
+            ship->incrementHits();
+            return true;  //acertou um navio.
+        }
+        return false; //acertou a água.
+    }
+    return false;
+}
+
 // Método para retornar uma referência à matriz de posições.
 Position (&Board::getPositions())[10][10] {
     return this->positions;

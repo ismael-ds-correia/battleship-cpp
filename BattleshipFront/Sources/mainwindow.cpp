@@ -1,27 +1,44 @@
 #include "../Headers/mainwindow.h"
+#include "Headers/battleWindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(BoardController* boardController, ShipController* shipController, QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), boardController(boardController), shipController(shipController) {
+MainWindow::MainWindow(
+    BoardController* boardController,
+    ShipController* shipController,
+    PlayerController* playerController,
+    QWidget *parent)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    boardController(boardController),
+    shipController(shipController),
+    playerController(playerController) {
 
-    ui->setupUi(this);
-    scene = new QGraphicsScene(this);//cria a cena e o view que será usado
+    ui->setupUi(this);//instancia inicial do Ui
+
+    //cria o Scene do tabuleiro
+    scene = new QGraphicsScene(this);
     ui->boardView->setScene(scene);
+
+    //cria o Scene do selector
+    selectorScene = new QGraphicsScene(this);
 
     setWindowTitle("Batalha batalhesca");
 
-    boardRenderer = new BoardRenderer(scene, shipController, boardController);
-    //boardRenderer->loadTextures();
-    // Conecta o sinal de atualização do tabuleiro ao slot de atualização da view.
-    connect(boardController, &BoardController::boardUpdated, this, &MainWindow::updateBoard);
+    //conecta as interações do front com os comandos do back
+    connect(playerController, &PlayerController::playerUpdated, this, &MainWindow::updateBoard);
 
+    connect(ui->randomizer, &QPushButton::clicked, this, &MainWindow::onRandomizeButtonClicked);
+    connect(ui->clear, &QPushButton::clicked, this, &MainWindow::onClearButtonClicked);
+    connect(ui->start, &QPushButton::clicked, this, &MainWindow::onStartButtonClicked);
 
     //sessão de testes
-    Ship testShip1("teste1", 3);
-    Ship testShip2("teste2", 4);
-    testShip2.setOrientation(false);
-    boardController->placeShip(2, 3, testShip1);
-    boardController->placeShip(6, 2, testShip2);
+    selectorSpace = new SelectorSpace(this);
+    ui->selectorContainer->setLayout(new QVBoxLayout);
+    ui->selectorContainer->layout()->addWidget(selectorSpace);
+    selectorSpace->show();
+
+    boardRenderer = new BoardRenderer(scene, shipController, boardController, selectorSpace, playerController);
+    boardRenderer->renderCoordinates();
 
     updateBoard();
 }
@@ -30,44 +47,58 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-//subclasse para lidar com os cliques
+
+void MainWindow::onRandomizeButtonClicked() {
+    playerController->positionShipsRandomly();
+
+    selectorSpace->clearShips();
+}
+
+
+void MainWindow::onClearButtonClicked() {
+    // Reinicia o estado do board (apenas a camada de visualização/estado interno do frontend)
+    playerController->resetBoard();
+
+    updateBoard();  // Atualiza a interface do tabuleiro
+
+    // Recria o SelectorSpace para restaurar os navios disponíveis
+    if (selectorSpace) {
+        ui->selectorContainer->layout()->removeWidget(selectorSpace);
+        delete selectorSpace;
+    }
+    selectorSpace = new SelectorSpace(this);
+    ui->selectorContainer->layout()->addWidget(selectorSpace);
+    selectorSpace->show();
+
+    boardRenderer->setSelectorSpace(selectorSpace);
+}
+
+
+void MainWindow::onStartButtonClicked() {
+    // Cria os objetos referentes ao adversário (robô)
+    // Supondo que a classe Player possua um construtor que recebe o nome
+    Player* enemyPlayer = new Player("Robô");
+
+    // Crie um novo BoardController para o robô
+    BoardController* enemyBoardController = new BoardController(enemyPlayer);
+
+    // Crie um PlayerController para o robô
+    PlayerController* enemyController = new PlayerController(enemyPlayer);
+
+    enemyBoardController->randomizeShips();
+
+    // Crie a tela de batalha, passando os controllers do jogador e do robô.
+    // Aqui, usamos o boardController, shipController e playerController que já existem para o jogador.
+    BattleWindow* battleWindow = new BattleWindow(boardController, enemyBoardController, shipController, playerController, enemyController);
+
+    battleWindow->show();
+
+    // Opcional: Fecha ou oculta a tela inicial
+    this->close();
+}
 
 
 void MainWindow::updateBoard() {
     boardRenderer->renderBoard();
 }
-
-// void MainWindow::updateBoard() {
-//     scene->clear();
-
-//     int cellSize = 40; //tamanho em pixels das celulas
-//     int margin = 0; //margem de espaçamento entre as celulas
-
-//     //redimenciona as texturas para um tamanho ideal
-//     QPixmap scaledWaterTexture = waterTexture.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-//     QPixmap scaledShipTexture = shipTexture.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-//     Position (&boardState)[10][10] = controller->getBoardState();
-
-//     //matriz responsavel pela geração do mapa
-//     for (int i = 0; i < 10; ++i) {
-//         for (int j = 0; j < 10; ++j) {
-//             QPixmap* texture = nullptr;
-
-//             if (boardState[i][j].getShipReference() != nullptr) { // Condição de se há barco, aplica textura
-//                 texture = &scaledShipTexture;
-//             } else {
-//                 texture = &scaledWaterTexture;
-//             }
-
-//             BoardCell* cell = new BoardCell(i, j, *texture);
-//             cell->setPos(j * (cellSize+margin), i * (cellSize+margin));
-
-//             //conecta o clique da celula ao handleCellClick
-//             connect(cell, &BoardCell::cellClicked, this, &MainWindow::handleCellClick);
-
-//             scene->addItem(cell);
-//         }
-//     }
-// }
 
