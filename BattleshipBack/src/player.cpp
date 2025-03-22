@@ -84,7 +84,7 @@ void Player::positionShipsRandomly() {
 }
 
 bool Player::attackOpponent(Board& enemyBoard, int row, int column){
-	return enemyBoard.attack(row, column);
+    return enemyBoard.attackFront(row, column);
 }
 
 string Player::getName(){

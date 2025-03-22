@@ -21,6 +21,7 @@ public:
     void resetBoard();
     bool attackOpponent(Player* opponent, int row, int col);
     void printBoard() const;
+    Player* getPlayer() const;
 
 signals:
     void playerUpdated();

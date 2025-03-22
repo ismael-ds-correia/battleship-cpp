@@ -23,7 +23,9 @@ public:
         ShipController* shipController,
         BoardController* boardController,
         SelectorSpace* selectorSpace,
-        PlayerController* playerController
+        PlayerController* playerController,
+        PlayerController* enemyController = nullptr,
+        bool attackMode = false
     );
 
     void setupBoardSelector();
@@ -36,6 +38,8 @@ public:
     void onAttackResult(int row, int col, bool hit);
     QPointF calculatePosition(int row, int col) const;
 
+    void setInteractive(bool interactive); //para bloquear o clique no próprio tabuleiro
+
     void setSelectorSpace(SelectorSpace* newSelectorSpace);
 
 public slots:
@@ -47,6 +51,11 @@ private:
     BoardController* boardController;
     SelectorSpace* selectorSpace;
     PlayerController* playerController;
+
+    bool attackMode;
+    PlayerController* attackerController; // Quem executa o ataque (jogador)
+    PlayerController* enemyController;    // O inimigo que será atacado
+
 
     QVector<BoardCell*> waterCells;
     QVector<QGraphicsItem*> shipItems;
@@ -81,7 +90,13 @@ private:
     QPixmap waterTexture;
     QPixmap scaledWaterTexture;
 
+    QPixmap waterHitTexture;
+    QPixmap shipHitTexture;
+    QPixmap scaledWaterHitTexture;
+    QPixmap scaledShipHitTexture;
+
     bool hideShips;
+    bool isInteractive;
 };
 
 #endif // BOARDRENDERER_H
