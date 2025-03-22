@@ -8,13 +8,25 @@ BoardRenderer::BoardRenderer(
     ShipController* shipController,
     BoardController* boardController,
     SelectorSpace* selectorSpace,
-    PlayerController* playerController)
+    PlayerController* playerController,
+    PlayerController* enemyController,
+    bool attackMode)
     : scene(scene),
     shipController(shipController),
     boardController(boardController),
     selectorSpace(selectorSpace),
     playerController(playerController),
-    hideShips(false) {
+    hideShips(false),
+    attackMode(attackMode),
+    attackerController(nullptr),
+    enemyController(nullptr)
+{
+    // Se estivermos em modo de ataque, o playerController passado originalmente
+    // é o atacante e o enemyController é o que está sendo atacado.
+    if (attackMode) {
+        attackerController = playerController;
+        this->enemyController = enemyController;
+    }
 
     loadTextures();
     renderWater();
@@ -49,6 +61,35 @@ void BoardRenderer::renderWater() {
 
 void BoardRenderer::handleCellClick(int row, int col) {
     qDebug() << "Iniciando handleCellClick " << row << col;
+    if (!isInteractive){
+        qDebug() << "Clique ignorado por ser do próprio tabuleiro";
+        return; // Ignora cliques se não for interativo
+    }
+
+    // Se estivermos no modo de ataque, processamos o clique como um comando de ataque.
+    if (attackMode) {
+        // Obtemos o estado atual do board (inimigo)
+        Position (&boardState)[10][10] = boardController->getBoardState();
+
+        // Se a célula já foi atacada, ignoramos o clique.
+        if (boardState[row][col].isAttacked()) {
+            qDebug() << "Esta célula já foi atacada.";
+            return;
+        }
+
+        // Dispara o ataque: reutilizamos o método do backend.
+        // OBSERVAÇÃO: Para isso, usamos o método attackOpponent do attackerController,
+        // que espera um ponteiro para o Player do oponente. Para isso, vamos precisar de um getter.
+        if (attackerController && enemyController) {
+            bool hit = attackerController->attackOpponent(enemyController->getPlayer(), row, col);
+            // A função attackOpponent já emite o sinal attackResult(row, col, hit),
+            // que poderá ser conectado para atualizar a interface.
+            qDebug() << "Ataque realizado na célula (" << row << "," << col << "): " << (hit ? "Acertou" : "Errou");
+        } else {
+            qDebug() << "Controles de ataque não configurados corretamente.";
+        }
+        return;
+    }
 
     //retorna o estado atual do board
     Position (&boardState)[10][10] = boardController->getBoardState();
@@ -156,15 +197,27 @@ void BoardRenderer::renderShips() {
 void BoardRenderer::onAttackResult(int row, int col, bool hit) {
     QPixmap overlayPixmap;
     if (hit) {
-        overlayPixmap.load(":/resources/hit_texture.png"); // Textura para acerto (fogo)
+        overlayPixmap = scaledShipHitTexture; // Textura para acerto (fogo)
     } else {
-        overlayPixmap.load(":/resources/miss_texture.png"); // Textura para água
+        overlayPixmap = scaledWaterHitTexture; // Textura para água
+    }
+
+    if (overlayPixmap.isNull()) {
+        qDebug() << "Falha ao carregar a textura de overlay!";
+        return;
     }
 
     QPointF pos = calculatePosition(row, col); // Converte coordenadas da grade para posição na cena.
     QGraphicsPixmapItem* overlayItem = new QGraphicsPixmapItem(overlayPixmap);
+    overlayItem->setZValue(100);
     overlayItem->setPos(pos);
     scene->addItem(overlayItem);
+
+    scene->update();
+}
+
+void BoardRenderer::setInteractive(bool interactive) {
+    isInteractive = interactive;
 }
 
 QPointF BoardRenderer::calculatePosition(int row, int col) const {
@@ -214,6 +267,10 @@ void BoardRenderer::loadTextures() {
 
     waterTexture.load("../../Textures/water.png");
 
+    waterHitTexture.load("../../Textures/waterHit.png");
+    shipHitTexture.load("../../Textures/fire.gif");
+
+
     submarineTextureH.load("../../Textures/subH.png");
     battleshipTextureH.load("../../Textures/battleshipH.png");
     cruiserTextureH.load("../../Textures/cruiserH.png");
@@ -225,6 +282,9 @@ void BoardRenderer::loadTextures() {
     carrierTextureV.load("../../Textures/carrierV.png");
 
     scaledWaterTexture = waterTexture.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    scaledWaterHitTexture = waterHitTexture.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaledShipHitTexture = shipHitTexture.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     scaledSubmarineTextureH = submarineTextureH.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     scaledCruiserTextureH = cruiserTextureH.scaled(96, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);

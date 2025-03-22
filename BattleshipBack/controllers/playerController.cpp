@@ -63,6 +63,11 @@ bool PlayerController::attackOpponent(Player* opponent, int row, int col) {
     return hit;
 }
 
+Player* PlayerController::getPlayer() const {
+    return player;
+}
+
+
 void PlayerController::printBoard() const {
     player->printBoard();
 }
