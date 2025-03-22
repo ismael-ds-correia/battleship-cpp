@@ -27,6 +27,8 @@ class Attack{
 
 		void setRight(Attack*);
 		Attack* getRight();
+
+
 };
 
 #endif

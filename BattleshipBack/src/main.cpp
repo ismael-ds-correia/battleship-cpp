@@ -6,27 +6,24 @@
 #include "fleet.h"
 #include <ctime>
 #include "robotplayer.h"
-#include "circularlinkedlist.h"
 
 using namespace std;
 
 int main() {
-    //srand(std::time(0));
-    CircularLinkedList list(2, 3);
-    list.push(3, 5);
-    list.push(2, 5);
-    list.push(1, 5);
-    list.push(1, 5);
-    list.push(5, 5);
-    list.push(7, 5);
-    list.push(9, 5);
+    srand(std::time(0));
+    Player player("eu kk");
+    RobotPlayer robot;
 
-    cout << *list.pop();
+    player.positionShipsRandomly();
 
-    list.print();
+    for(int i = 0; i < 15; i++){
+        robot.attack(player.getBoard());
 
-    cout << *list.pop();
+        player.printBoard();
+        cout << "\n";
+        robot.printVirtualBoard();
+    }
 
-
+    //player.printBoard();
     return 0;
 }

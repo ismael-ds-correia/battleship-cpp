@@ -1,11 +1,11 @@
 #include <iostream>
 #include "attack.h" 
 
-Attack::Attack(int row, int column){
-	this->row = row;
-	this->column = column;
-	this->left = nullptr;
-	this->right = nullptr;
+Attack::Attack(int row, int column) {
+    this->row = row;
+    this->column = column;
+    this->left = nullptr;
+    this->right = nullptr;
 }
 
 // Implementação da sobrecarga do operador <<

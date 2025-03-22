@@ -57,12 +57,12 @@ void Board::removeShip(Ship& ship){
 // Método para bloquear posições adjacentes ao navio.
 void Board::blockPositions(Ship& ship, int line, int column) {
     // Definindo os limites das linhas a serem bloqueadas.
-    int startRow = std::max(0, line - 1); // Linha inicial (garantindo que não seja menor que 0).
-    int endRow = std::min(9, line + (ship.isHorizontal() ? 0 : ship.getSize() - 1) + 1); // Linha final.
+    int startRow = max(0, line - 1); // Linha inicial (garantindo que não seja menor que 0).
+    int endRow = min(9, line + (ship.isHorizontal() ? 0 : ship.getSize() - 1) + 1); // Linha final.
 
     // Definindo os limites das colunas a serem bloqueadas.
-    int startCol = std::max(0, column - 1); // Coluna inicial (garantindo que não seja menor que 0).
-    int endCol = std::min(9, column + (ship.isHorizontal() ? ship.getSize() - 1 : 0) + 1); // Coluna final.
+    int startCol = max(0, column - 1); // Coluna inicial (garantindo que não seja menor que 0).
+    int endCol = min(9, column + (ship.isHorizontal() ? ship.getSize() - 1 : 0) + 1); // Coluna final.
 
     // Iterando pelas posições adjacentes ao navio.
     for (int i = startRow; i <= endRow; i++) {
