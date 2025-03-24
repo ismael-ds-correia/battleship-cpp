@@ -32,15 +32,32 @@ void RobotPlayer::attack(Board& enemyBoard){
 
         adjustStrategy(enemyBoard, row, column);
 	}else{
-        int row = rand()%10;
-        int column = rand()%10;
+        if(this->shouldAttackStrategicPositions()){
+            cout << "Modo de ataque estrategico ativado!" << "\n";
+            this->planStrategicAttack(enemyBoard);
+            
+            auto target = priorityQueue.front();
+            priorityQueue.pop();
 
-	    while(!enemyBoard.attack(row, column)){
-	       row = rand()%10;
-           column = rand()%10;
-	    }
+            int row = target.first;
+            int column = target.second;
 
-	    adjustStrategy(enemyBoard, row, column);
+            enemyBoard.attack(row, column);
+            adjustStrategy(enemyBoard, row, column);
+
+            return;
+        }else{
+            //Ataque aleatório
+            int row = rand()%10;
+            int column = rand()%10;
+
+    	    while(!enemyBoard.attack(row, column)){
+    	       row = rand()%10;
+               column = rand()%10;
+    	    }
+
+    	    adjustStrategy(enemyBoard, row, column);
+        }
 	}
 }
 
@@ -53,6 +70,7 @@ void RobotPlayer::adjustStrategy(Board& enemyBoard, int row, int column){
 			this->virtualBoard[row][column] = 3;
 			wreckedShipAdjustment(enemyBoard, row, column);
 			clearProrityQueue();
+            oneLessShip(ship->getSize());
 		}else{
 			this->virtualBoard[row][column] = 2;
 			discoverDirectionAndAdd(enemyBoard, row, column);
@@ -162,6 +180,97 @@ void RobotPlayer::wreckedShipAdjustment(Board& enemyBoard, int row, int column){
     for(int i = adjStartRow; i <= adjEndRow; i++){
         for(int j = adjStartCol; j <= adjEndCol; j++){
             this->virtualBoard[i][j] = 3; // Marca como posição bloqueada
+        }
+    }
+}
+
+bool RobotPlayer::shouldAttackStrategicPositions(){
+    int emptyPositions = 0;
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10; j++){
+            if(this->virtualBoard[i][j] != 0){
+                emptyPositions++;
+            }
+        }
+    }
+
+    return(emptyPositions/100.0 > 0.2);
+}
+
+void RobotPlayer::planStrategicAttack(Board& enemyBoard){
+    int size = sizeOfTheNextShip();
+
+    if(size == 0){
+        return;
+    }
+
+    //Determina se irá buscar na vertical ou na horizontal
+    bool randomBool = rand() % 2 == 0;
+
+    if(randomBool){
+        searchHorizontally(size);
+    }else{
+        searchVertically(size);
+    }
+}
+
+void RobotPlayer::searchVertically(int size){
+    cout << "Vertical" << "\n";
+    int count = 0;
+    for(int j = 0; j < 10; j++){
+        for(int i = 0; i < 10; i++){
+            if(this->virtualBoard[i][j] == 0){
+                count++;
+            }else{
+                count = 0;
+            }
+
+            if(count == size){
+                this->addToPriorityQueue(i, j);
+
+                return;
+            }
+        }
+        count = 0;
+    }
+}
+
+void RobotPlayer::searchHorizontally(int size){
+    cout << "Horizontal" << "\n";
+    int count = 0;
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10; j++){
+            if(this->virtualBoard[i][j] == 0){
+                count++;
+            }else{
+                count = 0;
+            }
+
+            if(count == size){
+                this->addToPriorityQueue(i, j);
+
+                return;
+            }
+        }
+        count = 0;
+    }
+}
+
+int RobotPlayer::sizeOfTheNextShip(){
+    for(int i = 0; i < 4; i++){
+        if(this->sizeOfEnemyShips[i] != 0){
+            return this->sizeOfEnemyShips[i];
+        }
+    }
+
+    return 0;
+}
+
+void RobotPlayer::oneLessShip(int sizeOfShipDestroyed){
+    for(int i = 0; i < 4; i++){
+        if(this->sizeOfEnemyShips[i] == sizeOfShipDestroyed){
+            this->sizeOfEnemyShips[i] = 0;
+            return;
         }
     }
 }

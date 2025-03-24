@@ -16,7 +16,7 @@ int main() {
 
     player.positionShipsRandomly();
 
-    for(int i = 0; i < 15; i++){
+    for(int i = 0; i < 30; i++){
         robot.attack(player.getBoard());
         player.printBoard();
         cout << "\n";
