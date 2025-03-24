@@ -8,7 +8,7 @@ Fleet::Fleet() {
 	this->ships[1] = Ship("Navio de Guerra", 4);
 	this->ships[2] = Ship("Encouraçado", 3);
 	this->ships[3] = Ship("Encouraçado", 3);
-	this->ships[4] = Ship("Submarino", 2);
+    this->ships[4] = Ship("Submarino", 1);
 }
 
 // Verifica se todos os navios da frota foram destruídos.

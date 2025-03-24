@@ -26,6 +26,7 @@ public:
 signals:
     void playerUpdated();
     void attackResult(int row, int col, bool hit);
+    void attackMade();
 
 private:
     Player* player;
