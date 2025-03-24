@@ -14,10 +14,14 @@ INCLUDEPATH += ../BattleshipBack/include \
 
 SOURCES += \
     ../BattleshipBack/controllers/boardController.cpp \
+    ../BattleshipBack/controllers/gameController.cpp \
     ../BattleshipBack/controllers/playerController.cpp \
+    ../BattleshipBack/controllers/robotController.cpp \
     ../BattleshipBack/controllers/shipController.cpp \
+    ../BattleshipBack/src/attack.cpp \
     ../BattleshipBack/src/board.cpp \
     ../BattleshipBack/src/fleet.cpp \
+    ../BattleshipBack/src/robotplayer.cpp \
     ../BattleshipBack/src/player.cpp \
     ../BattleshipBack/src/position.cpp \
     ../BattleshipBack/src/ship.cpp \
@@ -30,10 +34,14 @@ SOURCES += \
 
 HEADERS += \
     ../BattleshipBack/controllers/boardController.h \
+    ../BattleshipBack/controllers/gameController.h \
     ../BattleshipBack/controllers/playerController.h \
+    ../BattleshipBack/controllers/robotController.h \
     ../BattleshipBack/controllers/shipController.h \
+    ../BattleshipBack/include/attack.h \
     ../BattleshipBack/include/board.h \
     ../BattleshipBack/include/fleet.h \
+    ../BattleshipBack/include/robotplayer.h \
     ../BattleshipBack/include/player.h \
     ../BattleshipBack/include/position.h \
     ../BattleshipBack/include/ship.h \

@@ -60,6 +60,7 @@ void PlayerController::resetBoard() {
 bool PlayerController::attackOpponent(Player* opponent, int row, int col) {
     bool hit = player->attackOpponent(opponent->getBoard(), row, col);
     emit attackResult(row, col, hit);
+    emit attackMade();
     return hit;
 }
 

@@ -19,8 +19,7 @@ BoardRenderer::BoardRenderer(
     hideShips(false),
     attackMode(attackMode),
     attackerController(nullptr),
-    enemyController(nullptr)
-{
+    enemyController(nullptr) {
     // Se estivermos em modo de ataque, o playerController passado originalmente
     // é o atacante e o enemyController é o que está sendo atacado.
     if (attackMode) {
