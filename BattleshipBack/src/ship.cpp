@@ -1,4 +1,4 @@
-#include <iostream> 
+#include <iostream>
 #include <string>
 #include "ship.h"
 
@@ -10,25 +10,25 @@ Ship::Ship(string name, int size)
 
 // Retorna verdadeiro se o navio foi destruído (todas as posições atingidas).
 bool Ship::isDestroyed() {
-	return this->hits >= this->size;
+    return this->hits >= this->size;
 }
 
 // Retorna a orientação do navio.
 bool Ship::isHorizontal(){
-	return this->horizontal;
+    return this->horizontal;
 }
 
 // Alterna a orientação do navio (horizontal/vertical).
 void Ship::setOrientation(bool horizontal) {
-	this->horizontal = horizontal;
+    this->horizontal = horizontal;
 }
 
 void Ship::incrementHits(){
-	this->hits++;
+    this->hits++;
 }
 
 int Ship::getHits(){
-	return this->hits;
+    return this->hits;
 }
 
 int Ship::getShipSize(){

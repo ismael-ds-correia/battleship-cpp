@@ -22,6 +22,7 @@ class Player{
 		void positionShipsRandomly();
 		bool attackOpponent(Board&, int, int);
 		void printBoard();
+        Fleet& getFleet();
 };
 
 #endif

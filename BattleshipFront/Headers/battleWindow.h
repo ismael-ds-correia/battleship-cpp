@@ -36,6 +36,10 @@ private:
     PlayerController* enemyController;
 
     void setupUI();
+
+private slots:
+    void handleGameOver(bool playerWon);
+    void restartGame(); // Função para reiniciar o jogo
 };
 
 #endif // BATTLEWINDOW_H

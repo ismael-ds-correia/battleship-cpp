@@ -1,6 +1,7 @@
 #ifndef PLAYERCONTROLLER_H
 #define PLAYERCONTROLLER_H
 
+#include "ship.h"
 #include <string>
 #include <QObject>
 #include <QString>
@@ -26,6 +27,7 @@ public:
 signals:
     void playerUpdated();
     void attackResult(int row, int col, bool hit);
+    void shipDestroyed(Ship* ship);
 
 private:
     Player* player;

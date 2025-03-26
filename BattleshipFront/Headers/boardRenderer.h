@@ -44,6 +44,10 @@ public:
 
 public slots:
     void handleCellClick(int row, int col); //função de testes, remover depois
+    void onShipDestroyed(Ship* ship);
+
+signals:
+    void gameOver(bool playerWon);
 
 private:
     QGraphicsScene* scene;
@@ -97,6 +101,7 @@ private:
 
     bool hideShips;
     bool isInteractive;
+
 };
 
 #endif // BOARDRENDERER_H

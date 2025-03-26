@@ -37,8 +37,8 @@ bool BoardController::placeShipFromFleet(int shipIndex, int row, int col, bool h
 void BoardController::attackPosition(int x, int y) {
     // A lógica de ataque depende da implementação de attackOpponent do Player.
     // Aqui assumimos que x e y correspondem à linha e coluna, respectivamente.
-    bool hit = owner->attackOpponent(owner->getBoard(), x, y);
-    emit attackResult(hit);
+    //bool hit = owner->attackOpponent(owner->getBoard(), x, y);
+    //emit attackResult(hit);
 }
 
 void BoardController::randomizeShips() {

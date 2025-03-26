@@ -38,6 +38,7 @@ MainWindow::MainWindow(
     selectorSpace->show();
 
     boardRenderer = new BoardRenderer(scene, shipController, boardController, selectorSpace, playerController);
+    boardRenderer->setInteractive(true);
     boardRenderer->renderCoordinates();
 
     updateBoard();
