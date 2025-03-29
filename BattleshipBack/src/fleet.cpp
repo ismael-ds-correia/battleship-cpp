@@ -1,5 +1,7 @@
-#include <iostream>
+//#include <iostream>
 #include "fleet.h"
+//#include "qdebug.h"
+//#include "qlogging.h"
 #include "ship.h"
 
 // Inicializa uma frota com os navios padrão.
@@ -13,12 +15,13 @@ Fleet::Fleet() {
 
 // Verifica se todos os navios da frota foram destruídos.
 bool Fleet::isDestroyed() {
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 5; i++) {
 		if (!this->ships[i].isDestroyed()) { // Se algum navio ainda não foi destruído.
+            //qDebug() << "Navios ainda não foram destruidos";
 			return false;
 		}
 	}
-	
+    //qDebug() << "Todos os navios foram destruidos";
 	return true; // Todos os navios foram destruídos.
 }
 

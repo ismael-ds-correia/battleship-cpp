@@ -180,6 +180,7 @@ void BoardRenderer::onShipDestroyed(Ship* ship) {
         }
     }
     scene->update();
+    renderShips();
 }
 
 void BoardRenderer::renderShips() {
@@ -209,7 +210,7 @@ void BoardRenderer::renderShips() {
             // 🔹 Se não estiver na posição inicial do barco, não renderiza novamente
             if (i != startRow || j != startCol) continue;
 
-            if (hideShips) {
+            if (hideShips && !ship->isDestroyed()) {
                 // Se a flag estiver ativa, desenha a água no lugar do navio
                 BoardCell* waterCell = new BoardCell(startRow, startCol, scaledWaterTexture);
                 waterCell->setPos(startCol * (cellSize + margin), startRow * (cellSize + margin));
