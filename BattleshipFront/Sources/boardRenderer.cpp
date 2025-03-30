@@ -1,5 +1,6 @@
 #include "../Headers/boardRenderer.h"
 #include "../Headers/boardCell.h"
+#include "../Headers/battleWindow.h"
 
 //construtor ta gigante, essa formatação foi a melhor forma que eu achei pra deixar isso
 //minimamente legivel
@@ -85,9 +86,15 @@ void BoardRenderer::handleCellClick(int row, int col) {
             // A função attackOpponent já emite o sinal attackResult(row, col, hit),
             // que poderá ser conectado para atualizar a interface.
             qDebug() << "Ataque realizado na célula (" << row << "," << col << "): " << (hit ? "Acertou" : "Errou");
+
+            if (enemyController->getPlayer()->getFleet().isDestroyed()) {
+                qDebug() << "Fim de Jogo";
+                emit gameOver(true); // Jogador venceu
+            }
         } else {
             qDebug() << "Controles de ataque não configurados corretamente.";
         }
+
         return;
     }
 
@@ -128,6 +135,54 @@ void BoardRenderer::handleCellClick(int row, int col) {
     renderBoard(); //atualiza o render do tabuleiro
 }
 
+void BoardRenderer::onShipDestroyed(Ship* ship) {
+    // Obtém o estado atual do board.
+    Position (&boardState)[10][10] = boardController->getBoardState();
+    int cellSize = 32;
+    int margin = 0;
+
+    // Vetor para armazenar as coordenadas das células que pertencem ao navio.
+    std::vector<std::pair<int,int>> shipCells;
+    for (int i = 0; i < 10; ++i) {
+        for (int j = 0; j < 10; ++j) {
+            if (boardState[i][j].getShipReference() == ship) {
+                shipCells.push_back({i, j});
+            }
+        }
+    }
+
+    // Para cada célula que faz parte do navio, marque as células adjacentes.
+    for (const auto &cell : shipCells) {
+        int row = cell.first;
+        int col = cell.second;
+        for (int dRow = -1; dRow <= 1; ++dRow) {
+            for (int dCol = -1; dCol <= 1; ++dCol) {
+                int newRow = row + dRow;
+                int newCol = col + dCol;
+                // Verifica se a posição está dentro dos limites do board.
+                if (newRow < 0 || newRow >= 10 || newCol < 0 || newCol >= 10)
+                    continue;
+                // Se a célula adjacente faz parte do próprio navio, não processa.
+                if (boardState[newRow][newCol].getShipReference() == ship)
+                    continue;
+                // Se a célula ainda não foi atacada, marca-a e desenha o overlay.
+                if (!boardState[newRow][newCol].isAttacked()) {
+                    boardState[newRow][newCol].attack();
+
+                    // Adiciona overlay com a textura de água atingida.
+                    QPointF pos = calculatePosition(newRow, newCol);
+                    QGraphicsPixmapItem* overlayItem = new QGraphicsPixmapItem(scaledWaterHitTexture);
+                    overlayItem->setZValue(100);
+                    overlayItem->setPos(pos);
+                    scene->addItem(overlayItem);
+                }
+            }
+        }
+    }
+    scene->update();
+    renderShips();
+}
+
 void BoardRenderer::renderShips() {
     // Remove os barcos antigos da cena, se houver
     for (QGraphicsItem* item : shipItems) {
@@ -155,7 +210,7 @@ void BoardRenderer::renderShips() {
             // 🔹 Se não estiver na posição inicial do barco, não renderiza novamente
             if (i != startRow || j != startCol) continue;
 
-            if (hideShips) {
+            if (hideShips && !ship->isDestroyed()) {
                 // Se a flag estiver ativa, desenha a água no lugar do navio
                 BoardCell* waterCell = new BoardCell(startRow, startCol, scaledWaterTexture);
                 waterCell->setPos(startCol * (cellSize + margin), startRow * (cellSize + margin));

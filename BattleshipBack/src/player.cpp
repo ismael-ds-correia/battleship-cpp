@@ -98,6 +98,11 @@ Board& Player::getBoard(){
 void Player::printBoard(){
 	this->board.print();
 }
+
+Fleet& Player::getFleet() {
+    return this->fleet;
+}
+
 /*
 void Player::positionShipsRandomly(){
     int row = 0, column = 0, count = 0, i = 0;
