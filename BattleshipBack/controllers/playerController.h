@@ -27,6 +27,7 @@ public:
 signals:
     void playerUpdated();
     void attackResult(int row, int col, bool hit);
+    void attackMade();
     void shipDestroyed(Ship* ship);
 
 private:
