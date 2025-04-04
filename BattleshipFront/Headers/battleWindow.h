@@ -7,26 +7,20 @@
 #include "boardRenderer.h"
 #include "boardController.h"
 #include "playerController.h"
-#include "robotController.h"
 #include "shipController.h"
-#include "gameController.h"
 
 class BattleWindow : public QMainWindow {
     Q_OBJECT
 public:
-    explicit BattleWindow(
-        BoardController* playerBoardController,
-        BoardController* enemyBoardController,
-        ShipController* shipController,
-        PlayerController* playerController,
-        RobotController* enemyController,
-        QWidget* parent = nullptr
-    );
-
+    explicit BattleWindow(BoardController* playerBoardController,
+                          BoardController* enemyBoardController,
+                          ShipController* shipController,
+                          PlayerController* playerController,
+                          PlayerController* enemyController,
+                          QWidget* parent = nullptr);
     ~BattleWindow();
 
 private:
-    //Interface
     QGraphicsView* playerView;
     QGraphicsView* enemyView;
     QGraphicsScene* playerScene;
@@ -35,13 +29,11 @@ private:
     BoardRenderer* playerRenderer;
     BoardRenderer* enemyRenderer;
 
-    //logica de jogo
     BoardController* playerBoardController;
     BoardController* enemyBoardController;
     ShipController* shipController;
     PlayerController* playerController;
-    RobotController* enemyController;
-    GameController* gameController;
+    PlayerController* enemyController;
 
     void setupUI();
 
