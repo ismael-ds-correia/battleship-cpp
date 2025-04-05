@@ -9,6 +9,7 @@
 #include <ship.h>
 #include <cstdlib>
 #include <ctime>
+#include <QDebug>
 
 using namespace std;
 
@@ -20,45 +21,55 @@ RobotPlayer::RobotPlayer() : Player("Xerath"){
 	}
 }
 
-void RobotPlayer::attack(Board& enemyBoard){
-	if(!priorityQueue.empty()){
-		auto target = priorityQueue.front();
-        priorityQueue.pop();
+void RobotPlayer::attack(Board& enemyBoard) {
+    qDebug() << "RobotPlayer::attack: Iniciando ataque.";
 
+    if (!priorityQueue.empty()) {
+        qDebug() << "RobotPlayer::attack: Utilizando ataque prioritário.";
+        auto target = priorityQueue.front();
+        priorityQueue.pop();
         int row = target.first;
         int column = target.second;
-
+        qDebug() << "RobotPlayer::attack: Ataque na célula (" << row << "," << column << ").";
         enemyBoard.attack(row, column);
-
         adjustStrategy(enemyBoard, row, column);
-	}else{
-        if(this->shouldAttackStrategicPositions()){
-            cout << "Modo de ataque estrategico ativado!" << "\n";
+    } else {
+        if (this->shouldAttackStrategicPositions()) {
+            qDebug() << "RobotPlayer::attack: Modo de ataque estratégico ativado.";
             this->planStrategicAttack(enemyBoard);
-            
+
+            if (priorityQueue.empty()) {
+                int row = rand() % 10;
+                int column = rand() % 10;
+                qDebug() << "RobotPlayer::attack: Fallback para ataque aleatório na célula (" << row << "," << column << ").";
+                while (!enemyBoard.attack(row, column)) {
+                    row = rand() % 10;
+                    column = rand() % 10;
+                    qDebug() << "RobotPlayer::attack: Tentando novo ataque aleatório na célula (" << row << "," << column << ").";
+                }
+                adjustStrategy(enemyBoard, row, column);
+                return;
+            }
+
             auto target = priorityQueue.front();
             priorityQueue.pop();
-
             int row = target.first;
             int column = target.second;
-
+            qDebug() << "RobotPlayer::attack: Ataque estratégico na célula (" << row << "," << column << ").";
             enemyBoard.attack(row, column);
             adjustStrategy(enemyBoard, row, column);
-
-            return;
-        }else{
-            //Ataque aleatório
-            int row = rand()%10;
-            int column = rand()%10;
-
-    	    while(!enemyBoard.attack(row, column)){
-    	       row = rand()%10;
-               column = rand()%10;
-    	    }
-
-    	    adjustStrategy(enemyBoard, row, column);
+        } else {
+            int row = rand() % 10;
+            int column = rand() % 10;
+            qDebug() << "RobotPlayer::attack: Ataque aleatório na célula (" << row << "," << column << ").";
+            while (!enemyBoard.attack(row, column)) {
+                row = rand() % 10;
+                column = rand() % 10;
+                qDebug() << "RobotPlayer::attack: Tentando novo ataque aleatório na célula (" << row << "," << column << ").";
+            }
+            adjustStrategy(enemyBoard, row, column);
         }
-	}
+    }
 }
 
 

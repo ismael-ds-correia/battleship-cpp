@@ -11,39 +11,47 @@ BattleWindow::BattleWindow(
     BoardController* enemyBoardController,
     ShipController* shipBattleController,
     PlayerController* playerBattleController,
-    PlayerController* enemyBattleController,
+    RobotController* enemyBattleController,
     QWidget* parent)
     : QMainWindow(parent),
     playerBoardController(playerBoardController),
     enemyBoardController(enemyBoardController),
     shipController(shipBattleController),
     playerController(playerBattleController),
-    enemyController(enemyBattleController) {
+    enemyController(enemyBattleController),
+    currentTurn(Turn::Player){
+
     setupUI();
 
     // Cria o renderizador para o tabuleiro do jogador (exibindo os navios)
     playerRenderer = new BoardRenderer(playerScene, shipBattleController, playerBoardController, nullptr, playerBattleController);
-    playerRenderer->setHideShips(false); //false para mostrar os navios
-    playerRenderer->setInteractive(false); //desabilita o clique no próprio tabuleiro
+    playerRenderer->setHideShips(false);
+    playerRenderer->setInteractive(false);
     playerRenderer->renderCoordinates();
 
-    // Cria o renderizador para o tabuleiro do robô (oculta os navios)
     enemyRenderer = new BoardRenderer(enemyScene, shipBattleController, enemyBoardController, nullptr, playerBattleController, enemyBattleController, true);
-    enemyRenderer->setHideShips(false); // ativa a flag para esconder os navios
-    enemyRenderer->setInteractive(true); //habilita o clique no tabuleiro inimigo
+    enemyRenderer->setHideShips(false);
+    enemyRenderer->setInteractive(true);
     enemyRenderer->renderCoordinates();
+
 
     // Renderiza os tabuleiros
     playerRenderer->renderBoard();
     enemyRenderer->renderBoard();
 
-    connect(playerBattleController, &PlayerController::attackResult,
-            enemyRenderer, &BoardRenderer::onAttackResult);
+    connect(playerBattleController, &PlayerController::attackResult, enemyRenderer, &BoardRenderer::onAttackResult);
+    connect(playerBattleController, &PlayerController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
     connect(enemyRenderer, &BoardRenderer::gameOver, this, &BattleWindow::handleGameOver);
-    connect(playerBattleController, &PlayerController::shipDestroyed,
-            enemyRenderer, &BoardRenderer::onShipDestroyed);
-    //adicionar connect do robô para as posicoes adjacentes quando for implementado
+    connect(enemyRenderer, &BoardRenderer::cellClicked, this, &BattleWindow::onPlayerAttack);
 
+    connect(playerController, &PlayerController::attackResult, enemyRenderer, &BoardRenderer::onAttackResult);
+    // Atualiza o tabuleiro do jogador quando a IA ataca:
+    connect(enemyBattleController, &RobotController::attackCompleted, playerRenderer, [=](bool hit){
+        qDebug() << "Ataque da IA concluído. Hit:" << hit;
+        playerRenderer->renderBoard();
+    });
+
+    updateTurn();
     setWindowTitle("Tela de Batalha");
 }
 
@@ -70,6 +78,43 @@ void BattleWindow::setupUI() {
 
     centralWidget->setLayout(layout);
     setCentralWidget(centralWidget);
+}
+
+void BattleWindow::updateTurn() {
+    qDebug() << "Atualizando turno. Turno atual:" << (currentTurn == Turn::Player ? "Player" : "Enemy");
+    if (currentTurn == Turn::Player) {
+        enemyRenderer->setInteractive(true);
+        qDebug() << "Turno do jogador. Interatividade do tabuleiro inimigo habilitada.";
+    } else {
+        enemyRenderer->setInteractive(false);
+        qDebug() << "Turno da IA. Interatividade do tabuleiro inimigo desabilitada.";
+        QTimer::singleShot(1000, this, SLOT(enemyAttack()));
+    }
+}
+
+// Slot chamado quando o jogador realiza um ataque (por exemplo, via clique)
+void BattleWindow::onPlayerAttack(int row, int col) {
+    qDebug() << "onPlayerAttack chamado. Linha:" << row << "Coluna:" << col;
+    if (currentTurn != Turn::Player) {
+        qDebug() << "Ataque ignorado pois não é o turno do jogador.";
+        return;
+    }
+
+    currentTurn = Turn::Enemy;
+    updateTurn();
+}
+
+// Slot para o ataque da IA
+
+void BattleWindow::enemyAttack() {
+    qDebug() << "BattleWindow::enemyAttack: Início do ataque da IA.";
+
+    bool hit = enemyController->attackOpponent(playerController->getPlayer());
+    qDebug() << "BattleWindow::enemyAttack: Resultado do ataque da IA, hit =" << hit;
+
+    currentTurn = Turn::Player;
+    updateTurn();
+    qDebug() << "BattleWindow::enemyAttack: Turno alterado para Player e updateTurn() chamado.";
 }
 
 void BattleWindow::handleGameOver(bool playerWon) {

@@ -12,7 +12,7 @@
 #include "shipController.h"
 #include "selectorSpace.h"
 #include "playerController.h"
-
+#include "robotController.h"
 
 class BoardRenderer : public QGraphicsView {
     Q_OBJECT
@@ -24,7 +24,7 @@ public:
         BoardController* boardController,
         SelectorSpace* selectorSpace,
         PlayerController* playerController,
-        PlayerController* enemyController = nullptr,
+        RobotController* enemyController = nullptr, //MANGA
         bool attackMode = false
     );
 
@@ -48,6 +48,7 @@ public slots:
 
 signals:
     void gameOver(bool playerWon);
+    void cellClicked(int row, int col);
 
 private:
     QGraphicsScene* scene;
@@ -57,8 +58,8 @@ private:
     PlayerController* playerController;
 
     bool attackMode;
-    PlayerController* attackerController; // Quem executa o ataque (jogador)
-    PlayerController* enemyController;    // O inimigo que será atacado
+    PlayerController* attackerController;
+    RobotController* enemyController; //MANGA
 
 
     QVector<BoardCell*> waterCells;

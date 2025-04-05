@@ -8,16 +8,21 @@
 #include "boardController.h"
 #include "playerController.h"
 #include "shipController.h"
+#include "robotController.h"
+
+enum class Turn { Player, Enemy };
 
 class BattleWindow : public QMainWindow {
     Q_OBJECT
+
 public:
-    explicit BattleWindow(BoardController* playerBoardController,
-                          BoardController* enemyBoardController,
-                          ShipController* shipController,
-                          PlayerController* playerController,
-                          PlayerController* enemyController,
-                          QWidget* parent = nullptr);
+    explicit BattleWindow(
+        BoardController* playerBoardController,
+        BoardController* enemyBoardController,
+        ShipController* shipController,
+        PlayerController* playerController,
+        RobotController* enemyController,
+        QWidget* parent = nullptr);
     ~BattleWindow();
 
 private:
@@ -33,13 +38,18 @@ private:
     BoardController* enemyBoardController;
     ShipController* shipController;
     PlayerController* playerController;
-    PlayerController* enemyController;
+    RobotController* enemyController;
 
     void setupUI();
 
+    Turn currentTurn;
+
 private slots:
     void handleGameOver(bool playerWon);
-    void restartGame(); // Função para reiniciar o jogo
+    void restartGame();
+    void onPlayerAttack(int row, int col);
+    void enemyAttack();
+    void updateTurn();
 };
 
 #endif // BATTLEWINDOW_H
