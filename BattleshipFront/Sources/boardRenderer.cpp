@@ -10,7 +10,7 @@ BoardRenderer::BoardRenderer(
     BoardController* boardController,
     SelectorSpace* selectorSpace,
     PlayerController* playerController,
-    PlayerController* enemyController,
+    RobotController* enemyController, //MANGA
     bool attackMode)
     : scene(scene),
     shipController(shipController),
@@ -95,6 +95,7 @@ void BoardRenderer::handleCellClick(int row, int col) {
             qDebug() << "Controles de ataque não configurados corretamente.";
         }
 
+        emit cellClicked(row, col);
         return;
     }
 
@@ -250,6 +251,10 @@ void BoardRenderer::renderShips() {
 }
 
 void BoardRenderer::onAttackResult(int row, int col, bool hit) {
+    if (row < 0 || col < 0 || row >= 10 || col >= 10) {
+        qDebug() << "Coordenadas inválidas recebidas:" << row << col;
+        return; // Ignora coordenadas inválidas.
+    }
     QPixmap overlayPixmap;
     if (hit) {
         overlayPixmap = scaledShipHitTexture; // Textura para acerto (fogo)

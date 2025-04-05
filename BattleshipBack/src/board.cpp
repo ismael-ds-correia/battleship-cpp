@@ -1,5 +1,6 @@
 #include <iostream>
 #include "board.h"
+#include <QDebug>
 
 using namespace std;
 
@@ -176,8 +177,9 @@ Position Board::getPosition(int row, int column){
     return this->positions[row][column];
 }
 
-Ship* Board::getShipReference(int row, int column){
-    this->positions[row][column].getShipReference();
+Ship* Board::getShipReference(int row, int column) {
+    qDebug() << "Board::getShipReference: Obtendo referência do navio na célula (" << row << "," << column << ")";
+    return this->positions[row][column].getShipReference();
 }
 
 bool Board::isAttacked(int row, int column){

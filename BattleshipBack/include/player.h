@@ -13,7 +13,7 @@ class Player{
 		Fleet fleet;
 	public:
 		Player(string);
-		~Player(){}
+        virtual ~Player(){}
 		string getName();
 		Board& getBoard();
         bool placeShip(int, int, int, bool);

@@ -20,7 +20,7 @@ public:
     bool repositionShip(int shipIndex, int newLine, int newColumn, bool newHorizontal);
     void positionShipsRandomly();
     void resetBoard();
-    bool attackOpponent(Player* opponent, int row, int col);
+    virtual bool attackOpponent(Player* opponent, int row, int col);
     void printBoard() const;
     Player* getPlayer() const;
 

@@ -14,6 +14,7 @@ class RobotPlayer :  public Player{
 		int virtualBoard[10][10];
 		queue<pair<int, int>> priorityQueue;
 		int alertAttack=0;
+        int sizeOfEnemyShips[];
 	public:
 		RobotPlayer();
 		~RobotPlayer(){}
@@ -27,6 +28,12 @@ class RobotPlayer :  public Player{
 		void clearProrityQueue();
 		void discoverDirectionAndAdd(Board&, int, int);
 		void printVirtualBoard();
+        bool shouldAttackStrategicPositions();
+        void planStrategicAttack(Board& enemyBoard);
+        void searchVertically(int size);
+        void searchHorizontally(int size);
+        int sizeOfTheNextShip();
+        void oneLessShip(int sizeOfShipDestroyed);
 };
 
 #endif
