@@ -30,7 +30,7 @@ bool RobotController::attackOpponent(Player* opponent) {
     bool hit = true;
 
     qDebug() << "RobotController::attackOpponent: Emissão de sinal attackCompleted com hit =" << hit;
-    emit attackCompleted(int row, int col, bool hit);
+    emit attackCompleted(hit);
 
     return hit;
 }

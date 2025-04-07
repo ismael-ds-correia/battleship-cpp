@@ -183,5 +183,5 @@ Ship* Board::getShipReference(int row, int column) {
 }
 
 bool Board::isAttacked(int row, int column){
-    return this->positions[row][column].isAttacked();
+    this->positions[row][column].isAttacked();
 }
