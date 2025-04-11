@@ -41,6 +41,8 @@ MainWindow::MainWindow(
     boardRenderer->setInteractive(true);
     boardRenderer->renderCoordinates();
 
+    connect(selectorSpace, &SelectorSpace::shipSelected, boardRenderer, &BoardRenderer::updatePlacementIndicators);
+
     updateBoard();
 }
 

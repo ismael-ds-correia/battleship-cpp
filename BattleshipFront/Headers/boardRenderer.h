@@ -41,10 +41,13 @@ public:
     void setInteractive(bool interactive); //para bloquear o clique no próprio tabuleiro
 
     void setSelectorSpace(SelectorSpace* newSelectorSpace);
+    void updatePlacementIndicators();
 
 public slots:
     void handleCellClick(int row, int col); //função de testes, remover depois
     void onShipDestroyed(Ship* ship);
+
+
 
 signals:
     void gameOver(bool playerWon);
@@ -56,6 +59,8 @@ private:
     BoardController* boardController;
     SelectorSpace* selectorSpace;
     PlayerController* playerController;
+
+    std::vector<QGraphicsRectItem*> placementIndicators;
 
     bool attackMode;
     PlayerController* attackerController;

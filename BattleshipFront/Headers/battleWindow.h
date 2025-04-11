@@ -48,7 +48,9 @@ private slots:
     void handleGameOver(bool playerWon);
     void restartGame();
     void onPlayerAttack(int row, int col);
+    void handlePlayerAttackResult(int row, int col, bool hit);
     void enemyAttack();
+    void handleEnemyAttackResult(int row, int col, bool hit);
     void updateTurn();
 };
 

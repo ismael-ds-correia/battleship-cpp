@@ -90,6 +90,46 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 
             if (mouseEvent->button() == Qt::LeftButton) {
+                //PARTE DO EFEITO BONITINHO
+                if (currentEffect) {
+                    currentEffect->deleteLater();
+                    currentEffect = nullptr;
+                }
+                if (blurAnimation) {
+                    blurAnimation->stop();
+                    blurAnimation->deleteLater();
+                    blurAnimation = nullptr;
+                }
+                if (colorAnimation) {
+                    colorAnimation->stop();
+                    colorAnimation->deleteLater();
+                    colorAnimation = nullptr;
+                }
+
+                // Configura o efeito de sombra
+                currentEffect = new QGraphicsDropShadowEffect(label);
+                currentEffect->setColor(QColor(255, 255, 255, 255)); // Branco
+                currentEffect->setBlurRadius(10);
+                currentEffect->setOffset(0);
+                label->setGraphicsEffect(currentEffect);
+
+                // Animação do blur
+                blurAnimation = new QPropertyAnimation(currentEffect, "blurRadius", this);
+                blurAnimation->setDuration(1000);
+                blurAnimation->setStartValue(10);
+                blurAnimation->setEndValue(20);
+                blurAnimation->setLoopCount(-1); // Infinito
+                blurAnimation->start();
+
+                // Animação da cor (opacidade)
+                colorAnimation = new QPropertyAnimation(currentEffect, "color", this);
+                colorAnimation->setDuration(1000);
+                colorAnimation->setStartValue(QColor(255, 255, 255, 255));
+                colorAnimation->setEndValue(QColor(255, 255, 255, 127));
+                colorAnimation->setLoopCount(-1);
+                colorAnimation->start();
+
+
                 //pega o tamanho do barco a partir do QLabel
                 int shipSize = label->property("shipSize").toInt();
                 int shipIndex = label->property("shipIndex").toInt();
@@ -98,6 +138,8 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
                 selectedShipIndex = shipIndex;
                 selectedShipSize = shipSize; //quando precisar posicionar o barco, basta passar shipSize para BoardController
                 selectedShipLabel = label;
+
+                emit shipSelected();
 
             } else if (mouseEvent->button() == Qt::RightButton) {
                 rotateShip(label);
@@ -108,6 +150,33 @@ bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
     }
     return QWidget::eventFilter(obj, event);
 }
+
+
+void SelectorSpace::onPlacementFailed() {
+    if (currentEffect) {
+        // Pausa animações atuais
+        blurAnimation->pause();
+        colorAnimation->pause();
+
+        // Animação para vermelho
+        QPropertyAnimation* redAnim = new QPropertyAnimation(currentEffect, "color", this);
+        redAnim->setDuration(500);
+        redAnim->setStartValue(QColor(255, 0, 0, 255));
+        redAnim->setEndValue(QColor(255, 0, 0, 127));
+        redAnim->setLoopCount(2); // Pisca duas vezes
+
+        connect(redAnim, &QPropertyAnimation::finished, this, [this]() {
+            // Restaura a cor branca e retoma as animações
+            currentEffect->setColor(QColor(255, 255, 255, 255));
+            blurAnimation->resume();
+            colorAnimation->resume();
+            //redAnim->deleteLater();
+        });
+
+        redAnim->start();
+    }
+}
+
 
 void SelectorSpace::markShipAsPlaced(int shipIndex) {
     QList<QLabel*> shipLabels = findChildren<QLabel*>();
@@ -175,6 +244,23 @@ void SelectorSpace::clearSelectedShip() {
     selectedShipIndex = -1;
     selectedShipSize = 0;
     selectedShipLabel = nullptr;
+
+    if (currentEffect) {
+        currentEffect->deleteLater();
+        currentEffect = nullptr;
+    }
+    if (blurAnimation) {
+        blurAnimation->stop();
+        blurAnimation->deleteLater();
+        blurAnimation = nullptr;
+    }
+    if (colorAnimation) {
+        colorAnimation->stop();
+        colorAnimation->deleteLater();
+        colorAnimation = nullptr;
+    }
+
+    emit shipSelected();
 }
 
 int SelectorSpace::getSelectedShipSize() {
