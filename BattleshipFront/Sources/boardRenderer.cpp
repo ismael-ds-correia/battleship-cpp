@@ -128,8 +128,10 @@ void BoardRenderer::handleCellClick(int row, int col) {
     if (success) {
         selectorSpace->markShipAsPlaced(shipIndex);
         selectorSpace->clearSelectedShip(); // redundante, mas para garantir
+        updatePlacementIndicators();
         qDebug() << "Barco posicionado com sucesso.";
     } else {
+        selectorSpace->onPlacementFailed();
         qDebug() << "Falha ao posicionar o barco.";
     }
 
@@ -315,6 +317,73 @@ void BoardRenderer::renderCoordinates() {
         qreal y = i * (cellSize + margin) + (cellSize - textRect.height()) / 2;
         textItem->setPos(x, y);
         scene->addItem(textItem);
+    }
+}
+
+void BoardRenderer::updatePlacementIndicators() {
+    // Remove (e deleta) indicadores antigos, se existirem
+    for (QGraphicsRectItem* item : placementIndicators) {
+        scene->removeItem(item);
+        delete item;
+    }
+    placementIndicators.clear();
+
+    // Se não há navio selecionado, não adiciona nenhum overlay e finaliza
+    if (selectorSpace->getSelectedShipIndex() < 0) {
+        return;
+    }
+
+    // Obtemos o boardState para checar as posições
+    Position (&boardState)[10][10] = boardController->getBoardState();
+
+    bool horizontal = selectorSpace->isSelectedShipHorizontal();
+    int shipSize = selectorSpace->getSelectedShipSize();
+
+    int cellSize = 32;
+    int margin = 0;
+
+    // Para cada célula do tabuleiro
+    for (int row = 0; row < 10; ++row) {
+        for (int col = 0; col < 10; ++col) {
+            bool valid = true;
+            // Para a verificação, se o navio está na horizontal:
+            if (horizontal) {
+                if(col + shipSize > 10) {
+                    valid = false;
+                } else {
+                    for (int k = 0; k < shipSize; ++k) {
+                        if (!boardState[row][col + k].isValidPosition()) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                // Se vertical
+                if(row + shipSize > 10) {
+                    valid = false;
+                } else {
+                    for (int k = 0; k < shipSize; ++k) {
+                        if (!boardState[row + k][col].isValidPosition()) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Cria o overlay para a célula
+            QGraphicsRectItem* overlay = new QGraphicsRectItem(col * (cellSize + margin),
+                                                               row * (cellSize + margin),
+                                                               cellSize, cellSize);
+            overlay->setZValue(50);  // Valor intermediário para aparecer sobre a água mas abaixo de textos/ataques
+            // Seleciona cor: verde semi-transparente para válido e vermelho semi-transparente para inválido
+            QColor color = valid ? QColor(0, 255, 0, 100) : QColor(255, 0, 0, 100);
+            overlay->setBrush(color);
+            overlay->setPen(Qt::NoPen);
+            scene->addItem(overlay);
+            placementIndicators.push_back(overlay);
+        }
     }
 }
 

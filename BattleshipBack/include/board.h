@@ -24,7 +24,7 @@ class Board {
 							 		 		  // posicionado em uma determinada posição.
 		bool checkPosition(int, int);         // Método sobrecarregado para verificar se é possível atacar uma posição.
 		Ship* getShipReference(int, int);     // Retorna uma referência para um navio em uma determinada posição.
-		bool isAttacked(int, int);            // Verifica se uma posição no tabuleiro já foi atacada.
+        bool isAttacked(int, int);            // Verifica se uma posição no tabuleiro já foi atacada.
 };
 
 #endif

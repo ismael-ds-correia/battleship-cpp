@@ -8,6 +8,8 @@
 #include <QMouseEvent>
 #include <QVBoxLayout>
 #include <QTimer>
+#include <QGraphicsDropShadowEffect>
+#include <QPropertyAnimation>
 #include "ship.h"
 
 struct ShipInfo {
@@ -52,6 +54,17 @@ private:
     QPixmap originalShipPixmaps;
 
     QVector<ShipInfo> shipInfos;
+
+    //PARTE DA ANIMACAO DO SELECTORSPACE
+    QGraphicsDropShadowEffect* currentEffect = nullptr;
+    QPropertyAnimation* blurAnimation = nullptr;
+    QPropertyAnimation* colorAnimation = nullptr;
+
+public slots:
+    void onPlacementFailed();
+
+signals:
+    void shipSelected();
 };
 
 #endif // SELECTORSPACE_H

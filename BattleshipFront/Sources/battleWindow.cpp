@@ -46,10 +46,15 @@ BattleWindow::BattleWindow(
 
     connect(playerController, &PlayerController::attackResult, enemyRenderer, &BoardRenderer::onAttackResult);
     // Atualiza o tabuleiro do jogador quando a IA ataca:
-    connect(enemyBattleController, &RobotController::attackCompleted, playerRenderer, [=](bool hit){
-        qDebug() << "Ataque da IA concluído. Hit:" << hit;
-        playerRenderer->renderBoard();
-    });
+    connect(enemyController, &RobotController::attackResult, playerRenderer, &BoardRenderer::onAttackResult);
+
+    connect(playerController, &PlayerController::attackResult, this, &BattleWindow::handlePlayerAttackResult);
+    connect(enemyController, &RobotController::attackResult, this, &BattleWindow::handleEnemyAttackResult);
+
+    connect(playerController, &PlayerController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
+    connect(enemyController, &RobotController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
+
+
 
     updateTurn();
     setWindowTitle("Tela de Batalha");
@@ -100,8 +105,22 @@ void BattleWindow::onPlayerAttack(int row, int col) {
         return;
     }
 
-    currentTurn = Turn::Enemy;
-    updateTurn();
+    // Tiramos isso pq se não o turno muda mesmo se acertar o ataque
+    //currentTurn = Turn::Enemy;
+    //updateTurn();
+}
+
+// Para tratarmos do ataque do jogador
+void BattleWindow::handlePlayerAttackResult(int row, int col, bool hit) {
+    if (!hit) {
+        currentTurn = Turn::Enemy;
+        updateTurn();
+    } else {
+        // Verifica se todos os navios inimigos foram destruídos
+        if (enemyController->getPlayer()->getFleet().isDestroyed()) {
+            handleGameOver(true); // Jogador venceu
+        }
+    }
 }
 
 // Slot para o ataque da IA
@@ -112,10 +131,29 @@ void BattleWindow::enemyAttack() {
     bool hit = enemyController->attackOpponent(playerController->getPlayer());
     qDebug() << "BattleWindow::enemyAttack: Resultado do ataque da IA, hit =" << hit;
 
-    currentTurn = Turn::Player;
-    updateTurn();
-    qDebug() << "BattleWindow::enemyAttack: Turno alterado para Player e updateTurn() chamado.";
+    // Mesma coisa com o ataque do bot
+    //currentTurn = Turn::Player;
+    //updateTurn();
+    //qDebug() << "BattleWindow::enemyAttack: Turno alterado para Player e updateTurn() chamado.";
 }
+
+
+void BattleWindow::handleEnemyAttackResult(int row, int col, bool hit) {
+    if (hit) {
+        // Verifica se todos os navios do jogador foram destruídos
+        if (playerController->getPlayer()->getFleet().isDestroyed()) {
+            qDebug() << "Fim de jogo, robô venceu";
+            handleGameOver(false); // Robô venceu
+        } else {
+            // Continua o turno do robô
+            QTimer::singleShot(1000, this, SLOT(enemyAttack()));
+        }
+    } else {
+        currentTurn = Turn::Player;
+        updateTurn();
+    }
+}
+
 
 void BattleWindow::handleGameOver(bool playerWon) {
     QString winner = playerWon ? "Jogador" : "Robô";

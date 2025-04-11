@@ -22,6 +22,7 @@ public:
     // Acesso aos dados do board
     Board* getBoard();
     Position (&getBoardState())[10][10];
+    bool isPositionAvailable(int row, int col) const;
 
 signals:
     void boardUpdated();

@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QPixmap>
+#include <QGraphicsEffect>
 
 class BoardCell : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
@@ -17,6 +18,7 @@ public:
     int getRow() const { return row; }
     int getCol() const { return col; }
 
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override; //função do clique
 
@@ -25,6 +27,9 @@ signals:
 
 private:
     int row, col;
+
+    //dos efeitos
+    QGraphicsColorizeEffect* highlightEffect = nullptr;
 
 };
 
