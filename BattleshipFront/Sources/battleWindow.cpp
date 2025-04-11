@@ -23,13 +23,17 @@ BattleWindow::BattleWindow(
 
     setupUI();
 
+
+    soundManager = new SoundManager(this);
+    //soundManager->playBackgroundMusic();
+
     // Cria o renderizador para o tabuleiro do jogador (exibindo os navios)
-    playerRenderer = new BoardRenderer(playerScene, shipBattleController, playerBoardController, nullptr, playerBattleController);
+    playerRenderer = new BoardRenderer(playerScene, shipBattleController, playerBoardController, nullptr, playerBattleController, soundManager);
     playerRenderer->setHideShips(false);
     playerRenderer->setInteractive(false);
     playerRenderer->renderCoordinates();
 
-    enemyRenderer = new BoardRenderer(enemyScene, shipBattleController, enemyBoardController, nullptr, playerBattleController, enemyBattleController, true);
+    enemyRenderer = new BoardRenderer(enemyScene, shipBattleController, enemyBoardController, nullptr, playerBattleController, soundManager, enemyBattleController, true);
     enemyRenderer->setHideShips(false);
     enemyRenderer->setInteractive(true);
     enemyRenderer->renderCoordinates();
@@ -53,9 +57,6 @@ BattleWindow::BattleWindow(
 
     connect(playerController, &PlayerController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
     connect(enemyController, &RobotController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
-
-
-
     updateTurn();
     setWindowTitle("Tela de Batalha");
 }

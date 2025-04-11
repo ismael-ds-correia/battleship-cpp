@@ -10,6 +10,7 @@ BoardRenderer::BoardRenderer(
     BoardController* boardController,
     SelectorSpace* selectorSpace,
     PlayerController* playerController,
+    SoundManager* soundManager,
     RobotController* enemyController, //MANGA
     bool attackMode)
     : scene(scene),
@@ -17,6 +18,7 @@ BoardRenderer::BoardRenderer(
     boardController(boardController),
     selectorSpace(selectorSpace),
     playerController(playerController),
+    soundManager(soundManager),
     hideShips(false),
     attackMode(attackMode),
     attackerController(nullptr),
@@ -83,6 +85,9 @@ void BoardRenderer::handleCellClick(int row, int col) {
         // que espera um ponteiro para o Player do oponente. Para isso, vamos precisar de um getter.
         if (attackerController && enemyController) {
             bool hit = attackerController->attackOpponent(enemyController->getPlayer(), row, col);
+            if(soundManager) {
+                soundManager->playAttackSound();
+            }
             // A função attackOpponent já emite o sinal attackResult(row, col, hit),
             // que poderá ser conectado para atualizar a interface.
             qDebug() << "Ataque realizado na célula (" << row << "," << col << "): " << (hit ? "Acertou" : "Errou");
