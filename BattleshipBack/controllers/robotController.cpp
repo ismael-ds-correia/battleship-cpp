@@ -77,6 +77,7 @@ bool RobotController::attackOpponent(Player* opponent) {
         emit gameOver(false); // Sinaliza vitória do robô
     }
 
+
     return hit;
 }
 
