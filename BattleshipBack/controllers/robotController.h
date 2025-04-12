@@ -3,6 +3,7 @@
 
 #include "playerController.h"
 #include "robotplayer.h"
+#include "../BattleshipFront/Headers/soundManager.h"
 
 class RobotController : public QObject {
     Q_OBJECT
@@ -25,6 +26,8 @@ signals:
 
 private:
     RobotPlayer* robot;
+
+    SoundManager* soundManager;
 };
 
 #endif // ROBOTCONTROLLER_H

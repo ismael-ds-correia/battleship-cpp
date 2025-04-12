@@ -3,56 +3,57 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QDebug>
-#include <QFile>
+#include <QRandomGenerator>
 
 SoundManager::SoundManager(QObject* parent)
     : QObject(parent),
-    attackSound(new QSoundEffect(this)),
-    explosionSound(new QSoundEffect(this)) {
-
-    connect(attackSound, &QSoundEffect::statusChanged, this, [this]() {
-        qDebug() << "[attackSound] Status:" << attackSound->status();
-        //qDebug() << "[attackSound] Erro:" << attackSound->error();
-    });
-
+    attackSound(new QSoundEffect(this)) {
 
     loadSounds();
 }
 
 SoundManager::~SoundManager() {
-    // Os ponteiros já são gerenciados pelo QObject, não é necessário deletá-los manualmente.
+    qDeleteAll(attackSounds);
 }
 
 void SoundManager::loadSounds() {
-    QString appDir = QCoreApplication::applicationDirPath();
-    QString currentDir = QDir::currentPath();
-    qDebug() << "applicationDirPath:" << appDir;
-    qDebug() << "currentPath:" << currentDir;
+    // Define o caminho base onde os sons estão localizados.
+    QString basePath = "../../Sounds/";
 
-    // Constrói o caminho absoluto
-    QString attackPath = "../../Sounds/attack1.wav";
-    QString explosionPath = "../../Sounds/attack2.wav";
+    // Carrega as 4 variantes de som de ataque
+    for (int i = 1; i <= 4; ++i) {
+        QString path = basePath + QString("attack%1.wav").arg(i);
+        QSoundEffect *effect = new QSoundEffect(this); // Passa o 'this' para gerenciamento de memória
+        effect->setSource(QUrl::fromLocalFile(path));
+        effect->setVolume(0.5f);
 
-    qDebug() << "Caminho do ataque:" << attackPath;
-    qDebug() << "Arquivo de ataque existe?" << QFile::exists(attackPath);
-    qDebug() << "Caminho da explosão:" << explosionPath;
-    qDebug() << "Arquivo de explosão existe?" << QFile::exists(explosionPath);
+        // Conecta o sinal de carregamento para verificar se o som foi carregado com sucesso
+        connect(effect, &QSoundEffect::loadedChanged, [effect]() {
+            if (effect->isLoaded())
+                qDebug() << "Som carregado:" << effect->source();
+            else
+                qDebug() << "Falha ao carregar som:" << effect->source();
+        });
 
-    attackSound->setSource(QUrl::fromLocalFile(attackPath));
-    attackSound->setVolume(0.5f);
-
-    explosionSound->setSource(QUrl::fromLocalFile(explosionPath));
-    explosionSound->setVolume(0.5f);
+        attackSounds.append(effect);
+    }
 }
 
 void SoundManager::playAttackSound() {
-    if (attackSound)
-        attackSound->play();
-}
+    if (!attackSounds.isEmpty()) {
+        // Seleciona um índice aleatório dentre os sons carregados
+        int index = QRandomGenerator::global()->bounded(attackSounds.size());
+        QSoundEffect *selectedSound = attackSounds[index];
 
-void SoundManager::playExplosionSound() {
-    if (explosionSound)
-        explosionSound->play();
+        // Verifica se o som já está carregado antes de tocar
+        if (selectedSound->isLoaded()) {
+            selectedSound->play();
+        } else {
+            qDebug() << "Som não carregado, não foi possível reproduzir:" << selectedSound->source();
+        }
+    } else {
+        qDebug() << "Nenhum som de ataque foi carregado.";
+    }
 }
 
 void SoundManager::playBackgroundMusic() {

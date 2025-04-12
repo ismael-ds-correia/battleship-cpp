@@ -20,7 +20,7 @@ public:
 
 private:
     QSoundEffect* attackSound;
-    QSoundEffect* explosionSound;
+    QVector<QSoundEffect*> attackSounds;
 
     QMediaPlayer* backgroundMusic;
 };
