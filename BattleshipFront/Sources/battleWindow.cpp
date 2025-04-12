@@ -156,31 +156,60 @@ void BattleWindow::handleEnemyAttackResult(int row, int col, bool hit) {
 
 
 void BattleWindow::handleGameOver(bool playerWon) {
+    if (gameOverBox) return;
+
     QString winner = playerWon ? "Jogador" : "Robô";
 
-    QMessageBox msgBox;
-    msgBox.setWindowTitle("Fim de Jogo");
-    msgBox.setText(QString("%1 venceu!").arg(winner));
-    QPushButton* restartButton = msgBox.addButton("Reiniciar", QMessageBox::AcceptRole);
-    QPushButton* quitButton = msgBox.addButton("Sair", QMessageBox::RejectRole);
+    gameOverBox = new QMessageBox(this);
+    gameOverBox->setWindowTitle("Fim de Jogo");
+    gameOverBox->setText(QString("%1 venceu!").arg(winner));
 
-    msgBox.exec();
+    QPushButton* restartButton = gameOverBox->addButton("Reiniciar", QMessageBox::AcceptRole);
+    QPushButton* quitButton = gameOverBox->addButton("Sair", QMessageBox::RejectRole);
 
-    if (msgBox.clickedButton() == restartButton) {
-        restartGame();
-    } else if (msgBox.clickedButton() == quitButton) {
-        qApp->quit();
-    }
+    connect(gameOverBox, &QMessageBox::buttonClicked, this, [this, restartButton](QAbstractButton* button){
+        if (button == restartButton) {
+            restartGame();
+        } else {
+            qApp->quit();
+        }
+        gameOverBox->deleteLater();
+        gameOverBox = nullptr;
+    });
+
+    gameOverBox->show();
 }
 
 //PRECISAMOS CONSERTAR O BUG INCOMUM QUE O FIM DE JOGO NÃO É ACIONADO EM ALGUNS CASOS
 
 void BattleWindow::restartGame() {
-    // Cria uma nova instância da MainWindow com os controladores do jogador
-    MainWindow* mainWindow = new MainWindow(playerBoardController, shipController, playerController);
+
+    // Cria novos controladores com estado fresco
+    Player* newPlayer = new Player("Jogador");
+    BoardController* newBoardController = new BoardController(newPlayer);
+    ShipController* newShipController = new ShipController();
+    PlayerController* newPlayerController = new PlayerController(newPlayer);
+
+    // Cria nova janela principal com os novos controladores
+    MainWindow* mainWindow = new MainWindow(
+        newBoardController,
+        newShipController,
+        newPlayerController
+        );
+
+    // Configura para auto-deleção
+    mainWindow->setAttribute(Qt::WA_DeleteOnClose);
     mainWindow->show();
 
-    // Fecha a BattleWindow atual
+    // Destrói os controladores antigos
+    delete playerBoardController;
+    delete enemyBoardController;
+    delete shipController;
+    delete playerController;
+    delete enemyController;
+
+    // Fecha esta janela
     this->close();
+    this->deleteLater();
 }
 

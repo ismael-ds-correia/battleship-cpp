@@ -47,6 +47,7 @@ public:
 
     void onPlayerUpdated();
     void positionShipsRandomly();
+    bool isPlayerFleetComplete() const;
     ~MainWindow();
 
 

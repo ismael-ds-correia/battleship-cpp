@@ -10,24 +10,24 @@
 using namespace std;
 
 class RobotPlayer :  public Player{
-	private:
-		int virtualBoard[10][10];
-		queue<pair<int, int>> priorityQueue;
-		int alertAttack=0;
+    private:
+        int virtualBoard[10][10];
+        queue<pair<int, int>> priorityQueue;
+        int alertAttack=0;
         int sizeOfEnemyShips[];
-	public:
-		RobotPlayer();
-		~RobotPlayer(){}
-		void attack(Board&);
-		void addToPriorityQueue(int, int);
-		void adjustStrategy(Board&, int, int);
-		bool isValid(int, int);
-		bool isValidForTesting(int, int);
-		void attackNeighbors(int, int);
-		void wreckedShipAdjustment(Board&, int, int);
-		void clearProrityQueue();
-		void discoverDirectionAndAdd(Board&, int, int);
-		void printVirtualBoard();
+    public:
+        RobotPlayer();
+        ~RobotPlayer(){}
+        void attack(Board&);
+        void addToPriorityQueue(int, int);
+        void adjustStrategy(Board&, int, int);
+        bool isValid(int, int);
+        bool isValidForTesting(int, int);
+        void attackNeighbors(int, int);
+        void wreckedShipAdjustment(Board&, int, int);
+        void clearProrityQueue();
+        void discoverDirectionAndAdd(Board&, int, int);
+        void printVirtualBoard();
         bool shouldAttackStrategicPositions();
         void planStrategicAttack(Board& enemyBoard);
         void searchVertically(int size);

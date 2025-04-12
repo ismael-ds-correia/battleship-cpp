@@ -378,7 +378,7 @@ void BoardRenderer::updatePlacementIndicators() {
                                                                cellSize, cellSize);
             overlay->setZValue(50);  // Valor intermediário para aparecer sobre a água mas abaixo de textos/ataques
             // Seleciona cor: verde semi-transparente para válido e vermelho semi-transparente para inválido
-            QColor color = valid ? QColor(0, 255, 0, 100) : QColor(255, 0, 0, 100);
+            QColor color = valid ? QColor(0, 255, 0, 125) : QColor(255, 0, 0, 125);
             overlay->setBrush(color);
             overlay->setPen(Qt::NoPen);
             scene->addItem(overlay);

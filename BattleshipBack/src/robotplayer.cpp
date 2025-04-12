@@ -14,11 +14,11 @@
 using namespace std;
 
 RobotPlayer::RobotPlayer() : Player("Xerath"){
-	for(int i = 0; i<10; i++){
-		for(int j = 0; j<10; j++){
-			this->virtualBoard[i][j] = 0;
-		}
-	}
+    for(int i = 0; i<10; i++){
+        for(int j = 0; j<10; j++){
+            this->virtualBoard[i][j] = 0;
+        }
+    }
 }
 
 void RobotPlayer::attack(Board& enemyBoard) {
@@ -74,21 +74,21 @@ void RobotPlayer::attack(Board& enemyBoard) {
 
 
 void RobotPlayer::adjustStrategy(Board& enemyBoard, int row, int column){
-	Ship* ship = enemyBoard.getShipReference(row, column);
+    Ship* ship = enemyBoard.getShipReference(row, column);
 
-	if(ship != nullptr){
-		if(ship->isDestroyed()){
-			this->virtualBoard[row][column] = 3;
-			wreckedShipAdjustment(enemyBoard, row, column);
-			clearProrityQueue();
+    if(ship != nullptr){
+        if(ship->isDestroyed()){
+            this->virtualBoard[row][column] = 3;
+            wreckedShipAdjustment(enemyBoard, row, column);
+            clearProrityQueue();
             oneLessShip(ship->getSize());
-		}else{
-			this->virtualBoard[row][column] = 2;
-			discoverDirectionAndAdd(enemyBoard, row, column);
-		}
-	}else{
-		this->virtualBoard[row][column] = 1;
-	}
+        }else{
+            this->virtualBoard[row][column] = 2;
+            discoverDirectionAndAdd(enemyBoard, row, column);
+        }
+    }else{
+        this->virtualBoard[row][column] = 1;
+    }
 }
 
 void RobotPlayer::discoverDirectionAndAdd(Board& enemyBoard, int row, int column){
@@ -104,27 +104,27 @@ void RobotPlayer::discoverDirectionAndAdd(Board& enemyBoard, int row, int column
     this->clearProrityQueue();
     // Baseado na direção, adicionar à fila de prioridades
     if(horizontal){
-    	int c = column;
-    	while(this->virtualBoard[row][c-1] != 0){
-    		if(this->virtualBoard[row][c-1] == 3 || this->virtualBoard[row][c-1] == 1){
-    			break;
-    		}
+        int c = column;
+        while(this->virtualBoard[row][c-1] != 0){
+            if(this->virtualBoard[row][c-1] == 3 || this->virtualBoard[row][c-1] == 1){
+                break;
+            }
 
-    		c--;
-    	}
+            c--;
+        }
 
-    	this->addToPriorityQueue(row, c-1);
+        this->addToPriorityQueue(row, c-1);
 
-    	c = column;
-    	while(this->virtualBoard[row][c+1] != 0){
-    		if(this->virtualBoard[row][c+1] == 3 || this->virtualBoard[row][c+1] == 1){
-    			break;
-    		}
+        c = column;
+        while(this->virtualBoard[row][c+1] != 0){
+            if(this->virtualBoard[row][c+1] == 3 || this->virtualBoard[row][c+1] == 1){
+                break;
+            }
 
-    		c++;
-    	}
+            c++;
+        }
 
-    	this->addToPriorityQueue(row, c+1);
+        this->addToPriorityQueue(row, c+1);
 
         return;
     }
@@ -132,25 +132,25 @@ void RobotPlayer::discoverDirectionAndAdd(Board& enemyBoard, int row, int column
     if(vertical){
         int r = row;
         while(this->virtualBoard[r-1][column] != 0){
-        	if(this->virtualBoard[r-1][column] == 3 || this->virtualBoard[r-1][column] == 1){
-        		break;
-        	}
+            if(this->virtualBoard[r-1][column] == 3 || this->virtualBoard[r-1][column] == 1){
+                break;
+            }
 
-        	r--;
+            r--;
         }
 
         this->addToPriorityQueue(r-1, column);
 
         r = row;
         while(this->virtualBoard[r+1][column] != 0){
-        	if(this->virtualBoard[r+1][column] == 3 || this->virtualBoard[r+1][column] == 1){
-        		break;
-        	}
+            if(this->virtualBoard[r+1][column] == 3 || this->virtualBoard[r+1][column] == 1){
+                break;
+            }
 
-        	r++;
+            r++;
         }
 
-       	this->addToPriorityQueue(r+1, column);
+        this->addToPriorityQueue(r+1, column);
 
         return;
     }
@@ -287,31 +287,31 @@ void RobotPlayer::oneLessShip(int sizeOfShipDestroyed){
 }
 
 void RobotPlayer::attackNeighbors(int row, int column){
-	this->clearProrityQueue();
-	addToPriorityQueue(row - 1, column);
+    this->clearProrityQueue();
+    addToPriorityQueue(row - 1, column);
     addToPriorityQueue(row + 1, column);
     addToPriorityQueue(row, column - 1);
     addToPriorityQueue(row, column + 1);
 }
 
 void RobotPlayer::addToPriorityQueue(int row, int column){
-	if(this->isValid(row, column)){
-		this->priorityQueue.push({row, column});
-	}
+    if(this->isValid(row, column)){
+        this->priorityQueue.push({row, column});
+    }
 }
 
 void RobotPlayer::clearProrityQueue(){
-	while(!this->priorityQueue.empty()){
-		this->priorityQueue.pop();
-	}
+    while(!this->priorityQueue.empty()){
+        this->priorityQueue.pop();
+    }
 }
 
 bool RobotPlayer::isValid(int row, int column){
-	if(row < 0 || row > 9 || column < 0 || column > 9 || this->virtualBoard[row][column] != 0){
-		return false;
-	}
+    if(row < 0 || row > 9 || column < 0 || column > 9 || this->virtualBoard[row][column] != 0){
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool RobotPlayer::isValidForTesting(int row, int column){
