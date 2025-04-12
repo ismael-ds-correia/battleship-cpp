@@ -13,6 +13,7 @@
 #include "boardRenderer.h"
 #include "selectorSpace.h"
 #include "playerController.h"
+#include "soundManager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,6 +35,7 @@ private:
     BoardRenderer* boardRenderer;
     SelectorSpace* selectorSpace;
     PlayerController* playerController;
+    SoundManager* soundManager;
 
     void loadTextures();
 
