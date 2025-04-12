@@ -15,6 +15,7 @@ class RobotPlayer :  public Player{
 		queue<pair<int, int>> priorityQueue;
 		int alertAttack=0;
         int sizeOfEnemyShips[];
+        std::pair<int, int> locateShipStart(Board&, int, int);
 	public:
 		RobotPlayer();
 		~RobotPlayer(){}
@@ -30,8 +31,8 @@ class RobotPlayer :  public Player{
 		void printVirtualBoard();
         bool shouldAttackStrategicPositions();
         void planStrategicAttack(Board& enemyBoard);
-        void searchVertically(int size);
-        void searchHorizontally(int size);
+        bool searchVertically(int size);
+        bool searchHorizontally(int size);
         int sizeOfTheNextShip();
         void oneLessShip(int sizeOfShipDestroyed);
 };

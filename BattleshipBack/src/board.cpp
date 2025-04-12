@@ -1,6 +1,5 @@
 #include <iostream>
 #include "board.h"
-#include <QDebug>
 
 using namespace std;
 
@@ -167,6 +166,22 @@ bool Board::attackFront(int row, int col) {
     return false;
 }
 
+void Board::markAdjacentAsAttacked(Ship& ship, int line, int column) {
+    int startRow = max(0, line - 1);
+    int endRow = min(9, line + (ship.isHorizontal() ? 0 : ship.getSize() - 1) + 1);
+    int startCol = max(0, column - 1);
+    int endCol = min(9, column + (ship.isHorizontal() ? ship.getSize() - 1 : 0) + 1);
+
+    for (int i = startRow; i <= endRow; i++) {
+        for (int j = startCol; j <= endCol; j++) {
+            // Se a célula ainda não foi atacada, a marca
+            if (!this->positions[i][j].isAttacked()) {
+                this->positions[i][j].attack();
+            }
+        }
+    }
+}
+
 // Método para retornar uma referência à matriz de posições.
 Position (&Board::getPositions())[10][10] {
     return this->positions;
@@ -178,10 +193,9 @@ Position Board::getPosition(int row, int column){
 }
 
 Ship* Board::getShipReference(int row, int column) {
-    qDebug() << "Board::getShipReference: Obtendo referência do navio na célula (" << row << "," << column << ")";
     return this->positions[row][column].getShipReference();
 }
 
 bool Board::isAttacked(int row, int column){
-    this->positions[row][column].isAttacked();
+    return this->positions[row][column].isAttacked();
 }
