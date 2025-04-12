@@ -4,14 +4,14 @@
 #include <QDebug>
 
 RobotController::RobotController(RobotPlayer* robot, QObject* parent)
-    : QObject(parent), robot(robot)
-{
-    // robot deve ter sido criado e inicializado fora
+    : QObject(parent), robot(robot) {
+
+    soundManager = new SoundManager(this);
+    soundManager->loadSounds();
+
 }
 
 RobotController::~RobotController() {
-    // Caso o gerenciamento de memória seja feito fora, não delete aqui
-    // delete robot;  // se for de responsabilidade do RobotController
 }
 
 bool RobotController::attackOpponent(Player* opponent) {
@@ -34,6 +34,8 @@ bool RobotController::attackOpponent(Player* opponent) {
 
     // Perform the attack
     robot->attack(opponentBoard);
+
+    //soundManager->playHitSound();
 
     // Find the newly attacked cell
     int attackedRow = -1;

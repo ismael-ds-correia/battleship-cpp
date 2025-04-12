@@ -9,6 +9,7 @@
 #include "playerController.h"
 #include "shipController.h"
 #include "robotController.h"
+#include "soundManager.h"
 
 enum class Turn { Player, Enemy };
 
@@ -39,6 +40,8 @@ private:
     ShipController* shipController;
     PlayerController* playerController;
     RobotController* enemyController;
+
+    SoundManager* soundManager;
 
     void setupUI();
 
