@@ -4,15 +4,18 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QDragEnterEvent>
+#include <QGraphicsPixmapItem>
 #include <QDropEvent>
 #include <QMimeData>
 #include <QLabel>
+#include <QMovie>
 #include "Headers/boardCell.h"
 #include "boardController.h"
 #include "shipController.h"
 #include "selectorSpace.h"
 #include "playerController.h"
 #include "robotController.h"
+#include "soundManager.h"
 
 class BoardRenderer : public QGraphicsView {
     Q_OBJECT
@@ -24,7 +27,8 @@ public:
         BoardController* boardController,
         SelectorSpace* selectorSpace,
         PlayerController* playerController,
-        RobotController* enemyController = nullptr, //MANGA
+        SoundManager* soundManager,
+        RobotController* enemyController = nullptr,
         bool attackMode = false
     );
 
@@ -74,6 +78,8 @@ private:
     QLabel* selectedShipLabel;
     Ship tempShip;
 
+    QMovie* shipHitTexture;
+
     // texturas
     QPixmap battleshipTextureH;
     QPixmap submarineTextureH;
@@ -101,9 +107,12 @@ private:
     QPixmap scaledWaterTexture;
 
     QPixmap waterHitTexture;
-    QPixmap shipHitTexture;
     QPixmap scaledWaterHitTexture;
     QPixmap scaledShipHitTexture;
+
+    //
+
+    SoundManager* soundManager;
 
     bool hideShips;
     bool isInteractive;

@@ -19,7 +19,7 @@ int main() {
     for(int i = 0; i < 30; i++){
         robot.attack(player.getBoard());
         player.printBoard();
-        cout << "\n";
+        cout << i << "\n";
         robot.printVirtualBoard();
     }
 

@@ -37,7 +37,7 @@ MainWindow::MainWindow(
     ui->selectorContainer->layout()->addWidget(selectorSpace);
     selectorSpace->show();
 
-    boardRenderer = new BoardRenderer(scene, shipController, boardController, selectorSpace, playerController);
+    boardRenderer = new BoardRenderer(scene, shipController, boardController, selectorSpace, playerController, soundManager);
     boardRenderer->setInteractive(true);
     boardRenderer->renderCoordinates();
 

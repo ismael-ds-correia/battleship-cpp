@@ -9,7 +9,6 @@
 #include <ship.h>
 #include <cstdlib>
 #include <ctime>
-#include <QDebug>
 
 using namespace std;
 
@@ -22,56 +21,46 @@ RobotPlayer::RobotPlayer() : Player("Xerath"){
 }
 
 void RobotPlayer::attack(Board& enemyBoard) {
-    qDebug() << "RobotPlayer::attack: Iniciando ataque.";
-
     if (!priorityQueue.empty()) {
-        qDebug() << "RobotPlayer::attack: Utilizando ataque prioritário.";
         auto target = priorityQueue.front();
         priorityQueue.pop();
         int row = target.first;
         int column = target.second;
-        qDebug() << "RobotPlayer::attack: Ataque na célula (" << row << "," << column << ").";
         enemyBoard.attack(row, column);
         adjustStrategy(enemyBoard, row, column);
     } else {
-        if (this->shouldAttackStrategicPositions()) {
-            qDebug() << "RobotPlayer::attack: Modo de ataque estratégico ativado.";
-            this->planStrategicAttack(enemyBoard);
-
-            if (priorityQueue.empty()) {
+        if (shouldAttackStrategicPositions()) {
+            cout << "Modo de ataque estrategico ativado!" << "\n";
+            planStrategicAttack(enemyBoard);
+            if (!priorityQueue.empty()) {
+                auto target = priorityQueue.front();
+                priorityQueue.pop();
+                int row = target.first;
+                int column = target.second;
+                enemyBoard.attack(row, column);
+                adjustStrategy(enemyBoard, row, column);
+            } else {
+                // Caso a estratégia não encontre um alvo, ataque aleatoriamente.
                 int row = rand() % 10;
                 int column = rand() % 10;
-                qDebug() << "RobotPlayer::attack: Fallback para ataque aleatório na célula (" << row << "," << column << ").";
                 while (!enemyBoard.attack(row, column)) {
                     row = rand() % 10;
                     column = rand() % 10;
-                    qDebug() << "RobotPlayer::attack: Tentando novo ataque aleatório na célula (" << row << "," << column << ").";
                 }
                 adjustStrategy(enemyBoard, row, column);
-                return;
             }
-
-            auto target = priorityQueue.front();
-            priorityQueue.pop();
-            int row = target.first;
-            int column = target.second;
-            qDebug() << "RobotPlayer::attack: Ataque estratégico na célula (" << row << "," << column << ").";
-            enemyBoard.attack(row, column);
-            adjustStrategy(enemyBoard, row, column);
         } else {
+            // Ataque aleatório
             int row = rand() % 10;
             int column = rand() % 10;
-            qDebug() << "RobotPlayer::attack: Ataque aleatório na célula (" << row << "," << column << ").";
             while (!enemyBoard.attack(row, column)) {
                 row = rand() % 10;
                 column = rand() % 10;
-                qDebug() << "RobotPlayer::attack: Tentando novo ataque aleatório na célula (" << row << "," << column << ").";
             }
             adjustStrategy(enemyBoard, row, column);
         }
     }
 }
-
 
 void RobotPlayer::adjustStrategy(Board& enemyBoard, int row, int column){
     Ship* ship = enemyBoard.getShipReference(row, column);
@@ -82,6 +71,10 @@ void RobotPlayer::adjustStrategy(Board& enemyBoard, int row, int column){
             wreckedShipAdjustment(enemyBoard, row, column);
             clearProrityQueue();
             oneLessShip(ship->getSize());
+            //Localiza a posição inicial do navio.
+            std::pair<int, int> startPos = locateShipStart(enemyBoard, row, column);
+            //Chama o método que marca as posições adjacentes como atacadas.
+            enemyBoard.markAdjacentAsAttacked(*ship, startPos.first, startPos.second);
         }else{
             this->virtualBoard[row][column] = 2;
             discoverDirectionAndAdd(enemyBoard, row, column);
@@ -208,64 +201,101 @@ bool RobotPlayer::shouldAttackStrategicPositions(){
     return(emptyPositions/100.0 > 0.2);
 }
 
-void RobotPlayer::planStrategicAttack(Board& enemyBoard){
-    int size = sizeOfTheNextShip();
+void RobotPlayer::planStrategicAttack(Board& enemyBoard) {
+    int size = sizeOfTheNextShip(); // Tamanho do próximo navio que se espera atacar
+    if (size == 0) return;
 
-    if(size == 0){
-        return;
+    // Escolhe aleatoriamente uma direção para começar a busca
+    bool tryVertical = (rand() % 2 == 0);
+    bool found = false;
+
+    if (tryVertical) {
+        found = searchVertically(size);
+        if (!found)
+            found = searchHorizontally(size);
+    } else {
+        found = searchHorizontally(size);
+        if (!found)
+            found = searchVertically(size);
     }
 
-    //Determina se irá buscar na vertical ou na horizontal
-    bool randomBool = rand() % 2 == 0;
-
-    if(randomBool){
-        searchHorizontally(size);
-    }else{
-        searchVertically(size);
-    }
+    //Se found ainda for false, a fila de prioridades ficará vazia e um ataque aleatório será usado.
 }
 
-void RobotPlayer::searchVertically(int size){
-    cout << "Vertical" << "\n";
-    int count = 0;
-    for(int j = 0; j < 10; j++){
-        for(int i = 0; i < 10; i++){
-            if(this->virtualBoard[i][j] == 0){
-                count++;
-            }else{
-                count = 0;
+//Função auxiliar que retorna o ponto de início do navio.
+//(a célula mais à esquerda se horizontal ou a mais acima se vertical).
+std::pair<int, int> RobotPlayer::locateShipStart(Board& enemyBoard, int row, int column) {
+    Ship* ship = enemyBoard.getShipReference(row, column);
+    if (ship == nullptr) {
+        //Se não houver navio, retorna a posição original.
+        return {row, column};
+    }
+
+    int startRow = row;
+    int startCol = column;
+
+    if (ship->isHorizontal()) {
+        //Procura o extremo esquerdo.
+        while (startCol > 0 && enemyBoard.getShipReference(row, startCol - 1) == ship) {
+            startCol--;
+        }
+    } else {
+        //Procura o extremo superior.
+        while (startRow > 0 && enemyBoard.getShipReference(startRow - 1, column) == ship) {
+            startRow--;
+        }
+    }
+
+    return {startRow, startCol};
+}
+
+bool RobotPlayer::searchVertically(int size) {
+    //Percorre cada coluna do tabuleiro virtual.
+    for (int j = 0; j < 10; j++) {
+        int contiguous = 0;
+        for (int i = 0; i < 10; i++) {
+            if (this->virtualBoard[i][j] == 0) {
+                contiguous++;
+            } else {
+                contiguous = 0;
             }
-
-            if(count == size){
-                this->addToPriorityQueue(i, j);
-
-                return;
+            if (contiguous >= size) {
+                //Calcula a linha alvo como o centro da sequência.
+                int targetRow = i - size / 2;
+                if (targetRow < 0) targetRow = 0;
+                if (targetRow > 9) targetRow = 9;
+                addToPriorityQueue(targetRow, j);
+                return true;
             }
         }
-        count = 0;
     }
+    return false;
 }
 
-void RobotPlayer::searchHorizontally(int size){
-    cout << "Horizontal" << "\n";
-    int count = 0;
-    for(int i = 0; i < 10; i++){
-        for(int j = 0; j < 10; j++){
-            if(this->virtualBoard[i][j] == 0){
-                count++;
-            }else{
-                count = 0;
+bool RobotPlayer::searchHorizontally(int size) {
+    //Percorre cada linha do tabuleiro virtual.
+    for (int i = 0; i < 10; i++) {
+        int contiguous = 0;
+        for (int j = 0; j < 10; j++) {
+            if (this->virtualBoard[i][j] == 0) {
+                contiguous++;
+            } else {
+                contiguous = 0;
             }
-
-            if(count == size){
-                this->addToPriorityQueue(i, j);
-
-                return;
+            if (contiguous >= size) {
+                //Calcula a coluna alvo como o centro da sequência.
+                int targetColumn = j - size / 2;
+                //Se necessário, garante que o target esteja dentro dos limites.
+                if (targetColumn < 0) targetColumn = 0;
+                if (targetColumn > 9) targetColumn = 9;
+                addToPriorityQueue(i, targetColumn);
+                return true;
             }
         }
-        count = 0;
     }
+    return false;
 }
+
 
 int RobotPlayer::sizeOfTheNextShip(){
     for(int i = 0; i < 4; i++){

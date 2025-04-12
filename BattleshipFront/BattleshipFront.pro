@@ -1,4 +1,5 @@
-QT       += core gui
+QT += core gui
+QT += multimedia
 DEFINES += USE_QT
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -28,6 +29,7 @@ SOURCES += \
     Sources/boardCell.cpp \
     Sources/boardRenderer.cpp \
     Sources/mainwindow.cpp \
+    Sources/soundManager.cpp \
     main.cpp \
 
 HEADERS += \
@@ -45,7 +47,8 @@ HEADERS += \
     Headers/boardRenderer.h \
     Headers/boardCell.h \
     Headers/mainwindow.h \
-    Headers/selectorSpace.h
+    Headers/selectorSpace.h \
+    Headers/soundManager.h
 
 FORMS += \
     Forms/mainwindow.ui
@@ -56,4 +59,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    textures.qrc
+    textures.qrc \
+    sounds.qrc
