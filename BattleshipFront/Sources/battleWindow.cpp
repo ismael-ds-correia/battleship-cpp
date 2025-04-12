@@ -25,7 +25,7 @@ BattleWindow::BattleWindow(
 
 
     soundManager = new SoundManager(this);
-    //soundManager->playBackgroundMusic();
+    soundManager->playBackgroundMusic();
 
     // Cria o renderizador para o tabuleiro do jogador (exibindo os navios)
     playerRenderer = new BoardRenderer(playerScene, shipBattleController, playerBoardController, nullptr, playerBattleController, soundManager);

@@ -4,6 +4,7 @@
 #include "boardController.h"
 #include "shipController.h"
 #include "playerController.h"
+#include <QLoggingCategory>
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
@@ -16,6 +17,8 @@ int main(int argc, char *argv[]) {
 
     MainWindow mainWindow(&p1BoardController, &shipController, &playerController); //cria a janela do jogo
     mainWindow.show();
+
+    //QLoggingCategory::setFilterRules(QStringLiteral("qt.multimedia.*=true"));
 
     return app.exec();
 }

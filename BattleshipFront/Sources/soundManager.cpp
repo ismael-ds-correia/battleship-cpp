@@ -6,10 +6,10 @@
 #include <QRandomGenerator>
 
 SoundManager::SoundManager(QObject* parent)
-    : QObject(parent),
-    attackSound(new QSoundEffect(this)) {
+    : QObject(parent) {
 
     loadSounds();
+    loadBackgroundMusic();
 }
 
 SoundManager::~SoundManager() {
@@ -17,35 +17,49 @@ SoundManager::~SoundManager() {
 }
 
 void SoundManager::loadSounds() {
-    // Define o caminho base onde os sons estão localizados.
     QString basePath = "../../Sounds/";
 
-    // Carrega as 4 variantes de som de ataque
+    //carrega as 4 variantes de som de ataque
     for (int i = 1; i <= 4; ++i) {
         QString path = basePath + QString("attack%1.wav").arg(i);
         QSoundEffect *effect = new QSoundEffect(this); // Passa o 'this' para gerenciamento de memória
         effect->setSource(QUrl::fromLocalFile(path));
         effect->setVolume(0.5f);
 
-        // Conecta o sinal de carregamento para verificar se o som foi carregado com sucesso
-        connect(effect, &QSoundEffect::loadedChanged, [effect]() {
-            if (effect->isLoaded())
-                qDebug() << "Som carregado:" << effect->source();
-            else
-                qDebug() << "Falha ao carregar som:" << effect->source();
-        });
-
         attackSounds.append(effect);
     }
 }
 
+void SoundManager::loadBackgroundMusic() {
+    // Cria o QMediaPlayer
+    backgroundMusic = new QMediaPlayer(this);
+
+    // Cria o QAudioOutput e associa ao QMediaPlayer
+    audioOutput = new QAudioOutput(this);
+    backgroundMusic->setAudioOutput(audioOutput);
+
+    // Define o caminho para o arquivo MP3 (verifique se o caminho está correto ou utilize um recurso via .qrc)
+    QString musicPath = "../../Sounds/background.mp3";
+    backgroundMusic->setSource(QUrl::fromLocalFile(musicPath));
+
+    // Ajusta o volume (o QAudioOutput aceita valores entre 0.0 e 1.0)
+    audioOutput->setVolume(0.5);
+
+    // Conecta o sinal para detectar o fim da mídia e reiniciar a reprodução
+    connect(backgroundMusic, &QMediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
+        if (status == QMediaPlayer::MediaStatus::EndOfMedia) {
+            backgroundMusic->setPosition(0);
+            backgroundMusic->play();
+        }
+    });
+}
+
 void SoundManager::playAttackSound() {
     if (!attackSounds.isEmpty()) {
-        // Seleciona um índice aleatório dentre os sons carregados
+        //seleciona um índice aleatório dentre os sons carregados
         int index = QRandomGenerator::global()->bounded(attackSounds.size());
         QSoundEffect *selectedSound = attackSounds[index];
 
-        // Verifica se o som já está carregado antes de tocar
         if (selectedSound->isLoaded()) {
             selectedSound->play();
         } else {
@@ -57,8 +71,11 @@ void SoundManager::playAttackSound() {
 }
 
 void SoundManager::playBackgroundMusic() {
-    if (backgroundMusic)
+    if (backgroundMusic) {
         backgroundMusic->play();
+    } else {
+        qDebug() << "Música de fundo não carregada.";
+    }
 }
 
 void SoundManager::stopBackgroundMusic() {

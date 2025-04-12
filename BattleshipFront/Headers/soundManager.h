@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSoundEffect>
 #include <QMediaPlayer>
+#include <QAudioOutput>
 
 class SoundManager : public QObject {
     Q_OBJECT
@@ -12,6 +13,7 @@ public:
     ~SoundManager();
 
     void loadSounds();
+    void loadBackgroundMusic();
 
     void playAttackSound();
     void playExplosionSound();
@@ -19,10 +21,10 @@ public:
     void stopBackgroundMusic();
 
 private:
-    QSoundEffect* attackSound;
     QVector<QSoundEffect*> attackSounds;
 
-    QMediaPlayer* backgroundMusic;
+    QMediaPlayer* backgroundMusic = nullptr;
+    QAudioOutput* audioOutput = nullptr;
 };
 
 #endif // SOUNDMANAGER_H
