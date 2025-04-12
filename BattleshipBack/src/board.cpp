@@ -157,8 +157,6 @@ bool Board::attackFront(int row, int col) {
 
         Ship* ship = this->positions[row][col].getShipReference();
         if (ship != nullptr) {
-            //incrementa os acertos no navio.
-            //ship->incrementHits();
             return true;  //acertou um navio.
         }
         return false; //acertou a água.
