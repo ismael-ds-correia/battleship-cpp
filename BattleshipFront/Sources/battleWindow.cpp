@@ -23,7 +23,6 @@ BattleWindow::BattleWindow(
 
     setupUI();
 
-
     soundManager = new SoundManager(this);
     soundManager->playBackgroundMusic();
 
@@ -98,17 +97,12 @@ void BattleWindow::updateTurn() {
     }
 }
 
-// Slot chamado quando o jogador realiza um ataque (por exemplo, via clique)
 void BattleWindow::onPlayerAttack(int row, int col) {
     qDebug() << "onPlayerAttack chamado. Linha:" << row << "Coluna:" << col;
     if (currentTurn != Turn::Player) {
         qDebug() << "Ataque ignorado pois não é o turno do jogador.";
         return;
     }
-
-    // Tiramos isso pq se não o turno muda mesmo se acertar o ataque
-    //currentTurn = Turn::Enemy;
-    //updateTurn();
 }
 
 // Para tratarmos do ataque do jogador
@@ -127,26 +121,24 @@ void BattleWindow::handlePlayerAttackResult(int row, int col, bool hit) {
 // Slot para o ataque da IA
 
 void BattleWindow::enemyAttack() {
+    // Verifica se o turno ainda é da IA.
+    if (currentTurn != Turn::Enemy) {
+        qDebug() << "enemyAttack chamado, mas o turno não é da IA. Abortando ataque.";
+        return;
+    }
+
     qDebug() << "BattleWindow::enemyAttack: Início do ataque da IA.";
 
     bool hit = enemyController->attackOpponent(playerController->getPlayer());
     qDebug() << "BattleWindow::enemyAttack: Resultado do ataque da IA, hit =" << hit;
-
-    // Mesma coisa com o ataque do bot
-    //currentTurn = Turn::Player;
-    //updateTurn();
-    //qDebug() << "BattleWindow::enemyAttack: Turno alterado para Player e updateTurn() chamado.";
 }
 
 
 void BattleWindow::handleEnemyAttackResult(int row, int col, bool hit) {
     if (hit) {
-        // Verifica se todos os navios do jogador foram destruídos
-        if (playerController->getPlayer()->getFleet().isDestroyed()) {
-            qDebug() << "Fim de jogo, robô venceu";
-            handleGameOver(false); // Robô venceu
-        } else {
-            // Continua o turno do robô
+        // Se houver acerto e o jogador ainda não foi totalmente derrotado,
+        // continua o turno da IA agendando um novo ataque.
+        if (!playerController->getPlayer()->getFleet().isDestroyed()) {
             QTimer::singleShot(1000, this, SLOT(enemyAttack()));
         }
     } else {

@@ -403,7 +403,6 @@ void BoardRenderer::loadTextures() {
     waterTexture.load("../../Textures/water.png");
 
     waterHitTexture.load("../../Textures/waterHit.png");
-    //shipHitTexture.load("../../Textures/fire.gif");
 
     shipHitTexture = new QMovie("../../Textures/fire.gif");
     shipHitTexture->start();

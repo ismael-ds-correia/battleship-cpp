@@ -9,6 +9,7 @@
 #include <ship.h>
 #include <cstdlib>
 #include <ctime>
+#include <QTimer>
 
 using namespace std;
 
@@ -62,24 +63,32 @@ void RobotPlayer::attack(Board& enemyBoard) {
     }
 }
 
-void RobotPlayer::adjustStrategy(Board& enemyBoard, int row, int column){
+void RobotPlayer::adjustStrategy(Board& enemyBoard, int row, int column) {
     Ship* ship = enemyBoard.getShipReference(row, column);
-
-    if(ship != nullptr){
-        if(ship->isDestroyed()){
+    if (ship != nullptr) {
+        if (ship->isDestroyed()) {
+            // Atualiza o virtualBoard para indicar que a célula foi “fechada”
             this->virtualBoard[row][column] = 3;
+            // Realiza os ajustes de estratégia e limpa a fila de prioridade
             wreckedShipAdjustment(enemyBoard, row, column);
             clearProrityQueue();
             oneLessShip(ship->getSize());
-            //Localiza a posição inicial do navio.
-            std::pair<int, int> startPos = locateShipStart(enemyBoard, row, column);
-            //Chama o método que marca as posições adjacentes como atacadas.
-            enemyBoard.markAdjacentAsAttacked(*ship, startPos.first, startPos.second);
-        }else{
+
+            // Calcula a posição inicial do navio (para saber quais células adjacentes marcar)
+            pair<int, int> startPos = locateShipStart(enemyBoard, row, column);
+
+            //adia essa chamada para dar tempo para a atualização do estado e dos sinais do frontend serem processados.
+            //------------------------------ UTILIZAÇÃO DE THREADS ------------------------------
+            thread([=, &enemyBoard]() {
+                this_thread::sleep_for(chrono::milliseconds(10));
+                enemyBoard.markAdjacentAsAttacked(*ship, startPos.first, startPos.second);
+            }).detach();
+            //----------------------------------------------------------------------------------
+        } else {
             this->virtualBoard[row][column] = 2;
             discoverDirectionAndAdd(enemyBoard, row, column);
         }
-    }else{
+    } else {
         this->virtualBoard[row][column] = 1;
     }
 }
