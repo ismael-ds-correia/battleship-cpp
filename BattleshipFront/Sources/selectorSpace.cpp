@@ -85,68 +85,77 @@ void SelectorSpace::restoreShip(Ship &ship) {
 
 bool SelectorSpace::eventFilter(QObject *obj, QEvent *event) {
     QLabel *label = qobject_cast<QLabel*>(obj);
-    if (label) {
-        if (event->type() == QEvent::MouseButtonPress) {
-            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+    if (!label)
+        return QWidget::eventFilter(obj, event);
 
-            if (mouseEvent->button() == Qt::LeftButton) {
-                //PARTE DO EFEITO BONITINHO
-                if (currentEffect) {
-                    currentEffect->deleteLater();
-                    currentEffect = nullptr;
-                }
-                if (blurAnimation) {
-                    blurAnimation->stop();
-                    blurAnimation->deleteLater();
-                    blurAnimation = nullptr;
-                }
-                if (colorAnimation) {
-                    colorAnimation->stop();
-                    colorAnimation->deleteLater();
-                    colorAnimation = nullptr;
-                }
+    if (event->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 
-                // Configura o efeito de sombra
-                currentEffect = new QGraphicsDropShadowEffect(label);
-                currentEffect->setColor(QColor(255, 255, 255, 255)); // Branco
-                currentEffect->setBlurRadius(10);
-                currentEffect->setOffset(0);
-                label->setGraphicsEffect(currentEffect);
+        // Se for clique do botão esquerdo
+        if (mouseEvent->button() == Qt::LeftButton) {
 
-                // Animação do blur
-                blurAnimation = new QPropertyAnimation(currentEffect, "blurRadius", this);
-                blurAnimation->setDuration(1000);
-                blurAnimation->setStartValue(10);
-                blurAnimation->setEndValue(20);
-                blurAnimation->setLoopCount(-1); // Infinito
-                blurAnimation->start();
-
-                // Animação da cor (opacidade)
-                colorAnimation = new QPropertyAnimation(currentEffect, "color", this);
-                colorAnimation->setDuration(1000);
-                colorAnimation->setStartValue(QColor(255, 255, 255, 255));
-                colorAnimation->setEndValue(QColor(255, 255, 255, 127));
-                colorAnimation->setLoopCount(-1);
-                colorAnimation->start();
-
-
-                //pega o tamanho do barco a partir do QLabel
-                int shipSize = label->property("shipSize").toInt();
-                int shipIndex = label->property("shipIndex").toInt();
-                qDebug() << "Ship selected with size:" << shipSize;
-
-                selectedShipIndex = shipIndex;
-                selectedShipSize = shipSize; //quando precisar posicionar o barco, basta passar shipSize para BoardController
-                selectedShipLabel = label;
-
-                emit shipSelected();
-
-            } else if (mouseEvent->button() == Qt::RightButton) {
-                rotateShip(label);
+            // Se o navio clicado já está selecionado, limpar a seleção
+            if (selectedShipLabel == label) {
+                clearSelectedShip();
+                emit shipSelected(); // Opcional: emitir o sinal para notificar que a seleção mudou (ficou vazia)
+                return true;
             }
 
-            return true;
+            // Caso contrário, se houver uma seleção anterior, limpar os efeitos atuais.
+            if (currentEffect) {
+                currentEffect->deleteLater();
+                currentEffect = nullptr;
+            }
+            if (blurAnimation) {
+                blurAnimation->stop();
+                blurAnimation->deleteLater();
+                blurAnimation = nullptr;
+            }
+            if (colorAnimation) {
+                colorAnimation->stop();
+                colorAnimation->deleteLater();
+                colorAnimation = nullptr;
+            }
+
+            // Configura o efeito de destaque para o navio selecionado
+            currentEffect = new QGraphicsDropShadowEffect(label);
+            currentEffect->setColor(QColor(255, 255, 255, 255)); // Branco
+            currentEffect->setBlurRadius(10);
+            currentEffect->setOffset(0);
+            label->setGraphicsEffect(currentEffect);
+
+            // Animação do blur
+            blurAnimation = new QPropertyAnimation(currentEffect, "blurRadius", this);
+            blurAnimation->setDuration(1000);
+            blurAnimation->setStartValue(10);
+            blurAnimation->setEndValue(20);
+            blurAnimation->setLoopCount(-1); // Infinito
+            blurAnimation->start();
+
+            // Animação da cor (opacidade)
+            colorAnimation = new QPropertyAnimation(currentEffect, "color", this);
+            colorAnimation->setDuration(1000);
+            colorAnimation->setStartValue(QColor(255, 255, 255, 255));
+            colorAnimation->setEndValue(QColor(255, 255, 255, 127));
+            colorAnimation->setLoopCount(-1);
+            colorAnimation->start();
+
+            // Pega o tamanho do barco a partir das propriedades do QLabel
+            int shipSize = label->property("shipSize").toInt();
+            int shipIndex = label->property("shipIndex").toInt();
+
+            qDebug() << "Ship selected with size:" << shipSize;
+            selectedShipIndex = shipIndex;
+            selectedShipSize = shipSize;
+            selectedShipLabel = label;
+
+            // Emite o sinal para notificar que um navio foi selecionado
+            emit shipSelected();
+
+        } else if (mouseEvent->button() == Qt::RightButton) {
+            rotateShip(label);
         }
+        return true;
     }
     return QWidget::eventFilter(obj, event);
 }

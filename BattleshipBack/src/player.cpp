@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include "board.h"
+#include "shipController.h"
 
 using namespace std;
 
@@ -79,6 +80,22 @@ void Player::positionShipsRandomly() {
             count++; // Incrementa o contador se o navio foi posicionado
         }
     }
+}
+
+bool Player::isFleetComplete() {
+    ShipController controller;
+    Position (&boardState)[10][10] = board.getPositions();
+    Ship* ships = fleet.getShips();
+
+    // Itera por cada navio e verifica se há uma posição inicial.
+    for (int i = 0; i < 5; i++) {
+        std::pair<int, int> startPos = controller.getShipStartPosition(boardState, &ships[i]);
+        // Se a posição inicial for inválida, o navio não foi posicionado.
+        if (startPos.first == -1 || startPos.second == -1) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool Player::attackOpponent(Board& enemyBoard, int row, int column){

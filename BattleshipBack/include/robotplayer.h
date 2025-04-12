@@ -12,10 +12,10 @@
 using namespace std;
 
 class RobotPlayer :  public Player{
-	private:
-		int virtualBoard[10][10];
-		queue<pair<int, int>> priorityQueue;
-		int alertAttack=0;
+    private:
+        int virtualBoard[10][10];
+        queue<pair<int, int>> priorityQueue;
+        int alertAttack=0;
         int sizeOfEnemyShips[];
         std::pair<int, int> locateShipStart(Board&, int, int);
 	public:

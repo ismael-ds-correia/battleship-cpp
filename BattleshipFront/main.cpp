@@ -9,6 +9,21 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
+    app.setStyleSheet(
+        "QMainWindow { background-color: #202020; }"
+        "QLabel { color: white; }"
+        "QPushButton { "
+        "   background-color: #333; "
+        "   color: #fff; "
+        "   padding: 5px; "
+        "   border: 1px solid #555; "
+        "   border-radius: 25px; "
+        "} "
+        "QPushButton:hover { "
+        "   background-color: #444; "
+        "}"
+        );
+
     Player player1("jogador1");
 
     BoardController p1BoardController(&player1); //instancia o controllador

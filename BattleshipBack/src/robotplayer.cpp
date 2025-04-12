@@ -14,11 +14,11 @@
 using namespace std;
 
 RobotPlayer::RobotPlayer() : Player("Xerath"){
-	for(int i = 0; i<10; i++){
-		for(int j = 0; j<10; j++){
-			this->virtualBoard[i][j] = 0;
-		}
-	}
+    for(int i = 0; i<10; i++){
+        for(int j = 0; j<10; j++){
+            this->virtualBoard[i][j] = 0;
+        }
+    }
 }
 
 void RobotPlayer::attack(Board& enemyBoard) {
@@ -239,10 +239,10 @@ std::pair<int, int> RobotPlayer::locateShipStart(Board& enemyBoard, int row, int
         //Se não houver navio, retorna a posição original.
         return {row, column};
     }
-    
+
     int startRow = row;
     int startCol = column;
-    
+
     if (ship->isHorizontal()) {
         //Procura o extremo esquerdo.
         while (startCol > 0 && enemyBoard.getShipReference(row, startCol - 1) == ship) {
@@ -254,7 +254,7 @@ std::pair<int, int> RobotPlayer::locateShipStart(Board& enemyBoard, int row, int
             startRow--;
         }
     }
-    
+
     return {startRow, startCol};
 }
 
@@ -326,31 +326,31 @@ void RobotPlayer::oneLessShip(int sizeOfShipDestroyed){
 }
 
 void RobotPlayer::attackNeighbors(int row, int column){
-	this->clearProrityQueue();
-	addToPriorityQueue(row - 1, column);
+    this->clearProrityQueue();
+    addToPriorityQueue(row - 1, column);
     addToPriorityQueue(row + 1, column);
     addToPriorityQueue(row, column - 1);
     addToPriorityQueue(row, column + 1);
 }
 
 void RobotPlayer::addToPriorityQueue(int row, int column){
-	if(this->isValid(row, column)){
-		this->priorityQueue.push({row, column});
-	}
+    if(this->isValid(row, column)){
+        this->priorityQueue.push({row, column});
+    }
 }
 
 void RobotPlayer::clearProrityQueue(){
-	while(!this->priorityQueue.empty()){
-		this->priorityQueue.pop();
-	}
+    while(!this->priorityQueue.empty()){
+        this->priorityQueue.pop();
+    }
 }
 
 bool RobotPlayer::isValid(int row, int column){
-	if(row < 0 || row > 9 || column < 0 || column > 9 || this->virtualBoard[row][column] != 0){
-		return false;
-	}
+    if(row < 0 || row > 9 || column < 0 || column > 9 || this->virtualBoard[row][column] != 0){
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool RobotPlayer::isValidForTesting(int row, int column){

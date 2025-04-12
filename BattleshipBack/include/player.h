@@ -23,6 +23,7 @@ class Player{
 		bool attackOpponent(Board&, int, int);
 		void printBoard();
         Fleet& getFleet();
+        bool isFleetComplete();
 };
 
 #endif

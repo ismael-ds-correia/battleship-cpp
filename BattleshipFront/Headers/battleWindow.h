@@ -7,6 +7,7 @@
 #include "boardRenderer.h"
 #include "boardController.h"
 #include "playerController.h"
+#include "qmessagebox.h"
 #include "shipController.h"
 #include "robotController.h"
 #include "soundManager.h"
@@ -46,6 +47,9 @@ private:
     void setupUI();
 
     Turn currentTurn;
+
+    QMessageBox* gameOverBox = nullptr;
+    QTimer* enemyTurnTimer = nullptr;
 
 private slots:
     void handleGameOver(bool playerWon);
