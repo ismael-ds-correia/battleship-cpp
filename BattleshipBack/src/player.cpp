@@ -63,8 +63,6 @@ void Player::positionShipsRandomly() {
         }
     }
 
-    // Embaralhar as posições
-    //srand(std::time(0));
     random_shuffle(positions.begin(), positions.end());
 
     int count = 0; // Contador de navios posicionados

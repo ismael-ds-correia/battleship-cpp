@@ -9,6 +9,7 @@
 #include <ship.h>
 #include <cstdlib>
 #include <ctime>
+#include <QTimer>
 
 using namespace std;
 
@@ -62,26 +63,34 @@ void RobotPlayer::attack(Board& enemyBoard) {
     }
 }
 
-void RobotPlayer::adjustStrategy(Board& enemyBoard, int row, int column){
-	Ship* ship = enemyBoard.getShipReference(row, column);
-
-	if(ship != nullptr){
-		if(ship->isDestroyed()){
-			this->virtualBoard[row][column] = 3;
-			wreckedShipAdjustment(enemyBoard, row, column);
-			clearProrityQueue();
+void RobotPlayer::adjustStrategy(Board& enemyBoard, int row, int column) {
+    Ship* ship = enemyBoard.getShipReference(row, column);
+    if (ship != nullptr) {
+        if (ship->isDestroyed()) {
+            // Atualiza o virtualBoard para indicar que a célula foi “fechada”
+            this->virtualBoard[row][column] = 3;
+            // Realiza os ajustes de estratégia e limpa a fila de prioridade
+            wreckedShipAdjustment(enemyBoard, row, column);
+            clearProrityQueue();
             oneLessShip(ship->getSize());
-            //Localiza a posição inicial do navio.
-            std::pair<int, int> startPos = locateShipStart(enemyBoard, row, column);
-            //Chama o método que marca as posições adjacentes como atacadas.
-            enemyBoard.markAdjacentAsAttacked(*ship, startPos.first, startPos.second);
-		}else{
-			this->virtualBoard[row][column] = 2;
-			discoverDirectionAndAdd(enemyBoard, row, column);
-		}
-	}else{
-		this->virtualBoard[row][column] = 1;
-	}
+
+            // Calcula a posição inicial do navio (para saber quais células adjacentes marcar)
+            pair<int, int> startPos = locateShipStart(enemyBoard, row, column);
+
+            //adia essa chamada para dar tempo para a atualização do estado e dos sinais do frontend serem processados.
+            //------------------------------ UTILIZAÇÃO DE THREADS ------------------------------
+            thread([=, &enemyBoard]() {
+                this_thread::sleep_for(chrono::milliseconds(10));
+                enemyBoard.markAdjacentAsAttacked(*ship, startPos.first, startPos.second);
+            }).detach();
+            //----------------------------------------------------------------------------------
+        } else {
+            this->virtualBoard[row][column] = 2;
+            discoverDirectionAndAdd(enemyBoard, row, column);
+        }
+    } else {
+        this->virtualBoard[row][column] = 1;
+    }
 }
 
 void RobotPlayer::discoverDirectionAndAdd(Board& enemyBoard, int row, int column){
@@ -97,27 +106,27 @@ void RobotPlayer::discoverDirectionAndAdd(Board& enemyBoard, int row, int column
     this->clearProrityQueue();
     // Baseado na direção, adicionar à fila de prioridades
     if(horizontal){
-    	int c = column;
-    	while(this->virtualBoard[row][c-1] != 0){
-    		if(this->virtualBoard[row][c-1] == 3 || this->virtualBoard[row][c-1] == 1){
-    			break;
-    		}
+        int c = column;
+        while(this->virtualBoard[row][c-1] != 0){
+            if(this->virtualBoard[row][c-1] == 3 || this->virtualBoard[row][c-1] == 1){
+                break;
+            }
 
-    		c--;
-    	}
+            c--;
+        }
 
-    	this->addToPriorityQueue(row, c-1);
+        this->addToPriorityQueue(row, c-1);
 
-    	c = column;
-    	while(this->virtualBoard[row][c+1] != 0){
-    		if(this->virtualBoard[row][c+1] == 3 || this->virtualBoard[row][c+1] == 1){
-    			break;
-    		}
+        c = column;
+        while(this->virtualBoard[row][c+1] != 0){
+            if(this->virtualBoard[row][c+1] == 3 || this->virtualBoard[row][c+1] == 1){
+                break;
+            }
 
-    		c++;
-    	}
+            c++;
+        }
 
-    	this->addToPriorityQueue(row, c+1);
+        this->addToPriorityQueue(row, c+1);
 
         return;
     }
@@ -125,25 +134,25 @@ void RobotPlayer::discoverDirectionAndAdd(Board& enemyBoard, int row, int column
     if(vertical){
         int r = row;
         while(this->virtualBoard[r-1][column] != 0){
-        	if(this->virtualBoard[r-1][column] == 3 || this->virtualBoard[r-1][column] == 1){
-        		break;
-        	}
+            if(this->virtualBoard[r-1][column] == 3 || this->virtualBoard[r-1][column] == 1){
+                break;
+            }
 
-        	r--;
+            r--;
         }
 
         this->addToPriorityQueue(r-1, column);
 
         r = row;
         while(this->virtualBoard[r+1][column] != 0){
-        	if(this->virtualBoard[r+1][column] == 3 || this->virtualBoard[r+1][column] == 1){
-        		break;
-        	}
+            if(this->virtualBoard[r+1][column] == 3 || this->virtualBoard[r+1][column] == 1){
+                break;
+            }
 
-        	r++;
+            r++;
         }
 
-       	this->addToPriorityQueue(r+1, column);
+        this->addToPriorityQueue(r+1, column);
 
         return;
     }

@@ -24,7 +24,6 @@ bool RobotController::attackOpponent(Player* opponent) {
 
     Board& opponentBoard = opponent->getBoard();
 
-    // Store the attacked state of all cells before the attack
     bool attackedBefore[10][10];
     for (int i = 0; i < 10; ++i) {
         for (int j = 0; j < 10; ++j) {
@@ -32,12 +31,8 @@ bool RobotController::attackOpponent(Player* opponent) {
         }
     }
 
-    // Perform the attack
     robot->attack(opponentBoard);
 
-    //soundManager->playHitSound();
-
-    // Find the newly attacked cell
     int attackedRow = -1;
     int attackedCol = -1;
     for (int i = 0; i < 10; ++i) {
