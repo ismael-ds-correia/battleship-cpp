@@ -43,7 +43,7 @@ BattleWindow::BattleWindow(
     playerRenderer->renderBoard();
     enemyRenderer->renderBoard();
 
-    connect(playerBattleController, &PlayerController::attackResult, enemyRenderer, &BoardRenderer::onAttackResult);
+    //connect(playerBattleController, &PlayerController::attackResult, enemyRenderer, &BoardRenderer::onAttackResult);
     connect(playerBattleController, &PlayerController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
     connect(enemyRenderer, &BoardRenderer::gameOver, this, &BattleWindow::handleGameOver);
     connect(enemyRenderer, &BoardRenderer::cellClicked, this, &BattleWindow::onPlayerAttack);

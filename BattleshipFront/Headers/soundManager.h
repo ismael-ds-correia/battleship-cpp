@@ -15,13 +15,14 @@ public:
     void loadSounds();
     void loadBackgroundMusic();
 
-    void playAttackSound();
-    void playExplosionSound();
+    void playHitSound();
+    void playWaterSplashSound();
     void playBackgroundMusic();
     void stopBackgroundMusic();
 
 private:
-    QVector<QSoundEffect*> attackSounds;
+    QVector<QSoundEffect*> hitSounds;
+    QVector<QSoundEffect*> waterSplashSounds;
 
     QMediaPlayer* backgroundMusic = nullptr;
     QAudioOutput* audioOutput = nullptr;

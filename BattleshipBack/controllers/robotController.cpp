@@ -35,7 +35,7 @@ bool RobotController::attackOpponent(Player* opponent) {
     // Perform the attack
     robot->attack(opponentBoard);
 
-    soundManager->playAttackSound();
+    //soundManager->playHitSound();
 
     // Find the newly attacked cell
     int attackedRow = -1;

@@ -4,9 +4,11 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QDragEnterEvent>
+#include <QGraphicsPixmapItem>
 #include <QDropEvent>
 #include <QMimeData>
 #include <QLabel>
+#include <QMovie>
 #include "Headers/boardCell.h"
 #include "boardController.h"
 #include "shipController.h"
@@ -76,6 +78,8 @@ private:
     QLabel* selectedShipLabel;
     Ship tempShip;
 
+    QMovie* shipHitTexture;
+
     // texturas
     QPixmap battleshipTextureH;
     QPixmap submarineTextureH;
@@ -103,7 +107,6 @@ private:
     QPixmap scaledWaterTexture;
 
     QPixmap waterHitTexture;
-    QPixmap shipHitTexture;
     QPixmap scaledWaterHitTexture;
     QPixmap scaledShipHitTexture;
 
