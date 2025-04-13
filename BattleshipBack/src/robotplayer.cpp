@@ -207,7 +207,7 @@ bool RobotPlayer::shouldAttackStrategicPositions(){
         }
     }
 
-    return(emptyPositions/100.0 > 0.2);
+    return(emptyPositions/100.0 >= 0.2);
 }
 
 void RobotPlayer::planStrategicAttack(Board& enemyBoard) {

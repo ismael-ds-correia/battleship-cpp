@@ -16,7 +16,7 @@ class RobotPlayer :  public Player{
         int virtualBoard[10][10];
         queue<pair<int, int>> priorityQueue;
         int alertAttack=0;
-        int sizeOfEnemyShips[];
+        int sizeOfEnemyShips[5] = {6, 4, 3, 3, 1};
         std::pair<int, int> locateShipStart(Board&, int, int);
 	public:
 		RobotPlayer();
