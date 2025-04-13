@@ -1,5 +1,7 @@
 #include "../Headers/boardRenderer.h"
 #include "../Headers/boardCell.h"
+#include <QFile>
+#include <QDir>
 
 //construtor ta gigante, essa formatação foi a melhor forma que eu achei pra deixar isso
 //minimamente legivel
@@ -393,24 +395,32 @@ void BoardRenderer::setSelectorSpace(SelectorSpace* newSelectorSpace) {
 }
 
 void BoardRenderer::loadTextures() {
-    int cellSize = 32;//tamanho das celulas do tabuleiro
+    int cellSize = 32; // Tamanho das células do tabuleiro
 
-    waterTexture.load("../../Textures/water.png");
+    QString texturesPath = resolveResourcePath("Textures");
 
-    waterHitTexture.load("../../Textures/waterHit.png");
+    if (texturesPath.isEmpty()) {
+        qDebug() << "[BoardRenderer] Erro: Pasta de Texturas não encontrada.";
+        return;
+    }
 
-    shipHitTexture = new QMovie("../../Textures/fire.gif");
+    qDebug() << "[Path Resolver] Usando texturesPath:" << texturesPath;
+
+    waterTexture.load(texturesPath + "/water.png");
+    waterHitTexture.load(texturesPath + "/waterHit.png");
+
+    shipHitTexture = new QMovie(texturesPath + "/fire.gif");
     shipHitTexture->start();
 
-    submarineTextureH.load("../../Textures/subH.png");
-    battleshipTextureH.load("../../Textures/battleshipH.png");
-    cruiserTextureH.load("../../Textures/cruiserH.png");
-    carrierTextureH.load("../../Textures/carrierH.png");
+    submarineTextureH.load(texturesPath + "/subH.png");
+    battleshipTextureH.load(texturesPath + "/battleshipH.png");
+    cruiserTextureH.load(texturesPath + "/cruiserH.png");
+    carrierTextureH.load(texturesPath + "/carrierH.png");
 
-    submarineTextureV.load("../../Textures/subV.png");
-    battleshipTextureV.load("../../Textures/battleshipV.png");
-    cruiserTextureV.load("../../Textures/cruiserV.png");
-    carrierTextureV.load("../../Textures/carrierV.png");
+    submarineTextureV.load(texturesPath + "/subV.png");
+    battleshipTextureV.load(texturesPath + "/battleshipV.png");
+    cruiserTextureV.load(texturesPath + "/cruiserV.png");
+    carrierTextureV.load(texturesPath + "/carrierV.png");
 
     scaledWaterTexture = waterTexture.scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -427,3 +437,4 @@ void BoardRenderer::loadTextures() {
     scaledCarrierTextureV = carrierTextureV.scaled(cellSize, 192, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
 }
+

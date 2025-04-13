@@ -5,6 +5,7 @@
 #include <QSoundEffect>
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include "resourceUtils.h"
 
 class SoundManager : public QObject {
     Q_OBJECT

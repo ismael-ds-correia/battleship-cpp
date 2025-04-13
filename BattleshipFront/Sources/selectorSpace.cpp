@@ -1,12 +1,16 @@
 #include "../../Headers/selectorSpace.h"
 
-SelectorSpace::SelectorSpace(QWidget *parent) : QWidget(parent), Horizontal(true), isDragging(false) {
+SelectorSpace::SelectorSpace(QWidget *parent)
+    : QWidget(parent), Horizontal(true), isDragging(false) {
+
+    QString texturesPath = resolveResourcePath("Textures");
+
     shipInfos = {
-        {"../../Textures/carrierH.png", QSize(192, 32), 6},//porta-aviões (6 casas)
-        {"../../Textures/battleshipH.png", QSize(128, 32), 4},//navio de guerra (4 casas)
-        {"../../Textures/cruiserH.png", QSize(96, 32), 3},//encourçado (3 casas)
-        {"../../Textures/cruiserH.png", QSize(96, 32), 3},//encourçado (3 casas)
-        {"../../Textures/subH.png", QSize(32, 32), 1}//submarino (1 casa)
+        {texturesPath + "/carrierH.png", QSize(192, 32), 6},       // porta-aviões (6 casas)
+        {texturesPath + "/battleshipH.png", QSize(128, 32), 4},      // navio de guerra (4 casas)
+        {texturesPath + "/cruiserH.png", QSize(96, 32), 3},           // encourçado (3 casas)
+        {texturesPath + "/cruiserH.png", QSize(96, 32), 3},           // encourçado (3 casas)
+        {texturesPath + "/subH.png", QSize(32, 32), 1}                // submarino (1 casa)
     };
     setupShips();
 }
