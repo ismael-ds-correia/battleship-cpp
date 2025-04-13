@@ -78,12 +78,6 @@ void MainWindow::onClearButtonClicked() {
 
 
 void MainWindow::onStartButtonClicked() {
-    if (!playerController->getPlayer()->isFleetComplete()) {
-        qDebug() << "Frota incompleta! Posicionando navios restantes aleatoriamente...";
-        playerController->positionShipsRandomly();
-        updateBoard();
-    }
-
     // Cria o robô de forma dinâmica para garantir sua persistência
     RobotPlayer* enemyPlayer = new RobotPlayer();  // Alocado na heap
 
@@ -95,25 +89,10 @@ void MainWindow::onStartButtonClicked() {
     RobotController* enemyController = new RobotController(enemyPlayer);
 
     // Cria a BattleWindow usando o PlayerController existente para o jogador humano
-    BattleWindow* battleWindow = new BattleWindow(
-        new BoardController(playerController->getPlayer()),  // Novo controller
-        enemyBoardController,
-        new ShipController(),  // Novo controller
-        new PlayerController(playerController->getPlayer()), // Novo controller
-        enemyController
-        );
-
-    battleWindow->setAttribute(Qt::WA_DeleteOnClose);
+    BattleWindow* battleWindow = new BattleWindow(boardController, enemyBoardController, shipController, playerController, enemyController);
     battleWindow->show();
 
     this->close();
-}
-
-
-bool MainWindow::isPlayerFleetComplete() const {
-    // Se o layout do selectorContainer tiver algum widget (um navio) disponível,
-    // significa que nem todos os navios foram posicionados.
-    return (ui->selectorContainer->layout()->count() == 0);
 }
 
 
