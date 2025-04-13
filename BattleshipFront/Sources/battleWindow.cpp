@@ -14,13 +14,13 @@ BattleWindow::BattleWindow(
     RobotController* enemyBattleController,
     QWidget* parent)
     : QMainWindow(parent),
-    ui(new Ui::BattleWindow),
     playerBoardController(playerBoardController),
     enemyBoardController(enemyBoardController),
     shipController(shipBattleController),
     playerController(playerBattleController),
     enemyController(enemyBattleController),
-    currentTurn(Turn::Player){
+    currentTurn(Turn::Player),
+    ui(new Ui::BattleWindow){
 
     ui->setupUi(this);
     //setupUI();
@@ -60,9 +60,8 @@ BattleWindow::BattleWindow(
     connect(playerController, &PlayerController::attackResult, this, &BattleWindow::handlePlayerAttackResult);
     connect(enemyController, &RobotController::attackResult, this, &BattleWindow::handleEnemyAttackResult);
 
-    connect(playerController, &PlayerController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
-    connect(enemyController, &RobotController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
-
+    connect(playerController, &PlayerController::shipDestroyed, playerRenderer, &BoardRenderer::onShipDestroyed);
+    connect(enemyController, &RobotController::shipDestroyed, playerRenderer, &BoardRenderer::onShipDestroyed);
     updateTurn();
     setWindowTitle("Tela de Batalha");
 }

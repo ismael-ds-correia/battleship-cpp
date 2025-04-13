@@ -80,7 +80,7 @@ void SoundManager::loadBackgroundMusic() {
     QString musicPath = "../../Sounds/background.mp3";
     backgroundMusic->setSource(QUrl::fromLocalFile(musicPath));
 
-    audioOutput->setVolume(0.06);
+    audioOutput->setVolume(0.1);
 
     //conecta o sinal para detectar o fim da mídia e reiniciar a reprodução
     connect(backgroundMusic, &QMediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
