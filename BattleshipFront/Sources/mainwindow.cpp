@@ -37,6 +37,7 @@ MainWindow::MainWindow(
     ui->selectorContainer->layout()->addWidget(selectorSpace);
     selectorSpace->show();
 
+
     boardRenderer = new BoardRenderer(scene, shipController, boardController, selectorSpace, playerController, soundManager);
     boardRenderer->setInteractive(true);
     boardRenderer->renderCoordinates();
@@ -78,6 +79,12 @@ void MainWindow::onClearButtonClicked() {
 
 
 void MainWindow::onStartButtonClicked() {
+    if (!playerController->getPlayer()->isFleetComplete()) {
+        qDebug() << "Frota incompleta! Posicionando navios restantes aleatoriamente...";
+        playerController->positionShipsRandomly();
+        updateBoard();
+    }
+
     // Cria o robô de forma dinâmica para garantir sua persistência
     RobotPlayer* enemyPlayer = new RobotPlayer();  // Alocado na heap
 

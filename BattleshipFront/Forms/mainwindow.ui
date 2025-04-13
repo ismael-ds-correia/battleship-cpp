@@ -6,81 +6,173 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>607</width>
-    <height>443</height>
+    <width>750</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Batalha Naval</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #dde3f0, stop:1 #cfd7e6);
+    }
+    QLabel {
+        font: 24pt &quot;suntage&quot;;
+        color: rgb(50, 78, 102);
+    }
+    QPushButton {
+        background-color: #e8eef4;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font: bold 14pt &quot;suntage&quot;;
+        color: rgb(50, 78, 102);
+    }
+    QPushButton:hover {
+        background-color: #b3bbca;
+    }
+   </string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="boardView">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>361</width>
-      <height>351</height>
-     </rect>
+   <layout class="QVBoxLayout" name="verticalLayoutMain">
+    <property name="spacing">
+     <number>10</number>
     </property>
-   </widget>
-   <widget class="QPushButton" name="start">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>370</y>
-      <width>80</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="randomizer">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>370</y>
-      <width>80</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>P. Aleatório</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="selectorContainer" native="true">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>69</y>
-      <width>211</width>
-      <height>261</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="clear">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>370</y>
-      <width>80</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Limpar</string>
-    </property>
-   </widget>
+    <item>
+     <widget class="QFrame" name="titleFrame">
+      <property name="styleSheet">
+       <string notr="true">
+        QFrame {
+            background-color: #f7f4f3;
+            border-radius: 20px;
+            margin: 2px;
+        }
+       </string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayoutTitle">
+       <item>
+        <widget class="QLabel" name="titleLabel">
+         <property name="text">
+          <string>POSICIONE SEUS NAVIOS</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayoutBoardAndSelector">
+      <item>
+       <widget class="QFrame" name="naviosFrame">
+        <property name="styleSheet">
+         <string notr="true">
+          QFrame {
+              background-color: #e8eef4;
+              border-radius: 20px;
+              margin: 10px;
+          }
+         </string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayoutNavios">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="selectorContainer" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>330</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="naviosLabel">
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignTop</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="boardFrame">
+        <property name="styleSheet">
+         <string notr="true">
+          QFrame {
+              background-color: #f7f4f3;
+              border-radius: 20px;
+          }
+         </string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayoutBoard">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <item>
+          <widget class="QGraphicsView" name="boardView"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="boardLabel">
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignTop</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayoutButtons">
+      <property name="spacing">
+       <number>30</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="randomizer">
+        <property name="text">
+         <string>P. Aleatório</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="clear">
+        <property name="text">
+         <string>Limpar</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="start">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>607</width>
-     <height>25</height>
+     <width>750</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>

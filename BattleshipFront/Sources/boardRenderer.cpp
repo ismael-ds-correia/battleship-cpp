@@ -293,6 +293,8 @@ QPointF BoardRenderer::calculatePosition(int row, int col) const {
 }
 
 void BoardRenderer::renderCoordinates() {
+    QFont coordFont("Segoe UI", 10, QFont::Bold);
+
     int cellSize = 32;
     int margin = 0;
 
@@ -305,6 +307,7 @@ void BoardRenderer::renderCoordinates() {
         qreal x = j * (cellSize + margin) + (cellSize - textRect.width()) / 2;
         qreal y = -textRect.height() - 5;  // 5 pixels de margem
         textItem->setPos(x, y);
+        textItem->setFont(coordFont);
         scene->addItem(textItem);
     }
 
@@ -317,6 +320,7 @@ void BoardRenderer::renderCoordinates() {
         qreal x = -textRect.width() - 5;  // 5 pixels de margem
         qreal y = i * (cellSize + margin) + (cellSize - textRect.height()) / 2;
         textItem->setPos(x, y);
+        textItem->setFont(coordFont);
         scene->addItem(textItem);
     }
 }
