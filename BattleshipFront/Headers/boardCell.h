@@ -18,6 +18,8 @@ public:
     int getRow() const { return row; }
     int getCol() const { return col; }
 
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override; //função do clique

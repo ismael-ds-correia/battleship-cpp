@@ -6,55 +6,126 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>731</width>
-    <height>424</height>
+    <width>1000</width>
+    <height>600</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>MainWindow</string>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background: rgb(255, 255, 255);
+    }
+    QLabel {
+        background: rgb(247, 244, 243);
+        color: white;
+        font: 20pt "suntage";
+        qproperty-alignment: AlignCenter;
+    }
+    QGraphicsView {
+        background: rgb(247, 244, 243);
+        border-radius: 20px;
+    }
+   </string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>711</width>
-      <height>381</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="labelTurnStatus">
-       <property name="text">
-        <string>TextLabel</string>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="labelTurnStatus">
+      <property name="styleSheet">
+       <string notr="true">
+        background-color: rgb(232, 238, 244);
+        border-radius: 20px;
+        padding: 10px;
+        color: rgb(50, 78, 102);
+       </string>
+      </property>
+      <property name="minimumHeight">
+          <number>60</number>
        </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QGraphicsView" name="playerView"/>
-       </item>
-       <item>
-        <widget class="QGraphicsView" name="enemyView"/>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QFrame" name="playerFrame">
+        <property name="styleSheet">
+         <string notr="true">
+          QFrame {
+              background: rgb(232, 238, 244);
+              border-radius: 28px;
+              padding: 15px;
+          }
+         </string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+         <widget class="QLabel" name="labelPlayer">
+           <property name="text">
+             <string>SEU TABULEIRO</string>
+           </property>
+           <property name="minimumHeight">
+               <number>50</number>
+            </property>
+           <property name="styleSheet">
+             <string notr="true">
+               background-color: rgb(247, 244, 243);
+               border-radius: 20px;
+               padding: 5px;
+               color: rgb(50, 78, 102);
+               font: 20pt "suntage";
+               qproperty-alignment: AlignCenter;
+             </string>
+           </property>
+         </widget>
+         </item>
+         <item>
+          <widget class="QGraphicsView" name="playerView"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="enemyFrame">
+        <property name="styleSheet">
+         <string notr="true">
+          QFrame {
+              background: rgb(232, 238, 244);
+              border-radius: 28px;
+              padding: 15px;
+          }
+         </string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="labelEnemy">
+           <property name="text">
+            <string>TABULEIRO INIMIGO</string>
+           </property>
+           <property name="minimumHeight">
+               <number>50</number>
+            </property>
+           <property name="styleSheet">
+             <string notr="true">
+               background-color: rgb(247, 244, 243);
+               border-radius: 20px;
+               padding: 5px;
+               color: rgb(50, 78, 102);
+               font: 20pt "suntage";
+               qproperty-alignment: AlignCenter;
+             </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGraphicsView" name="enemyView"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>731</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

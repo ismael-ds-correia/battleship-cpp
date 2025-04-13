@@ -16,32 +16,46 @@ SelectorSpace::SelectorSpace(QWidget *parent)
 }
 
 void SelectorSpace::setupShips() {
-    //clearShips();
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setAlignment(Qt::AlignTop);
+    layout->setSpacing(10);
+    this->setLayout(layout);
 
     int offsetX = 5;
     int offsetY = 5;
     int spacing = 10;
     int index = 0;
+    float scaleFactor = 1.5;
+
 
     for (const ShipInfo &ship : shipInfos) {
+        QPixmap originalPixmap(ship.texturePath);
+        QSize newSize = originalPixmap.size() * scaleFactor;
+
+        // Redimensionar o pixmap mantendo a proporção
+        QPixmap scaledPixmap = originalPixmap.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
         QLabel *shipLabel = new QLabel(this);
-        shipLabel->setPixmap(QPixmap(ship.texturePath));
-        shipLabel->setFixedSize(ship.size);
+        shipLabel->setPixmap(scaledPixmap);
+        shipLabel->setFixedSize(newSize);
         shipLabel->setAttribute(Qt::WA_DeleteOnClose);
         shipLabel->setStyleSheet("background-color: transparent");
-        shipLabel->move(offsetX, offsetY);//ajusta a posição inicial
+        shipLabel->move(offsetX, offsetY);
+        shipLabel->setScaledContents(true);
 
         shipLabel->setProperty("shipSize", ship.shipSize);
         shipLabel->setProperty("shipIndex", index);
 
         shipLabel->installEventFilter(this);//captura eventos de mouse
 
-        offsetY += ship.size.height() + spacing;
+        offsetY += newSize.height() + spacing;
         index++;
+        originalPixmaps[shipLabel] = originalPixmap;
     }
 }
 
 void SelectorSpace::restoreShip(Ship &ship) {
+    float scaleFactor = 1.5;
     bool restored = false; //usado meramente para depuração
     // Procura uma entrada em shipInfos que corresponda ao tamanho do navio removido.
     // Se houver mais de uma com o mesmo tamanho, restaura a primeira que não estiver presente.
@@ -59,21 +73,35 @@ void SelectorSpace::restoreShip(Ship &ship) {
             if (!alreadyExists) {
                 // Cria o QLabel para o navio removido com base nos dados de shipInfos[i]
                 ShipInfo info = shipInfos[i];
+
+                // Usar o mesmo padrão de escala que setupShips
+                QPixmap originalPixmap(info.texturePath);
+                QSize newSize = originalPixmap.size() * scaleFactor;
+                QPixmap scaledPixmap = originalPixmap.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
                 QLabel* shipLabel = new QLabel(this);
-                shipLabel->setPixmap(QPixmap(info.texturePath));
-                shipLabel->setFixedSize(info.size);
+                shipLabel->setPixmap(scaledPixmap);
+                shipLabel->setFixedSize(newSize);
                 shipLabel->setAttribute(Qt::WA_DeleteOnClose);
                 shipLabel->setStyleSheet("background-color: transparent");
+                shipLabel->setScaledContents(true);
 
-                //define a posição padrão para exibição. O tamanho do barco é usado para calcular um offset
+                // Posição usando os mesmos cálculos de setupShips
                 int offsetX = 5;
                 int spacing = 10;
-                int offsetY = 5 + i * (info.size.height() + spacing);
+                int offsetY = 5 + i * (newSize.height() + spacing);
                 shipLabel->move(offsetX, offsetY);
 
                 shipLabel->setProperty("shipSize", info.shipSize);
                 shipLabel->setProperty("shipIndex", i);
                 shipLabel->installEventFilter(this);
+
+                // Armazenar o pixmap original
+                originalPixmaps[shipLabel] = originalPixmap;
+
+                // Garantir que a rotação começa como horizontal
+                shipRotation[shipLabel] = false;
+
                 shipLabel->show();
 
                 qDebug() << "Navio restaurado para shipInfos[" << i << "]";
@@ -207,35 +235,43 @@ void SelectorSpace::markShipAsPlaced(int shipIndex) {
 }
 
 void SelectorSpace::rotateShip(QLabel *shipLabel) {
-    // Se ainda não armazenamos o pixmap original, faz isso agora
     if (!originalPixmaps.contains(shipLabel)) {
-        originalPixmaps[shipLabel] = shipLabel->pixmap();
+        // Armazenar o pixmap original em tamanho real (não escalonado)
+        originalPixmaps[shipLabel] = QPixmap(shipInfos[shipLabel->property("shipIndex").toInt()].texturePath);
     }
 
-    // Obtém o estado atual de rotação para esse QLabel (false = horizontal, true = vertical)
-    bool isVertical = shipRotation.value(shipLabel, false);
+    float scaleFactor = 1.5; // Mesmo fator usado em outros lugares
+    bool isVertical = !shipRotation.value(shipLabel, false); // Inverte o estado atual
 
-    // Sempre usa o pixmap original como base para a transformação
+    // Pega a imagem original (sem escala)
     QPixmap originalPixmap = originalPixmaps.value(shipLabel);
-    QPixmap newPixmap;
+    QTransform transform;
 
-    if (!isVertical) {
-        // Rotaciona 90 graus para vertical
-        QTransform transform;
+    if (isVertical) {
+        // Rotaciona a imagem original
         transform.rotate(90);
-        newPixmap = originalPixmap.transformed(transform, Qt::SmoothTransformation);
+        QPixmap rotatedPixmap = originalPixmap.transformed(transform, Qt::SmoothTransformation);
+
+        // Escala para o tamanho desejado (invertendo largura/altura)
+        QSize rotatedSize(originalPixmap.height() * scaleFactor, originalPixmap.width() * scaleFactor);
+        QPixmap finalPixmap = rotatedPixmap.scaled(rotatedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        shipLabel->setPixmap(finalPixmap);
+        shipLabel->setFixedSize(rotatedSize);
     } else {
-        // Retorna para o estado original horizontal
-        newPixmap = originalPixmap;
+        // Usa a imagem original horizontal e escala
+        QSize originalSize(originalPixmap.width() * scaleFactor, originalPixmap.height() * scaleFactor);
+        QPixmap scaledPixmap = originalPixmap.scaled(originalSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        shipLabel->setPixmap(scaledPixmap);
+        shipLabel->setFixedSize(originalSize);
     }
 
-    shipLabel->setPixmap(newPixmap);
-    shipLabel->setFixedSize(newPixmap.size());
-
-    // Alterna o estado de rotação para este QLabel
-    shipRotation[shipLabel] = !isVertical;
+    // Define o novo estado de rotação
+    shipRotation[shipLabel] = isVertical;
     shipLabel->update();
 }
+
 void SelectorSpace::clearShips() {
     // Remove todos os navios do espaço de seleção
     QList<QLabel*> shipLabels = findChildren<QLabel*>();

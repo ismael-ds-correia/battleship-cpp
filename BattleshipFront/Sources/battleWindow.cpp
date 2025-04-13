@@ -1,5 +1,6 @@
 #include "./Headers/battleWindow.h"
 #include "../Headers/mainwindow.h"
+#include "ui_battleWindow.h"
 #include <QHBoxLayout>
 #include <QWidget>
 #include <QMessageBox>
@@ -25,6 +26,14 @@ BattleWindow::BattleWindow(
     ui->setupUi(this);
     //setupUI();
 
+
+    //PARTE DA INTERFACE
+    ui->playerView->setRenderHint(QPainter::Antialiasing);
+    ui->enemyView->setRenderHint(QPainter::Antialiasing);
+    ui->playerView->setCacheMode(QGraphicsView::CacheBackground);
+    ui->enemyView->setCacheMode(QGraphicsView::CacheBackground);
+
+    //SOM DO JOGO
     soundManager = new SoundManager(this);
     soundManager->playBackgroundMusic();
 
@@ -41,7 +50,7 @@ BattleWindow::BattleWindow(
     playerRenderer->renderCoordinates();
 
     enemyRenderer = new BoardRenderer(enemyScene, shipBattleController, enemyBoardController, nullptr, playerBattleController, soundManager, enemyBattleController, true);
-    enemyRenderer->setHideShips(false);
+    enemyRenderer->setHideShips(true);
     enemyRenderer->setInteractive(true);
     enemyRenderer->renderCoordinates();
 
@@ -96,7 +105,7 @@ void BattleWindow::updateTurn() {
     qDebug() << "Atualizando turno. Turno atual:" << (currentTurn == Turn::Player ? "Player" : "Enemy");
 
     if (currentTurn == Turn::Player) {
-        ui->labelTurnStatus->setText("🔵 Turno do Jogador");
+        ui->labelTurnStatus->setText("🟢 Turno do Jogador");
         enemyRenderer->setInteractive(true);
     } else {
         ui->labelTurnStatus->setText("🔴 Turno da IA");
@@ -164,6 +173,13 @@ void BattleWindow::handleGameOver(bool playerWon) {
     gameOverBox->setWindowTitle("Fim de Jogo");
     gameOverBox->setText(QString("%1 venceu!").arg(winner));
 
+    gameOverBox->setStyleSheet(
+        "QLabel {"
+        "    color: black;"         // cor desejada para o texto (por exemplo, preto)
+        "    font: 18pt 'segoiUi';"   // aumenta o tamanho e usa a fonte 'suntage'
+        "}"
+        );
+
     QPushButton* restartButton = gameOverBox->addButton("Reiniciar", QMessageBox::AcceptRole);
     QPushButton* quitButton = gameOverBox->addButton("Sair", QMessageBox::RejectRole);
 
@@ -179,8 +195,6 @@ void BattleWindow::handleGameOver(bool playerWon) {
 
     gameOverBox->show();
 }
-
-//PRECISAMOS CONSERTAR O BUG INCOMUM QUE O FIM DE JOGO NÃO É ACIONADO EM ALGUNS CASOS
 
 void BattleWindow::restartGame() {
 
@@ -202,11 +216,11 @@ void BattleWindow::restartGame() {
     mainWindow->show();
 
     // Destrói os controladores antigos
-    delete playerBoardController;
-    delete enemyBoardController;
-    delete shipController;
-    delete playerController;
-    delete enemyController;
+    //delete playerBoardController;
+    //delete enemyBoardController;
+    //delete shipController;
+    //delete playerController;
+    //delete enemyController;
 
     // Fecha esta janela
     this->close();
