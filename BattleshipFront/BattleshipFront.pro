@@ -47,6 +47,7 @@ HEADERS += \
     Headers/boardRenderer.h \
     Headers/boardCell.h \
     Headers/mainwindow.h \
+    Headers/resourceUtils.h \
     Headers/selectorSpace.h \
     Headers/soundManager.h
 

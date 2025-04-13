@@ -11,6 +11,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QPropertyAnimation>
 #include "ship.h"
+#include "resourceUtils.h"
 
 struct ShipInfo {
     QString texturePath;

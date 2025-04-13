@@ -16,6 +16,7 @@
 #include "playerController.h"
 #include "robotController.h"
 #include "soundManager.h"
+#include "resourceUtils.h"
 
 class BoardRenderer : public QGraphicsView {
     Q_OBJECT
