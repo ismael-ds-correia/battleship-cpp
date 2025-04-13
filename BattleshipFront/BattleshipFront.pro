@@ -51,6 +51,7 @@ HEADERS += \
     Headers/soundManager.h
 
 FORMS += \
+    Forms/battleWindow.ui \
     Forms/mainwindow.ui
 
 # Default rules for deployment.

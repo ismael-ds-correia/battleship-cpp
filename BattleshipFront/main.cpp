@@ -9,6 +9,7 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
+    /*
     app.setStyleSheet(
         "QMainWindow { background-color: #202020; }"
         "QLabel { color: white; }"
@@ -23,6 +24,7 @@ int main(int argc, char *argv[]) {
         "   background-color: #444; "
         "}"
         );
+    */
 
     Player player1("jogador1");
 
@@ -32,8 +34,6 @@ int main(int argc, char *argv[]) {
 
     MainWindow mainWindow(&p1BoardController, &shipController, &playerController); //cria a janela do jogo
     mainWindow.show();
-
-    //QLoggingCategory::setFilterRules(QStringLiteral("qt.multimedia.*=true"));
 
     return app.exec();
 }

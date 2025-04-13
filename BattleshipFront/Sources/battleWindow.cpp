@@ -14,6 +14,7 @@ BattleWindow::BattleWindow(
     RobotController* enemyBattleController,
     QWidget* parent)
     : QMainWindow(parent),
+    ui(new Ui::BattleWindow),
     playerBoardController(playerBoardController),
     enemyBoardController(enemyBoardController),
     shipController(shipBattleController),
@@ -21,12 +22,19 @@ BattleWindow::BattleWindow(
     enemyController(enemyBattleController),
     currentTurn(Turn::Player){
 
-    setupUI();
+    ui->setupUi(this);
+    //setupUI();
 
     soundManager = new SoundManager(this);
     soundManager->playBackgroundMusic();
 
-    // Cria o renderizador para o tabuleiro do jogador (exibindo os navios)
+    // Cria o renderizador para o tabuleiro do jogador
+    playerScene = new QGraphicsScene(this);
+    enemyScene = new QGraphicsScene(this);
+    ui->playerView->setScene(playerScene);
+    ui->enemyView->setScene(enemyScene);
+
+    // Configura os renderizadores
     playerRenderer = new BoardRenderer(playerScene, shipBattleController, playerBoardController, nullptr, playerBattleController, soundManager);
     playerRenderer->setHideShips(false);
     playerRenderer->setInteractive(false);
@@ -37,18 +45,16 @@ BattleWindow::BattleWindow(
     enemyRenderer->setInteractive(true);
     enemyRenderer->renderCoordinates();
 
-
     // Renderiza os tabuleiros
     playerRenderer->renderBoard();
     enemyRenderer->renderBoard();
 
-    //connect(playerBattleController, &PlayerController::attackResult, enemyRenderer, &BoardRenderer::onAttackResult);
+    // Conexões de sinal/slot
     connect(playerBattleController, &PlayerController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
     connect(enemyRenderer, &BoardRenderer::gameOver, this, &BattleWindow::handleGameOver);
     connect(enemyRenderer, &BoardRenderer::cellClicked, this, &BattleWindow::onPlayerAttack);
 
     connect(playerController, &PlayerController::attackResult, enemyRenderer, &BoardRenderer::onAttackResult);
-    // Atualiza o tabuleiro do jogador quando a IA ataca:
     connect(enemyController, &RobotController::attackResult, playerRenderer, &BoardRenderer::onAttackResult);
 
     connect(playerController, &PlayerController::attackResult, this, &BattleWindow::handlePlayerAttackResult);
@@ -56,11 +62,13 @@ BattleWindow::BattleWindow(
 
     connect(playerController, &PlayerController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
     connect(enemyController, &RobotController::shipDestroyed, enemyRenderer, &BoardRenderer::onShipDestroyed);
+
     updateTurn();
     setWindowTitle("Tela de Batalha");
 }
 
 BattleWindow::~BattleWindow() {
+    delete ui;
     delete playerRenderer;
     delete enemyRenderer;
 }
@@ -87,12 +95,13 @@ void BattleWindow::setupUI() {
 
 void BattleWindow::updateTurn() {
     qDebug() << "Atualizando turno. Turno atual:" << (currentTurn == Turn::Player ? "Player" : "Enemy");
+
     if (currentTurn == Turn::Player) {
+        ui->labelTurnStatus->setText("🔵 Turno do Jogador");
         enemyRenderer->setInteractive(true);
-        qDebug() << "Turno do jogador. Interatividade do tabuleiro inimigo habilitada.";
     } else {
+        ui->labelTurnStatus->setText("🔴 Turno da IA");
         enemyRenderer->setInteractive(false);
-        qDebug() << "Turno da IA. Interatividade do tabuleiro inimigo desabilitada.";
         QTimer::singleShot(1000, this, SLOT(enemyAttack()));
     }
 }
@@ -133,12 +142,12 @@ void BattleWindow::enemyAttack() {
     qDebug() << "BattleWindow::enemyAttack: Resultado do ataque da IA, hit =" << hit;
 }
 
-
 void BattleWindow::handleEnemyAttackResult(int row, int col, bool hit) {
     if (hit) {
-        // Se houver acerto e o jogador ainda não foi totalmente derrotado,
-        // continua o turno da IA agendando um novo ataque.
-        if (!playerController->getPlayer()->getFleet().isDestroyed()) {
+        if (playerController->getPlayer()->getFleet().isDestroyed()) {
+            handleGameOver(false); // Jogador perdeu
+        } else {
+            // Se não, continua o turno da IA após um pequeno delay
             QTimer::singleShot(1000, this, SLOT(enemyAttack()));
         }
     } else {
@@ -146,7 +155,6 @@ void BattleWindow::handleEnemyAttackResult(int row, int col, bool hit) {
         updateTurn();
     }
 }
-
 
 void BattleWindow::handleGameOver(bool playerWon) {
     if (gameOverBox) return;

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include "ui_battleWindow.h"
 #include "boardRenderer.h"
 #include "boardController.h"
 #include "playerController.h"
@@ -13,6 +14,10 @@
 #include "soundManager.h"
 
 enum class Turn { Player, Enemy };
+
+namespace Ui {
+class BattleWindow;
+}
 
 class BattleWindow : public QMainWindow {
     Q_OBJECT
@@ -47,6 +52,9 @@ private:
     void setupUI();
 
     Turn currentTurn;
+    QLabel* labelTurnStatus;
+
+    Ui::BattleWindow* ui;
 
     QMessageBox* gameOverBox = nullptr;
     QTimer* enemyTurnTimer = nullptr;
@@ -59,6 +67,7 @@ private slots:
     void enemyAttack();
     void handleEnemyAttackResult(int row, int col, bool hit);
     void updateTurn();
+
 };
 
 #endif // BATTLEWINDOW_H
