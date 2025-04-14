@@ -7,7 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include "board.h"
-//#include "shipController.h"
+#include "shipController.h"
 
 using namespace std;
 

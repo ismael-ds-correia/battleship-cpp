@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>750</width>
-    <height>600</height>
+    <height>625</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,16 +91,9 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>300</width>
-             <height>330</height>
+             <width>320</width>
+             <height>320</height>
             </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="naviosLabel">
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignTop</set>
            </property>
           </widget>
          </item>
@@ -172,7 +165,7 @@
      <x>0</x>
      <y>0</y>
      <width>750</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
