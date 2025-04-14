@@ -7,6 +7,6 @@ Donwload da versão de deploy: [Drive](https://drive.google.com/drive/folders/18
 Jogo de Batalha Naval desenvolvido em C++ com orientação a objetos. Conta com modo jogador versus robô, incluindo simulação de estratégias
 para posicionamento de navios e ataques. Projeto acadêmico para a disciplina de Paradigmas de Linguagem de Programação.
 
-##Tecnologias Usadas
+## Tecnologias Usadas
 
 ### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" height="40" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/qt/qt-original.svg" height="40" />
